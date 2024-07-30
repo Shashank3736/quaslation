@@ -22,7 +22,7 @@ export default function PostList({ posts }:{ posts: LatestPosts}) {
   return (
     <div className="flex flex-col p-4">
       {chapters.chapters.map((chapter) => (
-        <div key={chapter.id} className="p-4 mb-4 border rounded-lg cursor-pointer" onClick={() => window.location.href=`/chapter/${chapter.id}`}>
+        <div key={chapter.id} className="p-4 mb-4 border rounded-lg">
           <H3 className="mb-2">Chapter {chapter.chapter}: {chapter.title}</H3>
           <p className="mb-2">{chapter.description}<Link className="text-blue-600 dark:text-blue-400 hover:underline" href={`/chapter/${chapter.id}`}> Read More {">>"}</Link></p>
           <div className="flex justify-between">
