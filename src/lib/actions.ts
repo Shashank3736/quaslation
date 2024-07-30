@@ -12,6 +12,9 @@ export interface ChapterDetail {
     id: string;
     novel: {
         title: string;
+        novel_slug: {
+            slug: string;
+        }
     }
     createdAt: Date;
     publishedAt: Date;
@@ -86,6 +89,9 @@ export interface GetVolume {
 export interface NovelIndex {
     id: string;
     title: string;
+    novel_slug: {
+        slug: string;
+    }
 }
 
 export async function getLatestPosts({ last=10, premium=false, skip=0 }: GetLatestPostsOptions): Promise<LatestPosts> {
@@ -105,6 +111,9 @@ export async function getLatestPosts({ last=10, premium=false, skip=0 }: GetLate
                       id
                       novel {
                         title
+                        novel_slug {
+                            slug
+                        }
                       }
                       title
                       createdAt
@@ -284,6 +293,9 @@ export async function getNovels({ last = 10 }): Promise<NovelIndex[]> {
                     novels(first: ${last}) {
                       id
                       title
+                      novel_slug {
+                        slug
+                      }
                     }
                   }`,
             })
