@@ -6,21 +6,23 @@ interface GetLatestPostsOptions {
     skip?: number;
 }
 
-export interface LatestPosts {
-    chapters : {
-        chapter: number;
-        description: string;
-        id: string;
-        novel: {
-            title: string;
-        }
-        createdAt: Date;
-        publishedAt: Date;
+export interface ChapterDetail {
+    chapter: number;
+    description: string;
+    id: string;
+    novel: {
         title: string;
-        volume: {
-            number: number;
-        };
-    }[]
+    }
+    createdAt: Date;
+    publishedAt: Date;
+    title: string;
+    volume: {
+        number: number;
+    };
+}
+
+export interface LatestPosts {
+    chapters : ChapterDetail[]
     chaptersConnection: {
         aggregate: {
             count: number;
