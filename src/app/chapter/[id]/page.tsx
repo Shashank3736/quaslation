@@ -10,7 +10,7 @@ export default async function ChapterPage({ params }: { params: { id: string }})
   const chapter = await getChapter(params.id);
   return (
     <div className='p-4'>
-      <H3 className='mb-4'>{chapter.title}</H3>
+      <H3 className='mb-4'>Chapter {chapter.chapter}: {chapter.title}</H3>
       {chapter.premium ? (
         <Alert variant={"destructive"}>
           <AlertCircle className='h-4 w-4' />
