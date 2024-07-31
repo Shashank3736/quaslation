@@ -43,7 +43,7 @@ export default function PostList({ posts }:{ posts: LatestPosts}) {
           <H3 className="mb-2">Chapter {chapter.chapter}: {chapter.title}</H3>
           <p className="mb-2">{chapter.description}<Link className="text-blue-600 dark:text-blue-400 hover:underline" href={`/chapter/${chapter.id}`}> Read More {">>"}</Link></p>
           <div className="flex justify-between">
-            <Muted>Novel: {chapter.novel.title}</Muted>
+            <Muted><Link className="hover:underline" href={`/novels/${chapter.novel.novel_slug.slug}`}>{chapter.novel.title}</Link></Muted>
             <Muted>{timeAgo(chapter.publishedAt)}</Muted>
           </div>
         </div>
