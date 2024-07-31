@@ -14,9 +14,9 @@ export default async function BlogList() {
     <div className='p-4'>
       <H2>Blogs & Updates</H2>
       <Separator />
-      <div className='p-8 mt-4 border rounded-lg'>
+      <div className=''>
         {blogs.map(blog => (
-          <div key={blog.slug} className='flex flex-col'>
+          <div key={blog.slug} className='flex flex-col p-8 mt-4 border rounded-lg'>
             <H3 className='mb-2'>{blog.title}</H3>
             <p>{blog.description}</p>
             <div className='flex justify-between mt-4'>
