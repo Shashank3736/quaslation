@@ -11,7 +11,7 @@ import React from 'react'
 export default async function BlogList() {
   const blogs = await getBlogs({})
   return (
-    <div>
+    <div className='p-4'>
       <H2>Blogs & Updates</H2>
       <Separator />
       <div className='p-8 mt-4 border rounded-lg'>
