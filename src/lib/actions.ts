@@ -68,6 +68,10 @@ export interface Novel {
     }[]
 }
 
+export interface NovelSlug {
+    novel: Novel
+}
+
 export interface Volume {
     chapters: {
         chapter: number;
@@ -199,7 +203,7 @@ export async function getChapter(id: string): Promise<FullChapter> {
     }
 }
 
-export async function getVolume({ id, skip=0, last=10 }:{ id:string, skip?: number, last?: number }): Promise<GetVolume> {
+export async function getVolume({ id, skip=0, last=15 }:{ id:string, skip?: number, last?: number }): Promise<GetVolume> {
     try {
         console.log("Request made for volume: ", id)
         const response = await fetch(process.env.HYGRAPH_URL || "", {
@@ -241,9 +245,9 @@ export async function getVolume({ id, skip=0, last=10 }:{ id:string, skip?: numb
     }
 }
 
-export async function getNovel(id: string): Promise<Novel> {
+export async function getNovel(slug: string): Promise<NovelSlug> {
     try {
-        console.log("Request made for novel: ", id)
+        console.log("Request made for novel: ", slug)
         const response = await fetch(process.env.HYGRAPH_URL || "", {
             method: "POST",
             headers: {
@@ -252,13 +256,15 @@ export async function getNovel(id: string): Promise<Novel> {
             },
             body: JSON.stringify({
                 query: `query NovelIndex {
-                    novel(where: {id: "${id}"}) {
-                      description
-                      title
-                      volumes(orderBy: number_ASC, first: 10) {
-                        id
-                        number
+                    novelSlug(where: {slug: "${slug}"}) {
+                      novel {
+                        description
                         title
+                        volumes(orderBy: number_ASC, first: 10) {
+                          id
+                          number
+                          title
+                        }
                       }
                     }
                   }`,
@@ -271,7 +277,7 @@ export async function getNovel(id: string): Promise<Novel> {
         }
 
         const data = await response.json()
-        return data.data.novel
+        return data.data.novelSlug
 
     } catch (error) {
         console.error(error)
