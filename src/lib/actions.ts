@@ -49,6 +49,9 @@ export interface FullChapter {
     novel: {
         id: string;
         title: string;
+        novel_slug: {
+            slug: string
+        }
     }
     next?: {
         id: string;
@@ -177,6 +180,9 @@ export async function getChapter(id: string): Promise<FullChapter> {
                       novel {
                         id
                         title
+                        novel_slug {
+                          slug
+                        }
                       }
                       next {
                         id
