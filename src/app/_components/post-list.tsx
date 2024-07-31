@@ -3,6 +3,8 @@
 import H3 from "@/components/typography/h3"
 import Muted from "@/components/typography/muted"
 import { Button } from "@/components/ui/button"
+import { ToastAction } from "@/components/ui/toast"
+import { useToast } from "@/components/ui/use-toast"
 import { ChapterDetail, getLatestPosts, LatestPosts } from "@/lib/actions"
 import { timeAgo } from "@/lib/utils"
 import Link from "next/link"
@@ -11,12 +13,18 @@ import { useState } from "react"
 export default function PostList({ posts }:{ posts: LatestPosts}) {
   const [chapters, setChapters] = useState<LatestPosts>(posts)
   const [loading, setLoading] = useState(false)
+  const { toast } = useToast()
 
   const removeDuplicateKeys = (items: ChapterDetail[]) => {
     const seenKeys = new Set();
     return items.filter(item => {
       const key = item.id; // or any other property used as the key
       if (seenKeys.has(key)) {
+        toast({
+          title: "New Content available",
+          description: "Wow! it seems like new webnovel chapter is available for free. Refresh the page to see new free chapter at the top.",
+          action: <ToastAction altText="Refresh" onClick={() => window.location.reload()}>Refresh</ToastAction>
+        })
         return false;
       } else {
         seenKeys.add(key);
