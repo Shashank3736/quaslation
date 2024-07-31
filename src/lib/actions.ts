@@ -108,6 +108,14 @@ export type BlogIndex = {
     publishedAt: Date;
 }
 
+export type Blog = {
+    content: {
+        html: string;
+    }
+    publishedAt: Date;
+    title: string;
+}
+
 export async function getLatestPosts({ last=10, premium=false, skip=0 }: GetLatestPostsOptions): Promise<LatestPosts> {
     try {
         console.log("Request made for last chapters.")
@@ -364,6 +372,43 @@ export async function getBlogs({ last = 15, skip=0 }): Promise<BlogIndex[]> {
         const data = await response.json()
         
         return data.data.blogs
+
+    } catch (error) {
+        console.error(error)
+        throw "Server closed."
+    }
+}
+
+export async function getBlog(slug: string): Promise<Blog> {
+    try {
+        console.log("Request made for blog: ", slug)
+        const response = await fetch(process.env.HYGRAPH_URL || "", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'gcms-stage': 'PUBLISHED',
+            },
+            body: JSON.stringify({
+                query: `query GetBlog {
+                            blog(where: {slug: "${slug}"}) {
+                                content {
+                                    html
+                                }
+                                publishedAt
+                                title
+                            }
+                        }`,
+            })
+        })
+
+        if(!response.ok) {
+            console.error(response)
+            throw "Something is wrong! Please try again."
+        }
+
+        const data = await response.json()
+        
+        return data.data.blog
 
     } catch (error) {
         console.error(error)
