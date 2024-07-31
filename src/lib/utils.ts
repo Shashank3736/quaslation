@@ -27,3 +27,17 @@ export function timeAgo(dateString: Date) {
   }
   return 'just now';
 }
+
+export function formatDate(date: Date): string {
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true
+  };
+
+  return new Intl.DateTimeFormat('en-US', options).format(date);
+}
