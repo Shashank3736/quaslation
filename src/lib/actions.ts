@@ -120,6 +120,7 @@ export async function getLatestPosts({ last=10, premium=false, skip=0 }: GetLate
     try {
         console.log("Request made for last chapters.")
         const response = await fetch(process.env.HYGRAPH_URL || "", {
+            cache: "no-store",
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -172,6 +173,7 @@ export async function getChapter(id: string): Promise<FullChapter> {
     try {
         console.log("Request made for chapter: ", id)
         const response = await fetch(process.env.HYGRAPH_URL || "", {
+            cache: "no-store",
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -228,6 +230,7 @@ export async function getVolume({ id, skip=0, last=15 }:{ id:string, skip?: numb
     try {
         console.log("Request made for volume: ", id)
         const response = await fetch(process.env.HYGRAPH_URL || "", {
+            cache: "no-store",
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -270,6 +273,7 @@ export async function getNovel(slug: string): Promise<NovelSlug> {
     try {
         console.log("Request made for novel: ", slug)
         const response = await fetch(process.env.HYGRAPH_URL || "", {
+            cache: "no-store",
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -310,6 +314,7 @@ export async function getNovels({ last = 10 }): Promise<NovelIndex[]> {
     try {
         console.log("Request made for novels")
         const response = await fetch(process.env.HYGRAPH_URL || "", {
+            cache: "no-store",
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -347,6 +352,7 @@ export async function getBlogs({ last = 15, skip=0 }): Promise<BlogIndex[]> {
     try {
         console.log("Request made for blogs")
         const response = await fetch(process.env.HYGRAPH_URL || "", {
+            cache: "no-store",
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -383,6 +389,7 @@ export async function getBlog(slug: string): Promise<Blog> {
     try {
         console.log("Request made for blog: ", slug)
         const response = await fetch(process.env.HYGRAPH_URL || "", {
+            cache: "no-store",
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
