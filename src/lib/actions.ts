@@ -317,7 +317,7 @@ export async function getNovels({ last = 10 }): Promise<NovelIndex[]> {
             },
             body: JSON.stringify({
                 query: `query Novels {
-                    novels(first: ${last}) {
+                    novels(first: ${last}, orderBy: title_ASC) {
                       id
                       title
                       novel_slug {
