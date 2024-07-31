@@ -41,3 +41,5 @@ export function formatDate(date: Date): string {
 
   return new Intl.DateTimeFormat('en-US', options).format(date);
 }
+
+export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
