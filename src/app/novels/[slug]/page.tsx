@@ -8,13 +8,13 @@ import VolumeChapters from './_components/volume';
 export default async function NovelPage({ params }:{ params: { slug: string} }) {
   const novel = await getNovel(params.slug);
   return (
-    <div className='p-4'>
+    <div className='p-4 md:text-lg'>
       <H2 className='text-center'>{novel.novel.title}</H2>
-      <p className='pb-4'>{novel.novel.description}</p>
+      <p className='my-4'>{novel.novel.description}</p>
       <Separator />
       <div className='mt-4'>
         {novel.novel.volumes.map((volume) => (
-          <div key={volume.id} className='mt-2'>
+          <div key={volume.id} className='mb-2'>
             <Muted className={cn({"hidden": (volume.number === -1)})}>Volume {volume.number} {volume.title ? `: ${volume.title}`:""}</Muted>
             <VolumeChapters volumeId={volume.id} />
           </div>

@@ -20,7 +20,7 @@ export default async function ChapterPage({ params }: { params: { id: string }})
           </AlertDescription>
         </Alert>
       ):(
-        <div className='space-y-2 prose dark:prose-invert' dangerouslySetInnerHTML={{__html: chapter.content.html}} />
+        <div className='space-y-2 prose lg:prose-xl dark:prose-invert' dangerouslySetInnerHTML={{__html: chapter.content.html}} />
       )}
       <div className='flex justify-between mt-4'>
         <Button disabled={chapter.previous == undefined}>{chapter.previous ? (<Link href={`/chapter/${chapter.previous.id}`}>Previous</Link>):"Previous"}</Button>
