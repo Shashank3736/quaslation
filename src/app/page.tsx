@@ -4,9 +4,9 @@ import { Separator } from "@/components/ui/separator";
 
 export default function Home() {
   return (
-    <div>
+    <div className="p-4">
       <H2 className="text-center">Latest Chapters</H2>
-      <Separator />
+      <Separator className="mb-4" />
       <PostList />
     </div>
   );

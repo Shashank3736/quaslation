@@ -50,7 +50,7 @@ export default function PostList() {
   },[])
   
   return (
-    <div className="flex flex-col p-4">
+    <div className="flex flex-col">
       {chapters.chapters.length > 0 ? chapters.chapters.map((chapter) => (
         <div key={chapter.id} className="p-4 mb-4 border rounded-lg">
           <H3 className="mb-2">Chapter {chapter.chapter}: {chapter.title}</H3>
