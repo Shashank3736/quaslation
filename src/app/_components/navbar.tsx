@@ -1,6 +1,7 @@
 import { ModeToggle } from '@/components/system/dark-mode-button'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
 import Link from 'next/link'
 import React from 'react'
 
@@ -15,6 +16,12 @@ export default function Navbar() {
         <Button variant={"outline"} asChild><Link href={"/blogs/"}>Blogs</Link></Button>
         <Button variant={"outline"} asChild><Link href={"/novels/"}>Novels</Link></Button>
         <ModeToggle />
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+        <SignedOut>
+          <SignInButton><Button>Sign In</Button></SignInButton>
+        </SignedOut>
       </div>
       <Sheet>
         <SheetTrigger className='md:hidden'>
