@@ -33,23 +33,21 @@ export default function Navbar() {
               <SheetClose asChild>
                 <Button variant={"outline"} asChild><Link href={"/novels/"}>Novels</Link></Button>
               </SheetClose>
-              <SheetClose asChild>
-                <div className='self-center'>
-                  <ModeToggle />
-                </div>
+              <SheetClose className='flex justify-center'>
+                <ModeToggle showTheme />
               </SheetClose>
             </SheetHeader>
           </SheetContent>
         </Sheet>
         <p className='ml-4 text-2xl font-semibold'>Quaslation</p>
       </div>
+      <div className='hidden md:flex space-x-2 justify-center items-center'>
+        <Button variant={"outline"} asChild><Link href={"/"}>Home</Link></Button>
+        <Button variant={"outline"} asChild><Link href={"/blogs/"}>Blogs</Link></Button>
+        <Button variant={"outline"} asChild><Link href={"/novels/"}>Novels</Link></Button>
+        <ModeToggle />
+      </div>
       <div className='flex space-x-2 justify-center items-center'>
-        <div className='hidden md:flex space-x-2 justify-center items-center'>
-          <Button variant={"outline"} asChild><Link href={"/"}>Home</Link></Button>
-          <Button variant={"outline"} asChild><Link href={"/blogs/"}>Blogs</Link></Button>
-          <Button variant={"outline"} asChild><Link href={"/novels/"}>Novels</Link></Button>
-          <ModeToggle />
-        </div>
         <SignedIn>
           <OrganizationSwitcher organizationProfileMode='navigation' organizationProfileUrl='/organization-profile' />
           <UserButton userProfileMode='navigation' userProfileUrl='/user-profile' />
