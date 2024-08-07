@@ -10,7 +10,7 @@ export default function Navbar() {
   return (
     <div className='flex justify-between p-4'>
       <div className='flex justify-center items-center'>
-        <Image alt='logo' src={"/logo/logo.jpg"} width={100} height={100} className='rounded-full w-12 h-12' />
+        <Image alt='logo' src={"/logo/logo100x100.jpg"} width={100} height={100} className='rounded-full w-12 h-12' />
         <p className='ml-4 text-2xl font-semibold'>Quaslation</p>
       </div>
       <div className='hidden md:flex space-x-2 justify-center items-center'>
