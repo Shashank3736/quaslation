@@ -298,3 +298,10 @@ h1[data-localization-key='userProfile.navbar.title'] {
 .cl-internal-pp7u0o {
   @apply text-foreground
 }
+
+/* Remove clerk branding */
+.cl-internal-1dauvpw,
+.cl-userButtonPopoverFooter,
+.cl-organizationSwitcherPopoverFooter {
+  @apply hidden
+}
