@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-export function ModeToggle() {
+export function ModeToggle({ showTheme=false }) {
   const { setTheme, theme } = useTheme()
   const [client, setClient] = React.useState(false)
 
@@ -23,7 +23,12 @@ export function ModeToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button variant="outline" className="flex">
+          {(client && showTheme && theme) ?(
+            <p className="mr-2">{theme[0].toUpperCase()+theme.slice(1)}</p>
+          ):(
+            <></>
+          )}
           {client ? (theme === "system" ? (
             <Computer />
           ):(theme === "dark" ? (
