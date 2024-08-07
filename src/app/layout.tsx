@@ -10,6 +10,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Quaslation",
   description: "Quality translation of japanese web novels.",
+  icons: {
+    icon: "/logo/logo.jpg",
+  },
 };
 
 export default function RootLayout({
