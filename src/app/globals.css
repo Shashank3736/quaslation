@@ -124,6 +124,7 @@
 .cl-breadcrumbsItemDivider,
 .cl-fileDropAreaHint,
 .cl-fileDropAreaFooterHint,
+.cl-tableHead,
 .cl-form
   p[data-localization-key='userProfile.emailAddressPage.emailCode.formHint'],
 p[data-localization-key='userProfile.profilePage.successMessage'] {
@@ -190,7 +191,7 @@ button[data-localization-key='userProfile.start.dangerSection.deleteAccountButto
 .cl-profileSectionPrimaryButton,
 .cl-accordionTriggerButton,
 .cl-navbarButton {
-  @apply hover:bg-accent hover:text-accent-foreground;
+  @apply text-indigo-500 hover:bg-accent hover:text-accent-foreground;
 }
 
 .cl-card {
