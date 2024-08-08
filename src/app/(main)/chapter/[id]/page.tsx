@@ -14,7 +14,7 @@ export default async function ChapterPage({ params }: { params: { id: string }})
     <div className='p-4'>
       <H3 className='mb-4'>Chapter {chapter.chapter}: {chapter.title}</H3>
       {(chapter.premium) ? 
-      <Protect permission='org:premium:read' 
+      <Protect role='org:member'
       fallback={
         (
           <Alert variant={"destructive"}>
