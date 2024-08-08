@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 export function timeAgo(dateString: Date) {
   const now = new Date();
   const date = new Date(dateString);
-  const seconds = Math.floor((now - date) / 1000);
+  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
   const intervals = [
     { label: 'year', seconds: 31536000 },
     { label: 'month', seconds: 2592000 },
