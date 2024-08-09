@@ -6,7 +6,7 @@ type Props = {
 
 const AuthLayout = ({ children }: Props) => {
   return (
-    <div className="flex justify-center w-full items-center min-h-screen">
+    <div className="flex justify-center w-full items-center min-h-screen authBackground">
       {children}
     </div>
   );
