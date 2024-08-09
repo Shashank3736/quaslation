@@ -35,7 +35,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <main className="max-w-[1000px] mx-auto">
+            <main>
             {children}
             </main>
             <Toaster />
