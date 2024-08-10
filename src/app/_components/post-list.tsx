@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { ToastAction } from "@/components/ui/toast"
 import { useToast } from "@/components/ui/use-toast"
 import { ChapterDetail, getLatestPosts, LatestPosts } from "@/lib/actions"
-import { timeAgo } from "@/lib/utils"
+import { shortifyString, timeAgo } from "@/lib/utils"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 
@@ -56,7 +56,7 @@ export default function PostList() {
           <H3 className="mb-2">Chapter {chapter.chapter}: {chapter.title}</H3>
           <p className="mb-2">{chapter.description}<Link className="text-blue-600 dark:text-blue-400 hover:underline" href={`/chapter/${chapter.id}`}> Read More {">>"}</Link></p>
           <div className="flex justify-between">
-            <Muted><Link className="hover:underline" href={`/novels/${chapter.novel.novel_slug.slug}`}>{chapter.novel.title}</Link></Muted>
+            <Muted><Link className="hover:underline" href={`/novels/${chapter.novel.novel_slug.slug}`} title={chapter.novel.title}>{shortifyString(chapter.novel.title, 20)}</Link></Muted>
             <Muted>{timeAgo(chapter.publishedAt)}</Muted>
           </div>
         </div>

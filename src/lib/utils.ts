@@ -5,6 +5,18 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export function shortifyString(input: string, size = 15): string {
+  // Remove extra spaces from the input string
+  const trimmedInput = input.trim().replace(/\s+/g, ' ');
+
+  // Check the length and format accordingly
+  if (trimmedInput.length <= size) {
+      return trimmedInput;
+  } else {
+      return trimmedInput.slice(0, size-3) + "...";
+  }
+}
+
 export function timeAgo(dateString: Date) {
   const now = new Date();
   const date = new Date(dateString);
