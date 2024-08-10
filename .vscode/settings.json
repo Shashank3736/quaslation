@@ -1,6 +1,8 @@
 {
     "workbench.editor.customLabels.patterns": {
         "**/app/**/layout.tsx": "${dirname(1)}/${dirname} - Layout",
+        "**/app/**/loading.tsx": "${dirname(1)}/${dirname} - Loading",
+        "**/app/**/not-found.tsx": "${dirname(1)}/${dirname} - Not Found",
         "**/app/**/error.tsx": "${dirname(1)}/${dirname} - Error",
         "**/app/**/page.tsx": "${dirname(1)}/${dirname} - Page",
         "**/app/**/route.ts": "${dirname(1)}/${dirname} - Route",
