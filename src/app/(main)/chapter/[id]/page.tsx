@@ -1,4 +1,5 @@
-import RestrictedContent from '@/components/system/restricted-content';
+import LimitedContent from '@/components/shared/limited-content';
+import RestrictedContent from '@/components/shared/restricted-content';
 import H3 from '@/components/typography/h3';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -35,7 +36,9 @@ export default async function ChapterPage({ params }: { params: { id: string }})
         )}
       </SignedIn>
       <SignedOut>
-        <RestrictedContent />
+        <RestrictedContent>
+          <LimitedContent htmlContent={chapter.content.html} />
+        </RestrictedContent>
       </SignedOut>
       <div className='flex justify-between mt-4'>
         {chapter.previous ? (
