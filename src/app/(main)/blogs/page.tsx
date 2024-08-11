@@ -20,9 +20,11 @@ export default async function BlogList() {
             <H3 className='mb-2'>{blog.title}</H3>
             <p>{blog.description}</p>
             <div className='flex justify-between mt-4'>
-              <Button>
-                <Link href={`/blogs/${blog.slug}`}>Read Blog</Link>
-              </Button>
+                <Button asChild>
+                  <Link href={`/blogs/${blog.slug}`}>
+                    Read Blog
+                  </Link>
+                </Button>
               <Muted className='mt-4'>{timeAgo(blog.publishedAt)}</Muted>
             </div>
           </div>
