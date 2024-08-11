@@ -12,7 +12,7 @@ export default async function Blog({ params }: { params: { slug: string }}) {
       <H1>{blog.title}</H1>
       <Separator className='my-4' />
       <div className='prose dark:prose-invert lg:prose-lg' dangerouslySetInnerHTML={{__html: blog.content.html}} />
-      <Muted className="mt-4 self-end">Date: {formatDate(new Date(blog.publishedAt))}</Muted>
+      <Muted className="mt-4 self-end">{formatDate(new Date(blog.publishedAt))}</Muted>
     </div>
   )
 }
