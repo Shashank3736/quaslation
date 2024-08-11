@@ -1,5 +1,6 @@
 "use client"
 
+import { Button } from "@/components/ui/button"
 /**
  * v0 by Vercel.
  * @see https://v0.dev/t/Yy7JwTbRhrB
@@ -22,11 +23,12 @@ export default function Error() {
         <div className="mt-6">
           <Link
             href="/"
-            className="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            className="mr-4 inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
             prefetch={false}
           >
             Go to Homepage
           </Link>
+          <Button variant={"outline"} onClick={() => window.location.reload()}>Refresh</Button>
         </div>
       </div>
     </div>
