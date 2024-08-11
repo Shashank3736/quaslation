@@ -20,13 +20,9 @@ export default async function ChapterPage({ params }: { params: { id: string }})
         <Protect role='org:member'
         fallback={
           (
-            <Alert variant={"destructive"}>
-              <AlertCircle className='h-4 w-4' />
-              <AlertTitle>Premium Content</AlertTitle>
-              <AlertDescription>
-              We apologize, but this content is exclusive to our premium subscribers. However, we&apos;re pleased to inform you that it will be made available to all users free of charge in the near future. Thank you for your patience and continued interest in the novel.
-              </AlertDescription>
-            </Alert>
+            <RestrictedContent type={"premium"}>
+              <LimitedContent htmlContent={chapter.content.html} />
+            </RestrictedContent>
           )}
         >
           <div className='space-y-2 prose lg:prose-xl dark:prose-invert' dangerouslySetInnerHTML={{__html: chapter.content.html}} />
