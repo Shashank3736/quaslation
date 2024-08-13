@@ -15,7 +15,7 @@ export default async function NovelPage({ params }:{ params: { slug: string} }) 
       <div className='mt-4'>
         {novel.novel.volumes.map((volume) => (
           <div key={volume.id} className='mb-2'>
-            <Muted className={cn({"hidden": (volume.number === -1)})}>Volume {volume.number} {volume.title ? `: ${volume.title}`:""}</Muted>
+            <Muted className={cn({"hidden": (volume.number === -1)})}>Volume {volume.number}{volume.title ? `: ${volume.title}`:""}</Muted>
             <VolumeChapters volumeId={volume.id} />
           </div>
         ))}
