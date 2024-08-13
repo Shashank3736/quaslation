@@ -30,7 +30,7 @@ export default function VolumeChapters({ volumeId }: { volumeId: string }) {
     getVolume({ id: volumeId }).then(data => setVolume(data))
   }, [volumeId])
   return (
-    <div className='flex flex-col'>
+    <div className=''>
       <div className='flex flex-col mt-2'>
         {volume.volume.chapters.length > 0 ? volume.volume.chapters.map((chapter) => (
           <div  key={chapter.id} className='mt-1 flex'>
@@ -53,11 +53,11 @@ export default function VolumeChapters({ volumeId }: { volumeId: string }) {
         )}
       </div>
       <Button 
-        className={cn("self-center mt-4", { "hidden": volume.volume.chapters.length === volume.chaptersConnection.aggregate.count })} 
+        className={cn("my-4 ml-4", { "hidden": volume.volume.chapters.length === volume.chaptersConnection.aggregate.count })} 
         onClick={() => loadMore()}
         disabled={loading}
         >
-          {loading? "Loading...":"Load More"}
+          {loading? "Loading...":`Load More >>`}
       </Button>
     </div>
   )
