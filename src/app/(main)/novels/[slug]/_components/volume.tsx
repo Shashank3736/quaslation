@@ -30,7 +30,7 @@ export default function VolumeChapters({ volumeId }: { volumeId: string }) {
     getVolume({ id: volumeId }).then(data => setVolume(data))
   }, [volumeId])
   return (
-    <div className=''>
+    <div>
       <div className='flex flex-col mt-2'>
         {volume.volume.chapters.length > 0 ? volume.volume.chapters.map((chapter) => (
           <div  key={chapter.id} className='mt-1 flex'>
