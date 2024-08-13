@@ -25,10 +25,10 @@ export default async function ChapterPage({ params }: { params: { id: string }})
             </RestrictedContent>
           )}
         >
-          <div className='space-y-2 prose lg:prose-xl dark:prose-invert' dangerouslySetInnerHTML={{__html: chapter.content.html}} />
+          <article className='space-y-2 prose lg:prose-xl dark:prose-invert' dangerouslySetInnerHTML={{__html: chapter.content.html}} />
         </Protect>
         :(
-          <div className='space-y-2 prose lg:prose-xl dark:prose-invert' dangerouslySetInnerHTML={{__html: chapter.content.html}} />
+          <article className='space-y-2 prose lg:prose-xl dark:prose-invert' dangerouslySetInnerHTML={{__html: chapter.content.html}} />
         )}
       </SignedIn>
       <SignedOut>
