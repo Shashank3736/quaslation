@@ -31,9 +31,9 @@ export default function VolumeChapters({ volumeId }: { volumeId: string }) {
   }, [volumeId])
   return (
     <div>
-      <div className='flex flex-col mt-2'>
+      <div className='flex flex-col space-y-1'>
         {volume.volume.chapters.length > 0 ? volume.volume.chapters.map((chapter) => (
-          <div  key={chapter.id} className='mt-1 flex'>
+          <div  key={chapter.id} className='flex'>
             <Link href={`/chapter/${chapter.id}`} className='hover:underline'>{chapter.chapter}. {chapter.title}</Link>
             <Badge className={cn("ml-3", {"hidden": !chapter.premium})}>Premium</Badge>
           </div>
