@@ -34,7 +34,7 @@ export default async function ChapterPage({ params }: { params: { id: string }})
           <LimitedContent htmlContent={chapter.content.html} />
         </RestrictedContent>
       </SignedOut>
-      <div className='flex justify-between mt-4'>
+      <div className='flex justify-between pt-12 pb-4'>
         {chapter.previous ? (
           <Link href={`/chapter/${chapter.previous.id}`}><Button>Previous</Button></Link>
         ):(
