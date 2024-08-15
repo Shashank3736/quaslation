@@ -1,11 +1,9 @@
 import LimitedContent from '@/components/shared/limited-content';
 import RestrictedContent from '@/components/shared/restricted-content';
 import H3 from '@/components/typography/h3';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { getChapter } from '@/lib/actions'
-import { Protect, SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
-import { AlertCircle } from 'lucide-react';
+import { Protect, SignedIn, SignedOut } from '@clerk/nextjs';
 import Link from 'next/link';
 import React from 'react'
 
@@ -36,7 +34,7 @@ export default async function ChapterPage({ params }: { params: { id: string }})
           <LimitedContent htmlContent={chapter.content.html} />
         </RestrictedContent>
       </SignedOut>
-      <div className='flex justify-between mt-4'>
+      <div className='flex justify-between pt-12 pb-4'>
         {chapter.previous ? (
           <Link href={`/chapter/${chapter.previous.id}`}><Button>Previous</Button></Link>
         ):(

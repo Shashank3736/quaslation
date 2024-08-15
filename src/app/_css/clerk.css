@@ -232,10 +232,3 @@ h1[data-localization-key='userProfile.navbar.title'] {
 .cl-logoImage {
   @apply rounded-full w-12 h-12
 }
-
-/* Remove clerk branding */
-.cl-internal-1dauvpw,
-.cl-userButtonPopoverFooter,
-.cl-organizationSwitcherPopoverFooter {
-  @apply hidden
-}
