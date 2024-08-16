@@ -145,7 +145,7 @@ export async function getLatestPosts({ last=10, premium=false, skip=0 }: GetLate
                         number
                       }
                     }
-                    chaptersConnection(where: {premium: false}) {
+                    chaptersConnection(where: {premium: ${premium}}) {
                         aggregate {
                           count
                         }
