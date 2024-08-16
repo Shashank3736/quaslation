@@ -24,7 +24,7 @@ export default function PostList({ premium=false }) {
       if (seenKeys.has(key)) {
         toast({
           title: "New Content available",
-          description: "Wow! it seems like new webnovel chapter is available for free. Refresh the page to see new free chapter at the top.",
+          description: `Wow! it seems like new webnovel chapter is available for ${premium?"premium":"free"}. Refresh the page to see new ${premium?"premium":"free"} chapter at the top.`,
           action: <ToastAction altText="Refresh" onClick={() => (window.location.href = `${window.location.pathname}?tab=${premium?"premium":"free"}`)}>Refresh</ToastAction>
         })
         return false;
