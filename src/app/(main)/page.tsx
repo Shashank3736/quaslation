@@ -1,16 +1,10 @@
 import PostList from "../_components/post-list";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TabsContent } from "@radix-ui/react-tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
-interface MyPageProps {
-  searchParams: { [key: string]: string | string[] | undefined };
-}
-
-export default function Home({ searchParams }:MyPageProps) {
-  const tabValue = (searchParams.tab && searchParams.tab === "premium") ? searchParams.tab : "free"
+export default function Home() {
   return (
     <div className="p-4">
-      <Tabs defaultValue={tabValue}>
+      <Tabs defaultValue="free">
         <TabsList className="mb-2">
           <TabsTrigger value="free">Free</TabsTrigger>
           <TabsTrigger value="premium">Premium</TabsTrigger>
