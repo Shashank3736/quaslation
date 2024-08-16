@@ -1,5 +1,3 @@
-import H2 from "@/components/typography/h2";
-import { Separator } from "@/components/ui/separator";
 import PostList from "../_components/post-list";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TabsContent } from "@radix-ui/react-tabs";
