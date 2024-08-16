@@ -10,12 +10,13 @@ import { useToast } from "@/components/ui/use-toast"
 import { ChapterDetail, getLatestPosts, LatestPosts } from "@/lib/actions"
 import { shortifyString, timeAgo } from "@/lib/utils"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 export default function PostList({ premium=false }) {
   const [chapters, setChapters] = useState<LatestPosts>({ chaptersConnection: { aggregate: { count: 0 }}, chapters: [] })
   const [loading, setLoading] = useState(false)
   const { toast } = useToast()
+  const mainDivRef = useRef<HTMLDivElement | null>(null)
 
   const removeDuplicateKeys = (items: ChapterDetail[]) => {
     const seenKeys = new Set();
@@ -24,8 +25,11 @@ export default function PostList({ premium=false }) {
       if (seenKeys.has(key)) {
         toast({
           title: "New Content available",
-          description: "Wow! it seems like new webnovel chapter is available for free. Refresh the page to see new free chapter at the top.",
-          action: <ToastAction altText="Refresh" onClick={() => window.location.reload()}>Refresh</ToastAction>
+          description: `Wow! it seems like new webnovel chapter is available for ${premium?"premium":"free"}. Refresh the page to see new ${premium?"premium":"free"} chapter at the top.`,
+          action: <ToastAction altText="Refresh" onClick={() => {
+            getLatestPosts({ premium }).then((latesPosts) => setChapters(latesPosts));
+            mainDivRef.current?.scrollIntoView({ behavior: "smooth" })
+          }}>Refresh</ToastAction>
         })
         return false;
       } else {
@@ -51,8 +55,8 @@ export default function PostList({ premium=false }) {
   },[premium])
   
   return (
-    <div className="flex flex-col">
-      {chapters.chapters.length > 0 ? chapters.chapters.map((chapter) => (
+    <div className="flex flex-col" ref={mainDivRef}>
+      {chapters.chapters.length > 0 ? chapters.chapters.map((chapter, i) => (
         <div key={chapter.id} className="p-4 mb-4 border rounded-lg">
           {premium ? (
           <div className="flex items-center mb-2">
