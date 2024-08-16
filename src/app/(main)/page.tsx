@@ -7,8 +7,6 @@ import { TabsContent } from "@radix-ui/react-tabs";
 export default function Home() {
   return (
     <div className="p-4">
-      <H2 className="text-center">Latest Chapters</H2>
-      <Separator className="mb-4" />
       <Tabs defaultValue="free">
         <TabsList className="mb-2">
           <TabsTrigger value="free">Free</TabsTrigger>
