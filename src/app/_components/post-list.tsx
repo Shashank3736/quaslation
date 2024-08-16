@@ -2,6 +2,7 @@
 
 import H3 from "@/components/typography/h3"
 import Muted from "@/components/typography/muted"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ToastAction } from "@/components/ui/toast"
@@ -11,8 +12,8 @@ import { shortifyString, timeAgo } from "@/lib/utils"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 
-export default function PostList() {
-  const [chapters, setChapters] = useState<LatestPosts>({ chaptersConnection: { aggregate: { count: 0 }}, chapters: []})
+export default function PostList({ premium=false }) {
+  const [chapters, setChapters] = useState<LatestPosts>({ chaptersConnection: { aggregate: { count: 0 }}, chapters: [] })
   const [loading, setLoading] = useState(false)
   const { toast } = useToast()
 
@@ -36,7 +37,7 @@ export default function PostList() {
 
   const loadMore = ({ skip }:{ skip: number }) => {
     setLoading(true)
-    getLatestPosts({ skip }).then(posts => setChapters(chap => {
+    getLatestPosts({ skip, premium }).then(posts => setChapters(chap => {
       const set = new Set();
       chap.chapters.forEach(ch => set.add(ch.id))
       return {
@@ -46,14 +47,21 @@ export default function PostList() {
   }
 
   useEffect(() => {
-    getLatestPosts({}).then(data => setChapters(data))
-  },[])
+    getLatestPosts({ premium }).then(data => setChapters(data))
+  },[premium])
   
   return (
     <div className="flex flex-col">
       {chapters.chapters.length > 0 ? chapters.chapters.map((chapter) => (
         <div key={chapter.id} className="p-4 mb-4 border rounded-lg">
-          <H3 className="mb-2">Chapter {chapter.chapter}: {chapter.title}</H3>
+          {premium ? (
+          <div className="flex items-center mb-2">
+            <H3 className="mr-2">Chapter {chapter.chapter}: {chapter.title}</H3>
+            <Badge>Premium</Badge>
+          </div>
+          ):(
+            <H3 className="mb-2">Chapter {chapter.chapter}: {chapter.title}</H3>
+          )}
           <p className="mb-2">{chapter.description}<Link className="text-blue-600 dark:text-blue-400 hover:underline" href={`/chapter/${chapter.id}`}> Read More {">>"}</Link></p>
           <div className="flex justify-between">
             <Muted><Link className="hover:underline" href={`/novels/${chapter.novel.novel_slug.slug}`} title={chapter.novel.title}>{shortifyString(chapter.novel.title, 20)}</Link></Muted>
