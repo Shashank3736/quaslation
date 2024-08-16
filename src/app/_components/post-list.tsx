@@ -25,7 +25,7 @@ export default function PostList({ premium=false }) {
         toast({
           title: "New Content available",
           description: "Wow! it seems like new webnovel chapter is available for free. Refresh the page to see new free chapter at the top.",
-          action: <ToastAction altText="Refresh" onClick={() => window.location.reload()}>Refresh</ToastAction>
+          action: <ToastAction altText="Refresh" onClick={() => (window.location.href = `${window.location.pathname}?tab=${premium?"premium":"free"}`)}>Refresh</ToastAction>
         })
         return false;
       } else {
