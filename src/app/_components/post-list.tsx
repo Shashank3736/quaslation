@@ -27,9 +27,14 @@ export default function PostList({ premium=false }) {
           title: "New Content available",
           description: `Wow! it seems like new webnovel chapter is available for ${premium?"premium":"free"}. Refresh the page to see new ${premium?"premium":"free"} chapter at the top.`,
           action: <ToastAction altText="Refresh" onClick={() => {
-            getLatestPosts({ premium }).then((latesPosts) => setChapters(latesPosts));
-            mainDivRef.current?.scrollIntoView({ behavior: "smooth" })
-          }}>Refresh</ToastAction>
+            setLoading(true)
+            getLatestPosts({ premium })
+            .then((latesPosts) => setChapters(latesPosts))
+            .finally(() => {
+              mainDivRef.current?.scrollIntoView({ behavior: "smooth" });
+              setLoading(false);
+            })
+          }}>Reload</ToastAction>
         })
         return false;
       } else {

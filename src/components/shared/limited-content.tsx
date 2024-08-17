@@ -7,7 +7,7 @@ const LimitedContent = ({ htmlContent }: { htmlContent: string }) => {
     
     if (Array.isArray(parsedContent)) {
       // If parsedContent is an array, slice it
-      const limitedElements = parsedContent.slice(0, Math.ceil(parsedContent.length / 4));
+      const limitedElements = parsedContent.slice(0, Math.ceil((parsedContent.length/4 > 10 ? 10: parsedContent.length/4)));
       return limitedElements.map((element, index) => 
         React.createElement(
           element.type,
