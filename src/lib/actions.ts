@@ -62,13 +62,15 @@ export interface FullChapter {
 }
 
 export interface Novel {
-    description: string;
     title: string;
     volumes: {
         id: string;
         number: number;
         title: string | null;
     }[]
+    fullDescription: {
+        html: string;
+    }
 }
 
 export interface NovelSlug {
@@ -283,12 +285,14 @@ export async function getNovel(slug: string): Promise<NovelSlug> {
                 query: `query NovelIndex {
                     novelSlug(where: {slug: "${slug}"}) {
                       novel {
-                        description
                         title
                         volumes(orderBy: number_ASC, first: 10) {
                           id
                           number
                           title
+                        }
+                        fullDescription {
+                            html
                         }
                       }
                     }
