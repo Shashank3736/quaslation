@@ -3,13 +3,14 @@ import { Separator } from '@/components/ui/separator';
 import { getNovel } from '@/lib/actions'
 import VolumeChapters from './_components/volume';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { cn } from '@/lib/utils';
 
 export default async function NovelPage({ params }:{ params: { slug: string} }) {
   const novel = await getNovel(params.slug);
   return (
     <div className='p-4'>
       <H2 className='text-center'>{novel.novel.title}</H2>
-      <p className='my-4'>{novel.novel.description}</p>
+      <article className={cn("my-4 prose dark:prose-invert", "max-w-none")} dangerouslySetInnerHTML={{ __html: novel.novel.fullDescription.html }} />
       <Separator />
       <div className='mt-4'>
         {novel.novel.volumes.map((volume) => (

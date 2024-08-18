@@ -16,7 +16,7 @@ export default async function ChapterPage({ params }: { params: { id: string }})
       {(chapter.premium) ? 
       <>
       <SignedIn>
-        <article className='space-y-2 prose lg:prose-xl dark:prose-invert' dangerouslySetInnerHTML={{__html: chapter.content.html}} />
+        <article className='space-y-2 prose lg:prose-xl dark:prose-invert max-w-none' dangerouslySetInnerHTML={{__html: chapter.content.html}} />
       </SignedIn>
       <SignedOut>
         <RestrictedContent>
@@ -25,7 +25,7 @@ export default async function ChapterPage({ params }: { params: { id: string }})
       </SignedOut>
       </>
       :(
-        <article className='space-y-2 prose lg:prose-xl dark:prose-invert' dangerouslySetInnerHTML={{__html: chapter.content.html}} />
+        <article className='space-y-2 prose lg:prose-xl dark:prose-invert max-w-none' dangerouslySetInnerHTML={{__html: chapter.content.html}} />
       )}
       <div className='flex justify-between pt-12 pb-4'>
         {chapter.previous ? (
