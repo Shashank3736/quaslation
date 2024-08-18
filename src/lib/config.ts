@@ -1,3 +1,1 @@
-export const PREMIUM_USERS:{ [index: string]:boolean } = {
-  "user_2kGvnO7rByyxuXjW2la27ogZ8lf": true,
-}
+export const DISCORD_INVITE_URL="https://discord.gg/9Z7bMGzDne"
