@@ -11,7 +11,7 @@ export default async function Blog({ params }: { params: { slug: string }}) {
     <div className='p-4 flex flex-col'>
       <H1>{blog.title}</H1>
       <Separator className='my-4' />
-      <div className='prose dark:prose-invert lg:prose-lg' dangerouslySetInnerHTML={{__html: blog.content.html}} />
+      <div className='prose dark:prose-invert lg:prose-lg max-w-none' dangerouslySetInnerHTML={{__html: blog.content.html}} />
       <Muted className="mt-4 self-end">{formatDate(new Date(blog.publishedAt))}</Muted>
     </div>
   )
