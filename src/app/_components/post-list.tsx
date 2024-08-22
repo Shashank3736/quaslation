@@ -21,7 +21,7 @@ export default function PostList({ premium=false }) {
   const removeDuplicateKeys = (items: ChapterDetail[]) => {
     const seenKeys = new Set();
     return items.filter(item => {
-      const key = item.id; // or any other property used as the key
+      const key = item.slug; // or any other property used as the key
       if (seenKeys.has(key)) {
         toast({
           title: "New Content available",
@@ -48,7 +48,7 @@ export default function PostList({ premium=false }) {
     setLoading(true)
     getLatestPosts({ skip, premium }).then(posts => setChapters(chap => {
       const set = new Set();
-      chap.chapters.forEach(ch => set.add(ch.id))
+      chap.chapters.forEach(ch => set.add(ch.slug))
       return {
       chapters: removeDuplicateKeys(chap.chapters.concat(posts.chapters)),
       chaptersConnection: posts.chaptersConnection
@@ -62,7 +62,7 @@ export default function PostList({ premium=false }) {
   return (
     <div className="flex flex-col" ref={mainDivRef}>
       {chapters.chapters.length > 0 ? chapters.chapters.map((chapter, i) => (
-        <div key={chapter.id} className="p-4 mb-4 border rounded-lg">
+        <div key={chapter.slug} className="p-4 mb-4 border rounded-lg">
           {premium ? (
           <div className="flex items-center mb-2">
             <H3 className="mr-2">Chapter {chapter.chapter}: {chapter.title}</H3>
@@ -71,9 +71,9 @@ export default function PostList({ premium=false }) {
           ):(
             <H3 className="mb-2">Chapter {chapter.chapter}: {chapter.title}</H3>
           )}
-          <p className="mb-2">{chapter.description}<Link className="text-blue-600 dark:text-blue-400 hover:underline" href={`/chapter/${chapter.id}`}> Read More {">>"}</Link></p>
+          <p className="mb-2">{chapter.description}<Link className="text-blue-600 dark:text-blue-400 hover:underline" href={`/novels/${chapter.novel.slug}/${chapter.slug}`}> Read More {">>"}</Link></p>
           <div className="flex justify-between">
-            <Muted><Link className="hover:underline" href={`/novels/${chapter.novel.novel_slug.slug}`} title={chapter.novel.title}>{shortifyString(chapter.novel.title, 20)}</Link></Muted>
+            <Muted><Link className="hover:underline" href={`/novels/${chapter.novel.slug}`} title={chapter.novel.title}>{shortifyString(chapter.novel.title, 20)}</Link></Muted>
             <Muted>{timeAgo(chapter.publishedAt)}</Muted>
           </div>
         </div>

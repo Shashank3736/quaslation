@@ -9,14 +9,11 @@ interface GetLatestPostsOptions {
 export interface ChapterDetail {
     chapter: number;
     description: string;
-    id: string;
+    slug: string;
     novel: {
         title: string;
-        novel_slug: {
-            slug: string;
-        }
+        slug: string
     }
-    createdAt: Date;
     publishedAt: Date;
     title: string;
     volume: {
@@ -49,16 +46,18 @@ export interface FullChapter {
     novel: {
         id: string;
         title: string;
-        novel_slug: {
-            slug: string
-        }
+        slug: string
     }
     next?: {
-        id: string;
+        slug: string;
     }
     previous?: {
-        id: string;
+        slug: string;
     }
+}
+
+export type NormalHygraphImage = {
+    url: string;
 }
 
 export interface Novel {
@@ -71,16 +70,16 @@ export interface Novel {
     fullDescription: {
         html: string;
     }
-}
-
-export interface NovelSlug {
-    novel: Novel
+    thumbnail?: NormalHygraphImage
 }
 
 export interface Volume {
+    novel: {
+        slug: string;
+    }
     chapters: {
         chapter: number;
-        id: string;
+        slug: string;
         premium: boolean;
         title: string;
     }[]
@@ -98,9 +97,7 @@ export interface GetVolume {
 export interface NovelIndex {
     id: string;
     title: string;
-    novel_slug: {
-        slug: string;
-    }
+    slug: string;
 }
 
 export type BlogIndex = {
@@ -133,15 +130,12 @@ export async function getLatestPosts({ last=10, premium=false, skip=0 }: GetLate
                     chapters(first: ${last}, skip: ${skip}, where: {premium: ${premium}}, orderBy: createdAt_DESC) {
                       chapter
                       description
-                      id
+                      slug
                       novel {
                         title
-                        novel_slug {
-                            slug
-                        }
+                        slug
                       }
                       title
-                      createdAt
                       publishedAt
                       volume {
                         number
@@ -171,7 +165,14 @@ export async function getLatestPosts({ last=10, premium=false, skip=0 }: GetLate
     }
 }
 
-export async function getChapter(id: string): Promise<FullChapter> {
+export type GetChapterSlug = {
+    slug: string;
+    novel: {
+        slug: string
+    }
+}
+
+export async function getChapterSlug(id: string):Promise<GetChapterSlug> {
     try {
         console.log("Request made for chapter: ", id)
         const response = await fetch(process.env.HYGRAPH_URL || "", {
@@ -184,6 +185,41 @@ export async function getChapter(id: string): Promise<FullChapter> {
             body: JSON.stringify({
                 query: `query Chapter {
                     chapter(where: {id: "${id}"}) {
+                      slug
+                      novel {
+                        slug
+                      }
+                    }
+                  }`,
+            })
+        })
+
+        if(!response.ok) {
+            console.error(response)
+            throw "Something is wrong! Please try again."
+        }
+
+        const data = await response.json()
+        return data.data.chapter
+    } catch (error) {
+        console.error(error)
+        throw "Server closed."
+    }
+}
+
+export async function getChapter(slug: string): Promise<FullChapter> {
+    try {
+        console.log("Request made for chapter: ", slug)
+        const response = await fetch(process.env.HYGRAPH_URL || "", {
+            cache: "no-store",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'gcms-stage': 'PUBLISHED',
+            },
+            body: JSON.stringify({
+                query: `query Chapter {
+                    chapter(where: {slug: "${slug}"}) {
                       chapter
                       content {
                         html
@@ -199,15 +235,13 @@ export async function getChapter(id: string): Promise<FullChapter> {
                       novel {
                         id
                         title
-                        novel_slug {
-                          slug
-                        }
+                        slug
                       }
                       next {
-                        id
+                        slug
                       }
                       previous {
-                        id
+                        slug
                       }
                     }
                   }`,
@@ -241,9 +275,12 @@ export async function getVolume({ id, skip=0, last=15 }:{ id:string, skip?: numb
             body: JSON.stringify({
                 query: `query Volume {
                     volume(where: {id: "${id}"}) {
+                      novel {
+                        slug
+                      }
                       chapters(first: ${last}, skip: ${skip}, orderBy: chapter_ASC) {
                         chapter
-                        id
+                        slug
                         premium
                         title
                       }
@@ -271,7 +308,7 @@ export async function getVolume({ id, skip=0, last=15 }:{ id:string, skip?: numb
     }
 }
 
-export async function getNovel(slug: string): Promise<NovelSlug> {
+export async function getNovel(slug: string): Promise<Novel> {
     try {
         console.log("Request made for novel: ", slug)
         const response = await fetch(process.env.HYGRAPH_URL || "", {
@@ -283,8 +320,7 @@ export async function getNovel(slug: string): Promise<NovelSlug> {
             },
             body: JSON.stringify({
                 query: `query NovelIndex {
-                    novelSlug(where: {slug: "${slug}"}) {
-                      novel {
+                    novel(where: {slug: "${slug}"}) {
                         title
                         volumes(orderBy: number_ASC, first: 10) {
                           id
@@ -294,7 +330,9 @@ export async function getNovel(slug: string): Promise<NovelSlug> {
                         fullDescription {
                             html
                         }
-                      }
+                        thumbnail {
+                            url
+                        }
                     }
                   }`,
             })
@@ -306,7 +344,7 @@ export async function getNovel(slug: string): Promise<NovelSlug> {
         }
 
         const data = await response.json()
-        return data.data.novelSlug
+        return data.data.novel
 
     } catch (error) {
         console.error(error)
@@ -329,9 +367,7 @@ export async function getNovels({ last = 10 }): Promise<NovelIndex[]> {
                     novels(first: ${last}, orderBy: title_ASC) {
                       id
                       title
-                      novel_slug {
-                        slug
-                      }
+                      slug
                     }
                   }`,
             })
@@ -420,6 +456,100 @@ export async function getBlog(slug: string): Promise<Blog> {
         const data = await response.json()
         
         return data.data.blog
+
+    } catch (error) {
+        console.error(error)
+        throw "Server closed."
+    }
+}
+
+export type LastChapterVolume = {
+    number: number;
+}
+export type LastChapter = {
+    slug: string;
+    chapter: number;
+    premium: boolean;
+    volume: LastChapterVolume;
+}
+
+export async function getLastChapterNovel({ slug }:{ slug: string }):Promise<LastChapter[]> {
+    try {
+        console.log("Request made for latest chapter: ", slug)
+        const response = await fetch(process.env.HYGRAPH_URL || "", {
+            cache: "no-store",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'gcms-stage': 'PUBLISHED',
+            },
+            body: JSON.stringify({
+                query: `query GetLatestChapterNovel {
+                            chapters(
+                                where: {novel: {slug: "${slug}"}},
+                                last: 1
+                            ) {
+                                chapter
+                                slug
+                                premium
+                                volume {
+                                    number
+                                }
+                            }
+                        }`,
+            })
+        })
+
+        if(!response.ok) {
+            console.error(response)
+            throw "Something is wrong! Please try again."
+        }
+
+        const data = await response.json()
+        
+        return data.data.chapters
+
+    } catch (error) {
+        console.error(error)
+        throw "Server closed."
+    }
+}
+
+export async function getFirstChapterNovel({ slug }:{ slug: string }):Promise<LastChapter[]> {
+    try {
+        console.log("Request made for latest chapter: ", slug)
+        const response = await fetch(process.env.HYGRAPH_URL || "", {
+            cache: "no-store",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'gcms-stage': 'PUBLISHED',
+            },
+            body: JSON.stringify({
+                query: `query GetLatestChapterNovel {
+                            chapters(
+                                where: {novel: {slug: "${slug}"}},
+                                first: 1
+                            ) {
+                                chapter
+                                slug
+                                premium
+                                volume {
+                                    number
+                                }
+                            }
+                        }`,
+            })
+        })
+
+        if(!response.ok) {
+            console.error(response)
+            throw "Something is wrong! Please try again."
+        }
+
+        const data = await response.json()
+        
+        return data.data.chapters
 
     } catch (error) {
         console.error(error)
