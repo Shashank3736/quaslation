@@ -12,7 +12,7 @@ export default async function NovelList() {
       <Separator />
       <div className='flex flex-col mt-4'>
       {novels.map(novel => (
-        <Link className='mb-2 hover:underline text-blue-600 dark:text-primary' key={novel.id} href={`/novels/${novel.novel_slug.slug}`}>{novel.title}</Link>
+        <Link className='mb-2 hover:underline text-blue-600 dark:text-primary' key={novel.id} href={`/novels/${novel.slug}`}>{novel.title}</Link>
       ))}
       </div>
     </div>

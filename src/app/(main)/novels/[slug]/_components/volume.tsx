@@ -9,7 +9,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 export default function VolumeChapters({ volumeId }: { volumeId: string }) {
-  const [volume, setVolume] = useState<GetVolume>({ chaptersConnection: { aggregate: { count: 0 }}, volume: { chapters: []}})
+  const [volume, setVolume] = useState<GetVolume>({ chaptersConnection: { aggregate: { count: 0 }}, volume: { chapters: [], novel: { slug: ""}}})
   const [loading, setLoading] = useState(false)
 
   const loadMore = () => {
@@ -19,7 +19,8 @@ export default function VolumeChapters({ volumeId }: { volumeId: string }) {
       {
         chaptersConnection: data.chaptersConnection,
         volume: {
-          chapters: volume.volume.chapters.concat(data.volume.chapters)
+          chapters: volume.volume.chapters.concat(data.volume.chapters),
+          novel: data.volume.novel
         }
       }
     )))
@@ -33,8 +34,8 @@ export default function VolumeChapters({ volumeId }: { volumeId: string }) {
     <div>
       <div className='flex flex-col space-y-1'>
         {volume.volume.chapters.length > 0 ? volume.volume.chapters.map((chapter) => (
-          <div  key={chapter.id} className='flex'>
-            <Link href={`/chapter/${chapter.id}`} className='hover:underline'>{chapter.chapter}. {chapter.title}</Link>
+          <div  key={chapter.slug} className='flex'>
+            <Link href={`/novels/${volume.volume.novel.slug}/${chapter.slug}`} className='hover:underline'>{chapter.chapter}. {chapter.title}</Link>
             <Badge className={cn("ml-3", {"hidden": !chapter.premium})}>Premium</Badge>
           </div>
         )):(
