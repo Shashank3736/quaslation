@@ -3,9 +3,9 @@ import { Inter } from "next/font/google";
 import "./_css/globals.css";
 import "./_css/clerk.css"
 import { ThemeProvider } from "@/components/system/theme-provider";
-import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "@/components/ui/toaster";
 import { ClerkProvider } from "@clerk/nextjs";
+import GoogleAnalytics from "@/components/system/google-analytics";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,6 +30,7 @@ export default function RootLayout({
       }}
     >
       <html lang="en">
+        <GoogleAnalytics />
         <body className={inter.className}>
           <ThemeProvider
             attribute="class"
@@ -42,7 +43,6 @@ export default function RootLayout({
             </main>
             <Toaster />
           </ThemeProvider>
-          <Analytics />
         </body>
       </html>
     </ClerkProvider>
