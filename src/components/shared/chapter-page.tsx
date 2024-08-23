@@ -1,3 +1,4 @@
+
 import { FullChapter } from '@/lib/actions'
 import React from 'react'
 import H3 from '../typography/h3'
@@ -6,6 +7,7 @@ import RestrictedContent from './restricted-content'
 import LimitedContent from './limited-content'
 import { Button } from '../ui/button'
 import Link from 'next/link'
+import { ChapterNavigation } from './chapter-navigation'
 
 export const ChapterPage = ({ chapter }: { chapter: FullChapter }) => {
   return (
@@ -41,6 +43,7 @@ export const ChapterPage = ({ chapter }: { chapter: FullChapter }) => {
         ):(
           <Button disabled>Next</Button>
         )}
+        <ChapterNavigation previousLink={chapter.previous ? `/novels/${chapter.novel.slug}/${chapter.previous.slug}` : undefined} nextLink={chapter.next ? `/novels/${chapter.novel.slug}/${chapter.next.slug}` : undefined} />
       </div>
     </div>
   )
