@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { AR_One_Sans } from "next/font/google";
 import "./_css/globals.css";
 import "./_css/clerk.css"
 import { ThemeProvider } from "@/components/system/theme-provider";
@@ -8,7 +8,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/react";
 import GoogleAnalytics from "@/components/system/google-analytics";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = AR_One_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Quaslation",
