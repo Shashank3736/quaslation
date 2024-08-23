@@ -10,7 +10,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="max-w-[1000px] mx-auto">
       <Navbar />
-      <Alert className='m-4'>
+      <Alert className='m-4 w-fit'>
         <Terminal className='h-4 w-4' />
         <AlertTitle>Join our Discord Community</AlertTitle>
         <AlertDescription>
