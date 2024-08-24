@@ -74,7 +74,7 @@ export default function PostList({ premium=false }) {
           <p className="mb-2">{chapter.description}<Link className="text-blue-600 dark:text-blue-400 hover:underline" href={`/novels/${chapter.novel.slug}/${chapter.slug}`}> Read More {">>"}</Link></p>
           <div className="flex justify-between">
             <Muted><Link className="hover:underline" href={`/novels/${chapter.novel.slug}`} title={chapter.novel.title}>{shortifyString(chapter.novel.title, 20)}</Link></Muted>
-            <Muted>{timeAgo(chapter.publishedAt)}</Muted>
+            <Muted>{timeAgo(chapter.published || chapter.createdAt)}</Muted>
           </div>
         </div>
       )):(
