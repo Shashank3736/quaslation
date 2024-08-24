@@ -45,6 +45,7 @@ export async function GET(req: Request) {
     site_url: url.origin,
     feed_url: url.href,
     image_url: `${url.origin}/logo/logo100x100.jpg`,
+    categories: [data.data.chapters.map((chapter:any) => chapter.novel.slug).filter((value:string, index:number, self:string[]) => self.indexOf(value) === index)],
   })
 
   for (const chapter of data.data.chapters) {
@@ -53,6 +54,7 @@ export async function GET(req: Request) {
       description: chapter.description,
       url: `${url.origin}/novels/${chapter.novel.slug}/${chapter.slug}`,
       date: new Date(chapter.published),
+      categories: [chapter.novel.slug],
     })
   }
 
