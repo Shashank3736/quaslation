@@ -16,6 +16,12 @@ export const metadata: Metadata = {
   icons: {
     icon: "/logo/logo100x100.jpg",
   },
+  alternates: {
+    canonical: "/",
+    types: {
+      "application/rss+xml": "/rss.xml",
+    }
+  }
 };
 
 export default function RootLayout({
