@@ -15,6 +15,7 @@ export async function GET(req: Request) {
                 chapters(
                   where: {premium: false, published_gte: "${time.toISOString()}"}
                   first: 100
+                  orderBy: published_DESC
                 ) {
                   id
                   slug
