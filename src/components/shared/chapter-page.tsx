@@ -7,7 +7,7 @@ import RestrictedContent from './restricted-content'
 import LimitedContent from './limited-content'
 import { Button } from '../ui/button'
 import Link from 'next/link'
-import { ChapterNavigation } from './chapter-navigation'
+import { ChapterNavigation, ScrollToTop } from './chapter-navigation'
 
 export const ChapterPage = ({ chapter }: { chapter: FullChapter }) => {
   return (
@@ -45,6 +45,7 @@ export const ChapterPage = ({ chapter }: { chapter: FullChapter }) => {
         )}
         <ChapterNavigation previousLink={chapter.previous ? `/novels/${chapter.novel.slug}/${chapter.previous.slug}` : undefined} nextLink={chapter.next ? `/novels/${chapter.novel.slug}/${chapter.next.slug}` : undefined} />
       </div>
+      <ScrollToTop />
     </div>
   )
 }

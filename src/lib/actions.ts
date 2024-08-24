@@ -14,7 +14,8 @@ export interface ChapterDetail {
         title: string;
         slug: string
     }
-    publishedAt: Date;
+    published?: Date;
+    createdAt: Date;
     title: string;
     volume: {
         number: number;
@@ -127,7 +128,7 @@ export async function getLatestPosts({ last=10, premium=false, skip=0 }: GetLate
             },
             body: JSON.stringify({
                 query: `query LastChapters {
-                    chapters(first: ${last}, skip: ${skip}, where: {premium: ${premium}}, orderBy: createdAt_DESC) {
+                    chapters(first: ${last}, skip: ${skip}, where: {premium: ${premium}}, orderBy: ${premium? "createdAt_DESC": "published_DESC"}) {
                       chapter
                       description
                       slug
@@ -136,7 +137,8 @@ export async function getLatestPosts({ last=10, premium=false, skip=0 }: GetLate
                         slug
                       }
                       title
-                      publishedAt
+                      published
+                      createdAt
                       volume {
                         number
                       }
