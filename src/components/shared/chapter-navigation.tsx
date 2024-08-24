@@ -3,6 +3,16 @@
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect } from 'react'
 
+export const ScrollToTop = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0)
+    return () => {
+      window.scrollTo(0, 0)
+    }
+  }, []);
+  return null;
+}
+
 export const ChapterNavigation = ({ previousLink, nextLink }: { previousLink?: string, nextLink?: string }) => {
   const router = useRouter();
   const handleKeyPress = useCallback((event:KeyboardEvent) => {
