@@ -50,7 +50,6 @@ export default async function NovelPage({ params }:{ params: { slug: string} }) 
       <div className='mt-4'>
         {novel.volumes.map((volume) => (
           <Accordion type='single' collapsible key={volume.id} className='mb-2 rounded-lg border bg-background shadow-sm p-4'>
-            {/* <Muted className={cn({"hidden": (volume.number === -1)})}>Volume {volume.number}{volume.title ? `: ${volume.title}`:""}</Muted> */}
             {volume.number === -1 ? (
             <VolumeChapters volumeId={volume.id} />
             ):(
