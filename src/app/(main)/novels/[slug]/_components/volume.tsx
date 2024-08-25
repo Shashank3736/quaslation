@@ -3,7 +3,7 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { GetVolume, getVolume } from '@/lib/actions'
+import { GetVolume, getVolume } from '@/lib/hygraph/query'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'

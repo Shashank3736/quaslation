@@ -1,5 +1,5 @@
 
-import { FullChapter } from '@/lib/actions'
+import { FullChapter } from '@/lib/hygraph/query'
 import React from 'react'
 import H3 from '../typography/h3'
 import { SignedIn, SignedOut } from '@clerk/nextjs'

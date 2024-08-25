@@ -1,5 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { getChapterSlug } from "./lib/actions";
+import { getChapterSlug } from "./lib/hygraph/query";
 import { NextResponse } from "next/server";
 
 const isProtectedRoute = createRouteMatcher([

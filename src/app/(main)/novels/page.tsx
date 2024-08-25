@@ -1,6 +1,6 @@
 import H2 from '@/components/typography/h2'
 import { Separator } from '@/components/ui/separator'
-import { getNovels } from '@/lib/actions'
+import { getNovels } from '@/lib/hygraph/query'
 import Link from 'next/link'
 import React from 'react'
 
