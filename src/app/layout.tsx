@@ -6,7 +6,7 @@ import { ThemeProvider } from "@/components/system/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/react";
-import GoogleAnalytics from "@/components/system/google-analytics";
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 const inter = AR_One_Sans({ subsets: ["latin"] });
 
@@ -37,7 +37,7 @@ export default function RootLayout({
       }}
     >
       <html lang="en">
-        <GoogleAnalytics />
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ""} />
         <Analytics />
         <body className={inter.className}>
           <ThemeProvider
