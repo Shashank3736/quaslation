@@ -5,6 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export function hexToDecimal(hex:string) {
+  return parseInt(hex.replace("#",""), 16)
+}
+
 export function shortifyString(input: string, size = 15): string {
   // Remove extra spaces from the input string
   const trimmedInput = input.trim().replace(/\s+/g, ' ');
