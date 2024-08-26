@@ -1,7 +1,5 @@
 "use server"
 
-import { revalidatePath } from "next/cache";
-
 async function runMutation(QUERY: string) {
   try {
     const response = await fetch(process.env.HYGRAPH_MAIN_URL || "", {
@@ -55,8 +53,7 @@ export async function freeChapter(slug: string) {
     }
   }`
   try {
-    const { publishChapter }:{ publishChapter: PublishChapter } = await runMutation(QUERY);
-    revalidatePath(`/admin/premium/${publishChapter.novel.slug}/`)
+    await runMutation(QUERY);
   } catch (error) {
     throw new Error("Something went wrong!")
   }
