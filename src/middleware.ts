@@ -8,7 +8,9 @@ const isProtectedRoute = createRouteMatcher([
 
 export default clerkMiddleware(async (auth, req) => {
   if(!auth().userId && isProtectedRoute(req)) return auth().redirectToSignIn();
-  if((auth().userId !== process.env.ADMIN_USER_ID) && isProtectedRoute(req)) return NextResponse.redirect(new URL("/", req.url))
+  if((auth().userId !== process.env.ADMIN_USER_ID) && isProtectedRoute(req)) {
+    return NextResponse.redirect(new URL("/not-found", req.url))
+  }
   const url = new URL(req.url)
   if(url.pathname.startsWith("/chapter")) {
     const chapterSlugs = await getChapterSlug(url.pathname.split("/")[2]);
