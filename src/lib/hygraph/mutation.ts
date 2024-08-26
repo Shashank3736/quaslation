@@ -1,5 +1,8 @@
 "use server"
 
+import { MAIN_HOST } from "../config";
+import { hexToDecimal } from "../utils";
+
 async function runMutation(QUERY: string) {
   try {
     const response = await fetch(process.env.HYGRAPH_MAIN_URL || "", {
@@ -27,12 +30,22 @@ async function runMutation(QUERY: string) {
 }
 
 export type PublishChapter = {
-  id: string;
-  published: Date;
-  premium: boolean;
+  slug: string;
+  title: string;
+  chapter: number;
+  description: string;
   novel: {
     slug: string;
+    title: string;
+    thumbnail?: {
+      url: string
+    }
   }
+  volume: {
+    number: number
+  }
+  published: Date;
+  premium: boolean;
 }
 
 export async function freeChapter(slug: string) {
@@ -44,16 +57,61 @@ export async function freeChapter(slug: string) {
       id
     }
     publishChapter(where: {slug: "${slug}"}) {
-      id
+      slug
+      title
+      chapter
+      description
       novel {
         slug
+        title
+        thumbnail {
+          url
+        }
+      }
+      volume {
+        number
       }
       published
       premium
     }
   }`
   try {
-    await runMutation(QUERY);
+    const { publishChapter }:{ publishChapter: PublishChapter } = await runMutation(QUERY);
+    const params = {
+      embeds: [
+        {
+          title: `Chapter ${publishChapter.chapter}: ${publishChapter.title}`,
+          thumbnail: publishChapter.novel.thumbnail?.url,
+          url: `${MAIN_HOST}/novels/${publishChapter.novel.slug}/${publishChapter.slug}`,
+          description: publishChapter.description,
+          timestamp: publishChapter.published,
+          fields: [
+          {
+            name: "Novel",
+            value: `[${publishChapter.novel.title}](${MAIN_HOST}/novels/${publishChapter.novel.slug})`,
+            inline: true,
+          },
+            {
+              name: "Volume",
+              value: publishChapter.volume.number,
+              inline: true,
+            }
+          ],
+          color: hexToDecimal("#008000")
+        }
+      ]
+    }
+    console.log(params, params.embeds[0].fields)
+    fetch(process.env.DISCORD_WEBHOOK_URL || "", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
+    })
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.error('Error:', error));
   } catch (error) {
     throw new Error("Something went wrong!")
   }
