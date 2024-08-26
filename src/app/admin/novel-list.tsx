@@ -1,5 +1,5 @@
 import { Skeleton } from '@/components/ui/skeleton';
-import { getNovels, getPremiumChaptersByNovel, NovelIndex } from '@/lib/hygraph/query'
+import { getNovels, NovelIndex } from '@/lib/hygraph/query'
 import React from 'react'
 import { FreeNovelChapterDialog } from './novel-box-dialog';
 import { Button } from '@/components/ui/button';
