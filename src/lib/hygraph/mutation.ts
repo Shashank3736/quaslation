@@ -48,7 +48,7 @@ export type PublishChapter = {
   premium: boolean;
 }
 
-export async function freeChapter(slug: string) {
+export async function freeChapter(slug: string): Promise<PublishChapter> {
   const QUERY=`mutation MyMutation {
     updateChapter(
       data: {published: "${new Date().toISOString()}", premium: false}
@@ -101,6 +101,7 @@ export async function freeChapter(slug: string) {
     sendDiscordEmbed(embed)
     .then(result => console.log(result))
     .catch(error => console.error('Error:', error));
+    return publishChapter
   } catch (error) {
     throw new Error("Something went wrong!")
   }
