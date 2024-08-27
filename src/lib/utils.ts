@@ -5,6 +5,104 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export interface EmbedFooter {
+  text: string;
+  icon_url?: string;
+}
+
+export interface EmbedAuthor {
+  name: string;
+  icon_url?: string;
+  url?: string;
+}
+
+export interface EmbedField {
+  name: string;
+  value: string;
+  inline?: boolean;
+}
+
+export interface DiscordEmbedOptions {
+  title?: string;
+  description?: string;
+  url?: string;
+  timestamp?: string | Date;
+  color?: string;
+  footer?: EmbedFooter;
+  image?: string;
+  thumbnail?: string;
+  author?: EmbedAuthor;
+  fields?: EmbedField[];
+}
+
+export interface DiscordEmbed {
+  title?: string;
+  description?: string;
+  url?: string;
+  timestamp?: string;
+  color?: number;
+  footer?: EmbedFooter;
+  image?: { url: string };
+  thumbnail?: { url: string };
+  author?: EmbedAuthor;
+  fields?: EmbedField[];
+}
+
+export function createDiscordEmbed({
+  title,
+  description,
+  url,
+  timestamp = new Date(),
+  color,
+  footer,
+  image,
+  thumbnail,
+  author,
+  fields = []
+}: DiscordEmbedOptions = {}): DiscordEmbed {
+  const embed: DiscordEmbed = {};
+
+  if (title) embed.title = title;
+  if (description) embed.description = description;
+  if (url) embed.url = url;
+  if (timestamp) embed.timestamp = timestamp instanceof Date ? timestamp.toISOString() : timestamp;
+  if (color) embed.color = hexToDecimal(color);
+
+  if (footer) {
+    embed.footer = { text: footer.text };
+    if (footer.icon_url) embed.footer.icon_url = footer.icon_url;
+  }
+
+  if (image) embed.image = { url: image };
+  if (thumbnail) embed.thumbnail = { url: thumbnail };
+
+  if (author) {
+    embed.author = { name: author.name };
+    if (author.icon_url) embed.author.icon_url = author.icon_url;
+    if (author.url) embed.author.url = author.url;
+  }
+
+  if (fields.length > 0) embed.fields = fields;
+
+  return embed;
+}
+
+export async function sendDiscordEmbed(options: DiscordEmbedOptions) {
+  const embed = createDiscordEmbed(options);
+  try {
+    const response = await fetch(process.env.DISCORD_WEBHOOK_URL || "", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ embeds: [embed] }),
+    })
+    return await response.text()
+  } catch (error) {
+    throw new Error("Network Error")
+  }
+}
+
 export function hexToDecimal(hex:string) {
   return parseInt(hex.replace("#",""), 16)
 }
