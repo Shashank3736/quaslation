@@ -1,7 +1,7 @@
 "use server"
 
 import { MAIN_HOST } from "../config";
-import { hexToDecimal } from "../utils";
+import { sendDiscordEmbed } from "../utils";
 
 async function runMutation(QUERY: string) {
   try {
@@ -77,39 +77,28 @@ export async function freeChapter(slug: string) {
   }`
   try {
     const { publishChapter }:{ publishChapter: PublishChapter } = await runMutation(QUERY);
-    const params = {
-      embeds: [
-        {
-          title: `Chapter ${publishChapter.chapter}: ${publishChapter.title}`,
-          thumbnail: publishChapter.novel.thumbnail?.url,
-          url: `${MAIN_HOST}/novels/${publishChapter.novel.slug}/${publishChapter.slug}`,
-          description: publishChapter.description,
-          timestamp: publishChapter.published,
-          fields: [
-          {
-            name: "Novel",
-            value: `[${publishChapter.novel.title}](${MAIN_HOST}/novels/${publishChapter.novel.slug})`,
-            inline: true,
-          },
-            {
-              name: "Volume",
-              value: publishChapter.volume.number,
-              inline: true,
-            }
-          ],
-          color: hexToDecimal("#008000")
-        }
-      ]
-    }
-    console.log(params, params.embeds[0].fields)
-    fetch(process.env.DISCORD_WEBHOOK_URL || "", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const embed = {
+      title: `Chapter ${publishChapter.chapter}: ${publishChapter.title}`,
+      thumbnail: publishChapter.novel.thumbnail?.url,
+      url: `${MAIN_HOST}/novels/${publishChapter.novel.slug}/${publishChapter.slug}`,
+      description: publishChapter.description,
+      timestamp: publishChapter.published,
+      fields: [
+      {
+        name: "Novel",
+        value: `[${publishChapter.novel.title}](${MAIN_HOST}/novels/${publishChapter.novel.slug})`,
+        inline: true,
       },
-      body: JSON.stringify(params),
-    })
-    .then(response => response.text())
+        {
+          name: "Volume",
+          value: publishChapter.volume.number.toString(),
+          inline: true,
+        }
+      ],
+      color: "#008000"
+    }
+    
+    sendDiscordEmbed(embed)
     .then(result => console.log(result))
     .catch(error => console.error('Error:', error));
   } catch (error) {
