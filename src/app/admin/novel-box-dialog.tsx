@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button';
 import { freeChapter } from '@/lib/hygraph/mutation';
 import { delay } from '@/lib/utils';
+import { toast } from '@/components/ui/use-toast';
 
 export const FreeNovelChapterDialog = ({ novel }:{ novel: NovelIndex }) => {
   const [loading, setLoading] = useState(false);
@@ -50,11 +51,16 @@ export const FreeNovelChapterDialog = ({ novel }:{ novel: NovelIndex }) => {
             variant={"destructive"}
             onClick={async () => {
               setLoading(true)
-              await freeChapter(chapter.slug)
+              const release = await freeChapter(chapter.slug)
               await delay(500)
               const data = await getPremiumChaptersByNovel({ novelSlug: novel.slug })
               setChapter(data[0] || null)
               setLoading(false)
+              toast({
+                title: "New Free Chapter",
+                description: `Novel: ${release.novel.title}\n
+                Vol. ${release.volume.number} Chapter ${release.chapter}: ${chapter.title}`
+              })
             }}
             >
               Submit
