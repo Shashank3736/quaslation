@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useRef, useState, useMemo } from "react"
+import React, { useEffect, useRef, useState, useCallback } from "react"
 import H3 from "@/components/typography/h3"
 import Muted from "@/components/typography/muted"
 import { Badge } from "@/components/ui/badge"
@@ -11,6 +11,8 @@ import { useToast } from "@/components/ui/use-toast"
 import { ChapterDetail, getLatestPosts, LatestPosts } from "@/lib/hygraph/query"
 import { shortifyString, timeAgo } from "@/lib/utils"
 import Link from "next/link"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { AlertCircle } from "lucide-react"
 
 const ChapterItem: React.FC<{ chapter: ChapterDetail; premium: boolean }> = React.memo(({ chapter, premium }) => (
   <div className="p-4 mb-4 border rounded-lg">
@@ -42,50 +44,85 @@ ChapterItem.displayName = 'ChapterItem'
 export default function PostList({ premium = false }) {
   const [chapters, setChapters] = useState<LatestPosts>({ chaptersConnection: { aggregate: { count: 0 } }, chapters: [] })
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const { toast } = useToast()
   const mainDivRef = useRef<HTMLDivElement | null>(null)
 
-  const removeDuplicateKeys = useMemo(() => (items: ChapterDetail[]) => {
-    const seenKeys = new Set();
+  const removeDuplicateKeys = useCallback((items: ChapterDetail[]): ChapterDetail[] => {
+    const seenKeys = new Set<string>();
     return items.filter(item => {
       const key = item.slug;
       if (seenKeys.has(key)) {
-        toast({
-          title: "New Content available",
-          description: `Wow! it seems like new webnovel chapter is available for ${premium ? "premium" : "free"}. Refresh the page to see new ${premium ? "premium" : "free"} chapter at the top.`,
-          action: <ToastAction altText="Refresh" onClick={() => {
-            setLoading(true)
-            getLatestPosts({ premium })
-              .then((latestPosts) => setChapters(latestPosts))
-              .finally(() => {
-                mainDivRef.current?.scrollIntoView({ behavior: "smooth" });
-                setLoading(false);
-              })
-          }}>Reload</ToastAction>
-        })
         return false;
       } else {
         seenKeys.add(key);
         return true;
       }
     });
-  }, [premium, toast])
+  }, [])
 
-  const loadMore = ({ skip }: { skip: number }) => {
+  const fetchLatestPosts = useCallback(async (skip?: number) => {
     setLoading(true)
-    getLatestPosts({ skip, premium }).then(posts => setChapters(chap => {
-      const set = new Set();
-      chap.chapters.forEach(ch => set.add(ch.slug))
-      return {
-        chapters: removeDuplicateKeys(chap.chapters.concat(posts.chapters)),
-        chaptersConnection: posts.chaptersConnection
+    setError(null)
+    try {
+      const data = await getLatestPosts({ skip, premium })
+      if (skip) {
+        setChapters(chap => {
+          const updatedChapters = removeDuplicateKeys(chap.chapters.concat(data.chapters))
+          if (updatedChapters.length !== chap.chapters.length + data.chapters.length) {
+            toast({
+              title: "New Content available",
+              description: `Wow! it seems like new webnovel chapter is available for ${premium ? "premium" : "free"}. Refresh the page to see new ${premium ? "premium" : "free"} chapter at the top.`,
+              action: <ToastAction altText="Refresh" onClick={() => fetchLatestPosts(0)}>Reload</ToastAction>
+            })
+          }
+          return {
+            chapters: updatedChapters,
+            chaptersConnection: data.chaptersConnection
+          }
+        })
+      } else {
+        setChapters(data)
       }
-    })).finally(() => setLoading(false))
-  }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred')
+      toast({
+        title: "Error",
+        description: "Failed to fetch latest posts. Please try again later.",
+        variant: "destructive",
+      })
+    } finally {
+      setLoading(false)
+      if (skip === 0) {
+        mainDivRef.current?.scrollIntoView({ behavior: "smooth" })
+      }
+    }
+  }, [premium, toast, removeDuplicateKeys])
+
+  const loadMore = useCallback(() => {
+    fetchLatestPosts(chapters.chapters.length)
+  }, [fetchLatestPosts, chapters.chapters.length])
 
   useEffect(() => {
-    getLatestPosts({ premium }).then(data => setChapters(data))
-  }, [premium])
+    fetchLatestPosts()
+  }, [fetchLatestPosts])
+
+  if (error) {
+    return (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertTitle>Error</AlertTitle>
+        <AlertDescription>
+          <p>
+          {error}
+          </p>
+          <Button variant="outline" className="mt-2" onClick={() => fetchLatestPosts()}>
+            Try Again
+          </Button>
+        </AlertDescription>
+      </Alert>
+    )
+  }
 
   return (
     <div className="flex flex-col" ref={mainDivRef}>
@@ -106,7 +143,7 @@ export default function PostList({ premium = false }) {
         </div>
       )}
       {chapters.chapters.length !== chapters.chaptersConnection.aggregate.count && (
-        <Button className="center self-center" disabled={loading} onClick={() => loadMore({ skip: chapters.chapters.length })}>
+        <Button className="center self-center" disabled={loading} onClick={loadMore}>
           {loading ? "Loading..." : "Load More"}
         </Button>
       )}
