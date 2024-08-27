@@ -5,17 +5,23 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button';
 import { freeChapter } from '@/lib/hygraph/mutation';
+import { delay } from '@/lib/utils';
 
 export const FreeNovelChapterDialog = ({ novel }:{ novel: NovelIndex }) => {
   const [loading, setLoading] = useState(false);
-  const [chapter, setChapter] = useState<PremiumChaptersByNovel|null>(null)
-  useEffect(() => {
-    getPremiumChaptersByNovel({ novelSlug: novel.slug })
-    .then((data) => setChapter(data[0] || null))
-  },[])
+  const [chapter, setChapter] = useState<PremiumChaptersByNovel|null|undefined>()
 
   if(chapter === null) return (
     <Button variant={"secondary"} disabled>Free</Button>
+  ) 
+  else if (chapter == undefined) return (
+    <Button onClick={() => {
+      setLoading(true)
+      getPremiumChaptersByNovel({ novelSlug: novel.slug })
+      .then((data) => setChapter(data[0] || null))
+      .finally(() => setLoading(false))
+    }}
+    disabled={loading}>{loading ? "Checking...":"Check"}</Button>
   )
   return (
     <Dialog>
@@ -45,6 +51,7 @@ export const FreeNovelChapterDialog = ({ novel }:{ novel: NovelIndex }) => {
             onClick={async () => {
               setLoading(true)
               await freeChapter(chapter.slug)
+              await delay(500)
               const data = await getPremiumChaptersByNovel({ novelSlug: novel.slug })
               setChapter(data[0] || null)
               setLoading(false)
