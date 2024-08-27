@@ -116,6 +116,54 @@ export type Blog = {
     title: string;
 }
 
+export type PremiumChaptersByNovel = {
+    id: string;
+    chapter: number;
+    title: string;
+    volume: {
+        number: number;
+    }
+    slug: string;
+}
+
+export async function getPremiumChaptersByNovel({ novelSlug }:{ novelSlug: string }):Promise<PremiumChaptersByNovel[]> {
+    const QUERY = `query MyQuery {
+        chapters(where: {premium: true, novel: {slug: "${novelSlug}"}}, first: 1) {
+            id
+            chapter
+            title
+            volume {
+                number
+            }
+            slug
+        }
+    }`
+
+    try {
+        console.log("Requesting premium chapters of novel: ", novelSlug);
+        const response = await fetch(process.env.HYGRAPH_URL || "", {
+            cache: "no-store",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'gcms-stage': 'PUBLISHED',
+            },
+            body: JSON.stringify({
+                query: QUERY
+            })
+        });
+
+        if(!response.ok) {
+            console.log(await response.json())
+            throw new Error("Seems like something is wrong with the slug or maybe you are not permitted.")
+        }
+        const { data } = await response.json()
+        return data.chapters
+    } catch (error) {
+        throw new Error("Server closed.")
+    }
+}
+
 export async function getLatestPosts({ last=10, premium=false, skip=0 }: GetLatestPostsOptions): Promise<LatestPosts> {
     try {
         console.log("Request made for last chapters.")

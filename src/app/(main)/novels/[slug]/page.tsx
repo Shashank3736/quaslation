@@ -1,6 +1,6 @@
 import H2 from '@/components/typography/h2';
 import { Separator } from '@/components/ui/separator';
-import { getFirstChapterNovel, getLastChapterNovel, getNovel } from '@/lib/actions'
+import { getFirstChapterNovel, getLastChapterNovel, getNovel } from '@/lib/hygraph/query'
 import VolumeChapters from './_components/volume';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { cn } from '@/lib/utils';
