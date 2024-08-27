@@ -15,7 +15,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
 
 const ChapterItem: React.FC<{ chapter: ChapterDetail; premium: boolean }> = React.memo(({ chapter, premium }) => (
-  <div className="p-4 mb-4 border rounded-lg">
+  <article className="p-4 mb-4 border rounded-lg">
     {premium ? (
       <div className="flex items-center mb-2">
         <H3 className="mr-2">Chapter {chapter.chapter}: {chapter.title}</H3>
@@ -26,17 +26,32 @@ const ChapterItem: React.FC<{ chapter: ChapterDetail; premium: boolean }> = Reac
     )}
     <p className="mb-2">
       {chapter.description}
-      <Link className="text-blue-600 dark:text-blue-400 hover:underline" href={`/novels/${chapter.novel.slug}/${chapter.slug}`}> Read More {">>"}</Link>
+      <Link 
+        className="text-blue-600 dark:text-blue-400 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500" 
+        href={`/novels/${chapter.novel.slug}/${chapter.slug}`}
+        aria-label={`Read more about Chapter ${chapter.chapter}: ${chapter.title}`}
+      > 
+        Read More {">>"}
+      </Link>
     </p>
     <div className="flex justify-between">
       <Muted>
-        <Link className="hover:underline" href={`/novels/${chapter.novel.slug}`} title={chapter.novel.title}>
+        <Link 
+          className="hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500" 
+          href={`/novels/${chapter.novel.slug}`} 
+          title={chapter.novel.title}
+          aria-label={`View novel: ${chapter.novel.title}`}
+        >
           {shortifyString(chapter.novel.title, 20)}
         </Link>
       </Muted>
-      <Muted>{timeAgo(chapter.published || chapter.createdAt)}</Muted>
+      <Muted>
+        <time dateTime={new Date(chapter.published || chapter.createdAt).toISOString()}>
+          {timeAgo(chapter.published || chapter.createdAt)}
+        </time>
+      </Muted>
     </div>
-  </div>
+  </article>
 ))
 
 ChapterItem.displayName = 'ChapterItem'
@@ -125,13 +140,14 @@ export default function PostList({ premium = false }) {
   }
 
   return (
-    <div className="flex flex-col" ref={mainDivRef}>
+    <div className="flex flex-col" ref={mainDivRef} role="feed" aria-busy={loading} aria-live="polite">
+      <h2 className="sr-only">{premium ? "Premium" : "Free"} Webnovel Chapters</h2>
       {chapters.chapters.length > 0 ? chapters.chapters.map((chapter) => (
         <ChapterItem key={chapter.slug} chapter={chapter} premium={premium} />
       )) : (
-        <div>
+        <div aria-label="Loading chapters">
           {Array.from({ length: 10 }, (_, index) => (
-            <div key={index} className="p-4 mb-4 space-y-2 border rounded-lg">
+            <div key={index} className="p-4 mb-4 space-y-2 border rounded-lg" aria-hidden="true">
               <Skeleton className="h-6 w-28" />
               <Skeleton className="h-28 w-full" />
               <div className="flex justify-between">
@@ -143,7 +159,12 @@ export default function PostList({ premium = false }) {
         </div>
       )}
       {chapters.chapters.length !== chapters.chaptersConnection.aggregate.count && (
-        <Button className="center self-center" disabled={loading} onClick={loadMore}>
+        <Button 
+          className="center self-center" 
+          disabled={loading} 
+          onClick={loadMore}
+          aria-label={loading ? "Loading more chapters" : "Load more chapters"}
+        >
           {loading ? "Loading..." : "Load More"}
         </Button>
       )}
