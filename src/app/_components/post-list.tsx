@@ -1,5 +1,6 @@
 "use client"
 
+import React, { useEffect, useRef, useState, useMemo } from "react"
 import H3 from "@/components/typography/h3"
 import Muted from "@/components/typography/muted"
 import { Badge } from "@/components/ui/badge"
@@ -10,30 +11,56 @@ import { useToast } from "@/components/ui/use-toast"
 import { ChapterDetail, getLatestPosts, LatestPosts } from "@/lib/hygraph/query"
 import { shortifyString, timeAgo } from "@/lib/utils"
 import Link from "next/link"
-import { useEffect, useRef, useState } from "react"
 
-export default function PostList({ premium=false }) {
-  const [chapters, setChapters] = useState<LatestPosts>({ chaptersConnection: { aggregate: { count: 0 }}, chapters: [] })
+const ChapterItem: React.FC<{ chapter: ChapterDetail; premium: boolean }> = React.memo(({ chapter, premium }) => (
+  <div className="p-4 mb-4 border rounded-lg">
+    {premium ? (
+      <div className="flex items-center mb-2">
+        <H3 className="mr-2">Chapter {chapter.chapter}: {chapter.title}</H3>
+        <Badge>Premium</Badge>
+      </div>
+    ) : (
+      <H3 className="mb-2">Chapter {chapter.chapter}: {chapter.title}</H3>
+    )}
+    <p className="mb-2">
+      {chapter.description}
+      <Link className="text-blue-600 dark:text-blue-400 hover:underline" href={`/novels/${chapter.novel.slug}/${chapter.slug}`}> Read More {">>"}</Link>
+    </p>
+    <div className="flex justify-between">
+      <Muted>
+        <Link className="hover:underline" href={`/novels/${chapter.novel.slug}`} title={chapter.novel.title}>
+          {shortifyString(chapter.novel.title, 20)}
+        </Link>
+      </Muted>
+      <Muted>{timeAgo(chapter.published || chapter.createdAt)}</Muted>
+    </div>
+  </div>
+))
+
+ChapterItem.displayName = 'ChapterItem'
+
+export default function PostList({ premium = false }) {
+  const [chapters, setChapters] = useState<LatestPosts>({ chaptersConnection: { aggregate: { count: 0 } }, chapters: [] })
   const [loading, setLoading] = useState(false)
   const { toast } = useToast()
   const mainDivRef = useRef<HTMLDivElement | null>(null)
 
-  const removeDuplicateKeys = (items: ChapterDetail[]) => {
+  const removeDuplicateKeys = useMemo(() => (items: ChapterDetail[]) => {
     const seenKeys = new Set();
     return items.filter(item => {
-      const key = item.slug; // or any other property used as the key
+      const key = item.slug;
       if (seenKeys.has(key)) {
         toast({
           title: "New Content available",
-          description: `Wow! it seems like new webnovel chapter is available for ${premium?"premium":"free"}. Refresh the page to see new ${premium?"premium":"free"} chapter at the top.`,
+          description: `Wow! it seems like new webnovel chapter is available for ${premium ? "premium" : "free"}. Refresh the page to see new ${premium ? "premium" : "free"} chapter at the top.`,
           action: <ToastAction altText="Refresh" onClick={() => {
             setLoading(true)
             getLatestPosts({ premium })
-            .then((latesPosts) => setChapters(latesPosts))
-            .finally(() => {
-              mainDivRef.current?.scrollIntoView({ behavior: "smooth" });
-              setLoading(false);
-            })
+              .then((latestPosts) => setChapters(latestPosts))
+              .finally(() => {
+                mainDivRef.current?.scrollIntoView({ behavior: "smooth" });
+                setLoading(false);
+              })
           }}>Reload</ToastAction>
         })
         return false;
@@ -42,42 +69,29 @@ export default function PostList({ premium=false }) {
         return true;
       }
     });
-  };
+  }, [premium, toast])
 
-  const loadMore = ({ skip }:{ skip: number }) => {
+  const loadMore = ({ skip }: { skip: number }) => {
     setLoading(true)
     getLatestPosts({ skip, premium }).then(posts => setChapters(chap => {
       const set = new Set();
       chap.chapters.forEach(ch => set.add(ch.slug))
       return {
-      chapters: removeDuplicateKeys(chap.chapters.concat(posts.chapters)),
-      chaptersConnection: posts.chaptersConnection
-    }})).finally(() => setLoading(false))
+        chapters: removeDuplicateKeys(chap.chapters.concat(posts.chapters)),
+        chaptersConnection: posts.chaptersConnection
+      }
+    })).finally(() => setLoading(false))
   }
 
   useEffect(() => {
     getLatestPosts({ premium }).then(data => setChapters(data))
-  },[premium])
-  
+  }, [premium])
+
   return (
     <div className="flex flex-col" ref={mainDivRef}>
-      {chapters.chapters.length > 0 ? chapters.chapters.map((chapter, i) => (
-        <div key={chapter.slug} className="p-4 mb-4 border rounded-lg">
-          {premium ? (
-          <div className="flex items-center mb-2">
-            <H3 className="mr-2">Chapter {chapter.chapter}: {chapter.title}</H3>
-            <Badge>Premium</Badge>
-          </div>
-          ):(
-            <H3 className="mb-2">Chapter {chapter.chapter}: {chapter.title}</H3>
-          )}
-          <p className="mb-2">{chapter.description}<Link className="text-blue-600 dark:text-blue-400 hover:underline" href={`/novels/${chapter.novel.slug}/${chapter.slug}`}> Read More {">>"}</Link></p>
-          <div className="flex justify-between">
-            <Muted><Link className="hover:underline" href={`/novels/${chapter.novel.slug}`} title={chapter.novel.title}>{shortifyString(chapter.novel.title, 20)}</Link></Muted>
-            <Muted>{timeAgo(chapter.published || chapter.createdAt)}</Muted>
-          </div>
-        </div>
-      )):(
+      {chapters.chapters.length > 0 ? chapters.chapters.map((chapter) => (
+        <ChapterItem key={chapter.slug} chapter={chapter} premium={premium} />
+      )) : (
         <div>
           {Array.from({ length: 10 }, (_, index) => (
             <div key={index} className="p-4 mb-4 space-y-2 border rounded-lg">
@@ -92,7 +106,9 @@ export default function PostList({ premium=false }) {
         </div>
       )}
       {chapters.chapters.length !== chapters.chaptersConnection.aggregate.count && (
-        <Button className="center self-center" disabled={loading} onClick={() => loadMore({ skip: chapters.chapters.length })}>{loading? "Loading...": "Load More"}</Button>
+        <Button className="center self-center" disabled={loading} onClick={() => loadMore({ skip: chapters.chapters.length })}>
+          {loading ? "Loading..." : "Load More"}
+        </Button>
       )}
     </div>
   )
