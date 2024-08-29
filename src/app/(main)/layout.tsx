@@ -5,10 +5,12 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { DISCORD_INVITE_URL } from '@/lib/config'
 import { Terminal } from 'lucide-react'
+import GoogleAdsense from '@/components/system/google-adsense'
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="max-w-[1000px] mx-auto">
+      <GoogleAdsense pId={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID || ""} />
       <Navbar />
       <Alert className='m-4 w-fit'>
         <Terminal className='h-4 w-4' />
