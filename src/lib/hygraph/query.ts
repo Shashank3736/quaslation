@@ -107,3 +107,93 @@ export async function getChapterSlug(id: string):Promise<ChapterSlug> {
       throw error
   }
 }
+
+export interface FullChapter {
+  chapter: number;
+  content: {
+    html: string;
+  }
+  createdAt: Date;
+  premium: boolean;
+  title: string;
+  updatedAt: Date;
+  volume: {
+    number: number;
+    title: string | null;
+  };
+  novel: {
+    id: string;
+    title: string;
+    slug: string
+  }
+  next?: {
+    slug: string;
+  }
+  previous?: {
+    slug: string;
+  }
+}
+
+export async function getChapter(slug: string): Promise<FullChapter> {
+  const QUERY = `query Chapter {
+    chapter(where: {slug: "${slug}"}) {
+      chapter
+      content {
+        html
+      }
+      createdAt
+      premium
+      title
+      updatedAt
+      volume {
+        number
+        title
+      }
+      novel {
+        id
+        title
+        slug
+      }
+      next {
+        slug
+      }
+      previous {
+        slug
+      }
+    }
+  }`
+  try {
+      console.log("Request made for chapter: ", slug)
+      const { chapter } = await runQuery(QUERY);
+      return chapter
+
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+export interface NovelIndex {
+  id: string;
+  title: string;
+  slug: string;
+}
+
+export async function getNovels({ last = 25 }): Promise<NovelIndex[]> {
+  const QUERY = `query Novels {
+    novels(first: ${last}, orderBy: title_ASC) {
+      id
+      title
+      slug
+    }
+  }`
+  try {
+      console.log("Request made for novels")
+      const { novels } = await runQuery(QUERY);
+      
+      return novels
+  } catch (error) {
+      console.error(error)
+      throw error
+  }
+}
