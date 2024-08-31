@@ -22,6 +22,7 @@ async function runQuery(QUERY: string) {
     throw new Error("Server closed.")
   }
 }
+
 export interface ChapterDetail {
   chapter: number;
   description: string;
@@ -195,5 +196,73 @@ export async function getNovels({ last = 25 }): Promise<NovelIndex[]> {
   } catch (error) {
       console.error(error)
       throw error
+  }
+}
+
+export type VolumeChapter = {
+  chapter: number;
+  premium: boolean;
+  slug: string;
+  title: string;
+}
+
+export type Volume = {
+  id: string;
+  number: number;
+  title: string;
+  chapters: VolumeChapter[]
+  novel: {
+    slug: string;
+  }
+}
+
+export type HTMLData = {
+  html: string;
+}
+
+export type ImageURL = {
+  url: string;
+}
+
+export type Novel = {
+  fullDescription: HTMLData;
+  volumes: Volume[];
+  title: string;
+  thumbnail?: ImageURL;
+}
+
+export async function getNovel(slug: string): Promise<Novel> {
+  const QUERY = `query MyQuery {
+    novel(where: {slug: "${slug}"}) {
+      fullDescription {
+        html
+      }
+      volumes(orderBy: number_ASC, first: 10) {
+        id
+        number
+        title
+        chapters(first: 100, orderBy: chapter_ASC) {
+          chapter
+          premium
+          slug
+          title
+        }
+        novel {
+          slug
+        }
+      }
+      title
+      thumbnail {
+        url
+      }
+    }
+  }`
+
+  try {
+    const { novel } = await runQuery(QUERY);
+    return novel;
+  } catch (error) {
+    console.error(error)
+    throw error
   }
 }

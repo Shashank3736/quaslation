@@ -1,6 +1,6 @@
 import H2 from '@/components/typography/h2';
 import { Separator } from '@/components/ui/separator';
-import { getFirstChapterNovel, getLastChapterNovel, getNovel } from '@/lib/hygraph/query'
+import { getNovel } from '@/lib/hygraph/query'
 import VolumeChapters from './_components/volume';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { cn } from '@/lib/utils';
@@ -11,8 +11,10 @@ import { LockIcon } from 'lucide-react';
 
 export default async function NovelPage({ params }:{ params: { slug: string} }) {
   const novel = await getNovel(params.slug);
-  const firstChapter = await getFirstChapterNovel({ slug: params.slug });
-  const lastChapter = await getLastChapterNovel({ slug: params.slug });
+  const firstVolume = novel.volumes.at(0)
+  const firstChapter = firstVolume?.chapters.at(0)
+  const lastVolume = novel.volumes.at(-1)
+  const lastChapter = lastVolume?.chapters.at(-1)
 
   return (
     <div className='p-4'>
@@ -29,16 +31,20 @@ export default async function NovelPage({ params }:{ params: { slug: string} }) 
         <div className='p-4'>
           <H2 className='text-center'>{novel.title}</H2>
           <div className='flex space-x-4 mt-8'>
-            <Button title={firstChapter[0].volume.number > -1 ? `Volume ${firstChapter[0].volume.number} Chapter ${firstChapter[0].chapter}` : `Chapter ${firstChapter[0].chapter}`} asChild>
-              <Link href={`${params.slug}/${firstChapter[0].slug}`}>
-                {firstChapter[0].premium ? (<LockIcon className='mr-2 h-4 w-4' />):""} Read First
+            {firstVolume && firstChapter ? (
+            <Button title={firstVolume.number > -1 ? `Volume ${firstVolume.number} Chapter ${firstChapter.chapter}` : `Chapter ${firstChapter.chapter}`} asChild>
+              <Link href={`${params.slug}/${firstChapter.slug}`}>
+                {firstChapter.premium ? (<LockIcon className='mr-2 h-4 w-4' />):""} Read First
               </Link>
             </Button>
-            <Button title={lastChapter[0].volume.number > -1 ? `Volume ${lastChapter[0].volume.number} Chapter ${lastChapter[0].chapter}` : `Chapter ${lastChapter[0].chapter}`} variant={"secondary"} asChild>
-              <Link href={`${params.slug}/${lastChapter[0].slug}`}>
-                {lastChapter[0].premium ? (<LockIcon className='mr-2 h-4 w-4' />):""} Read Last
+            ):null}
+            {lastVolume && lastChapter ? (
+            <Button title={lastVolume.number > -1 ? `Volume ${lastVolume.number} Chapter ${lastChapter.chapter}` : `Chapter ${lastChapter.chapter}`} variant={"secondary"} asChild>
+              <Link href={`${params.slug}/${lastChapter.slug}`}>
+                {lastChapter.premium ? (<LockIcon className='mr-2 h-4 w-4' />):""} Read Last
               </Link>
             </Button>            
+            ):null}
           </div>
         </div>
       </div>
@@ -51,14 +57,14 @@ export default async function NovelPage({ params }:{ params: { slug: string} }) 
         {novel.volumes.map((volume) => (
           <Accordion type='single' collapsible key={volume.id} className='mb-2 rounded-lg border bg-background shadow-sm p-4'>
             {volume.number === -1 ? (
-            <VolumeChapters volumeId={volume.id} />
+            <VolumeChapters data={volume} />
             ):(
               <AccordionItem value={`volume${volume.number}`} className='border-0'>
                 <AccordionTrigger className="flex items-center justify-between gap-4 px-6 py-4">
                   <h3 className="text-lg font-medium">Volume {volume.number}{volume.title ? `: ${volume.title}`:""}</h3>
                 </AccordionTrigger>
                 <AccordionContent>
-                  <VolumeChapters volumeId={volume.id} />
+                  <VolumeChapters data={volume} />
                 </AccordionContent>
               </AccordionItem>
             )}
