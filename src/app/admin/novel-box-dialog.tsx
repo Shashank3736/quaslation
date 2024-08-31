@@ -1,8 +1,9 @@
 "use client"
 
-import { getPremiumChaptersByNovel, NovelIndex, PremiumChaptersByNovel } from '@/lib/hygraph/query';
+import { NovelIndex, PremiumChaptersByNovel } from '@/lib/hygraph/query';
+import { action as getPremiumChaptersByNovel } from "./actions"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button';
 import { freeChapter } from '@/lib/hygraph/mutation';
 import { delay } from '@/lib/utils';

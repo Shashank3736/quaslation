@@ -320,3 +320,35 @@ export async function getBlog(slug: string): Promise<Blog> {
       throw error
   }
 }
+
+export type PremiumChaptersByNovel = {
+  id: string;
+  chapter: number;
+  title: string;
+  volume: {
+      number: number;
+  }
+  slug: string;
+}
+
+export async function getPremiumChaptersByNovel({ novelSlug }:{ novelSlug: string }):Promise<PremiumChaptersByNovel[]> {
+  const QUERY = `query MyQuery {
+      chapters(where: {premium: true, novel: {slug: "${novelSlug}"}}, first: 1) {
+          id
+          chapter
+          title
+          volume {
+              number
+          }
+          slug
+      }
+  }`
+
+  try {
+      console.log("Requesting premium chapters of novel: ", novelSlug);
+      const { chapters } = await runQuery(QUERY)
+      return chapters
+  } catch (error) {
+      throw new Error("Server closed.")
+  }
+}
