@@ -1,30 +1,25 @@
 "use client"
 
-import { NovelIndex, PremiumChaptersByNovel } from '@/lib/hygraph/query';
-import { action as getPremiumChaptersByNovel } from "./actions"
+import { PremiumChaptersNovel } from '@/lib/hygraph/query';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button';
 import { freeChapter } from '@/lib/hygraph/mutation';
-import { delay } from '@/lib/utils';
 import { toast } from '@/components/ui/use-toast';
 
-export const FreeNovelChapterDialog = ({ novel }:{ novel: NovelIndex }) => {
+export const FreeNovelChapterDialog = ({ novel }:{ novel: PremiumChaptersNovel }) => {
   const [loading, setLoading] = useState(false);
-  const [chapter, setChapter] = useState<PremiumChaptersByNovel|null|undefined>()
+  const [index, setIndex] = useState(0);
+  const chapters = useMemo(() => novel.chapters, [novel]);
+  const chapter = useMemo(() => chapters.at(index), [chapters, index]);
 
-  if(chapter === null) return (
+  if(chapters.length === 0) return (
     <Button variant={"secondary"} disabled>Free</Button>
   ) 
-  else if (chapter == undefined) return (
-    <Button onClick={() => {
-      setLoading(true)
-      getPremiumChaptersByNovel({ novelSlug: novel.slug })
-      .then((data) => setChapter(data[0] || null))
-      .finally(() => setLoading(false))
-    }}
-    disabled={loading}>{loading ? "Checking...":"Check"}</Button>
-  )
+  else if (chapter == undefined) {
+    return <Button disabled>Limit Reached</Button>
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -53,9 +48,7 @@ export const FreeNovelChapterDialog = ({ novel }:{ novel: NovelIndex }) => {
             onClick={async () => {
               setLoading(true)
               const release = await freeChapter(chapter.slug)
-              await delay(500)
-              const data = await getPremiumChaptersByNovel({ novelSlug: novel.slug })
-              setChapter(data[0] || null)
+              setIndex(i => i+1)
               setLoading(false)
               toast({
                 title: "New Free Chapter",

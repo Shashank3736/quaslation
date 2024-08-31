@@ -352,3 +352,36 @@ export async function getPremiumChaptersByNovel({ novelSlug }:{ novelSlug: strin
       throw new Error("Server closed.")
   }
 }
+export type PremiumChaptersNovel = {
+  id: string;
+  title: string;
+  slug: string;
+  chapters: PremiumChaptersByNovel[];
+}
+export async function getPremiumChapters():Promise<PremiumChaptersNovel[]> {
+  const QUERY = `query MyQuery {
+    novels(last: 10, orderBy: publishedAt_DESC) {
+      id
+      slug
+      title
+      chapters(where: {premium: true}, first: 3) {
+        id
+        chapter
+        title
+        volume {
+          number
+        }
+        slug
+      }
+    }
+  }`
+  try {
+    console.log("Request made for novels")
+    const { novels } = await runQuery(QUERY);
+    
+    return novels
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
