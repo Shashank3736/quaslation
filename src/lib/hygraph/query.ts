@@ -266,3 +266,57 @@ export async function getNovel(slug: string): Promise<Novel> {
     throw error
   }
 }
+export type BlogIndex = {
+  description: string;
+  slug: string;
+  title: string;
+  publishedAt: Date;
+}
+
+export async function getBlogs({ last = 15, skip=0 }): Promise<BlogIndex[]> {
+  const QUERY = `query GetBlogs {
+    blogs(first: ${last}, skip: ${skip}, orderBy: createdAt_DESC) {
+      description
+      slug
+      title
+      publishedAt
+    }
+  }`
+  try {
+      console.log("Request made for blogs")
+      const { blogs } = await runQuery(QUERY);
+      
+      return blogs
+
+  } catch (error) {
+      console.error(error)
+      throw error
+  }
+}
+
+export type Blog = {
+  content: HTMLData;
+  publishedAt: Date;
+  title: string;
+}
+
+export async function getBlog(slug: string): Promise<Blog> {
+  const QUERY = `query GetBlog {
+    blog(where: {slug: "${slug}"}) {
+      content {
+        html
+      }
+      publishedAt
+      title
+    }
+  }`
+  try {
+      console.log("Request made for blog: ", slug)
+      const { blog } = await runQuery(QUERY);
+      
+      return blog
+  } catch (error) {
+      console.error(error)
+      throw error
+  }
+}
