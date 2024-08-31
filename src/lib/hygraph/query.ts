@@ -78,6 +78,32 @@ export async function getLatestPosts({ last=25, premium=false, skip=0 }): Promis
 
   } catch (error) {
       console.error(error)
-      throw "Server closed."
+      throw error;
+  }
+}
+
+export type ChapterSlug = {
+  slug: string;
+  novel: {
+      slug: string
+  }
+}
+
+export async function getChapterSlug(id: string):Promise<ChapterSlug> {
+  const QUERY = `query Chapter {
+    chapter(where: {id: "${id}"}) {
+      slug
+      novel {
+        slug
+      }
+    }
+  }`
+  try {
+      console.log("Request made for chapter: ", id)
+      const data = await runQuery(QUERY);
+      return data.chapter
+  } catch (error) {
+      console.error(error)
+      throw error
   }
 }
