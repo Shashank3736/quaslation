@@ -1,12 +1,12 @@
 import { Skeleton } from '@/components/ui/skeleton';
-import { getNovels, NovelIndex } from '@/lib/hygraph/query'
+import { getPremiumChapters, PremiumChaptersNovel } from '@/lib/hygraph/query'
 import React from 'react'
 import { FreeNovelChapterDialog } from './novel-box-dialog';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
-async function NovelBoxAdmin({ novel }:{ novel: NovelIndex }) {
+async function NovelBoxAdmin({ novel }:{ novel: PremiumChaptersNovel }) {
   return (
     <div className={cn('border m-4 p-4 rounded-lg lg:text-lg')}>
       <p className='mb-2'>{novel.title}</p>
@@ -27,7 +27,7 @@ async function NovelBoxAdmin({ novel }:{ novel: NovelIndex }) {
 
 
 export const NovelList = async () => {
-  const novels = await getNovels({});
+  const novels = await getPremiumChapters();
   return (
     <div className='flex flex-wrap'>
       {novels.map((novel) => (
