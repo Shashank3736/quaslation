@@ -1,11 +1,11 @@
-async function runQuery(QUERY: string) {
+async function runQuery(QUERY: string, stage: "PUBLISHED" | "DRAFT" = "PUBLISHED") {
   try {
     const response = await fetch(process.env.HYGRAPH_URL || "", {
       cache: "no-store",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        'gcms-stage': 'PUBLISHED',
+        'gcms-stage': stage,
       },
       body: JSON.stringify({
         query: QUERY
