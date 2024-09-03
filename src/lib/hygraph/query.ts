@@ -1,4 +1,4 @@
-async function runQuery(QUERY: string, stage: "PUBLISHED" | "DRAFT" = "PUBLISHED") {
+export async function runQuery(QUERY: string, stage: "PUBLISHED" | "DRAFT" = "PUBLISHED") {
   try {
     const response = await fetch(process.env.HYGRAPH_URL || "", {
       cache: "no-store",
