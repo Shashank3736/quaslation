@@ -1,4 +1,18 @@
 import RSS from "rss";
+type FeedChapter = {
+  chapter: number;
+  description: string;
+  id: string;
+  slug: string;
+  title: string;
+  published: Date;
+  novel: {
+    slug: string;
+  }
+  volume: {
+    number: number
+  }
+}
 
 export async function GET(req: Request) {
   const time = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
@@ -39,6 +53,8 @@ export async function GET(req: Request) {
     console.error(data)
     throw "Something is wrong! Please try again."
   }
+
+  const chapters:FeedChapter[] = data.data.chapters;
   
   const feed = new RSS({
     title: "Quaslation",
@@ -46,10 +62,10 @@ export async function GET(req: Request) {
     site_url: url.origin,
     feed_url: url.href,
     image_url: `${url.origin}/logo/logo100x100.jpg`,
-    categories: [data.data.chapters.map((chapter:any) => chapter.novel.slug).filter((value:string, index:number, self:string[]) => self.indexOf(value) === index)],
+    categories: chapters.map(chap => chap.novel.slug).filter((value, index, array) => array.indexOf(value) === index),
   })
 
-  for (const chapter of data.data.chapters) {
+  for (const chapter of chapters) {
     feed.item({
       title: `${chapter.novel.slug} ${chapter.volume.number > 0 ? `Volume ${chapter.volume.number} ` : ""}Chapter ${chapter.chapter}`,
       description: chapter.description,
@@ -58,7 +74,7 @@ export async function GET(req: Request) {
       categories: [chapter.novel.slug],
     })
   }
-
+  
   return new Response(feed.xml({ indent: true }), {
     headers: {
       "Content-Type": "text/xml",
