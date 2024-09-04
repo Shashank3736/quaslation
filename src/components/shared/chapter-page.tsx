@@ -19,7 +19,7 @@ export const ChapterPage = ({ chapter }: { chapter: FullChapter }) => {
         <article className='space-y-2 prose lg:prose-xl dark:prose-invert max-w-none' dangerouslySetInnerHTML={{__html: chapter.content.html}} />
       </SignedIn>
       <SignedOut>
-        <RestrictedContent>
+        <RestrictedContent type={"upcoming"}>
           <LimitedContent htmlContent={chapter.content.html} />
         </RestrictedContent>
       </SignedOut>

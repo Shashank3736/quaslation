@@ -12,7 +12,7 @@ export default function VolumeChapters({ data }: { data: Volume }) {
         <div  key={chapter.slug}>
           <Link href={`/novels/${volume.novel.slug}/${chapter.slug}`} className='hover:underline'>
           {chapter.chapter}. {chapter.title}
-          <Badge className={cn("ml-2", {"hidden": !chapter.premium})}>Premium</Badge>
+          <Badge className={cn("ml-2", {"hidden": !chapter.premium})}>Coming Soon</Badge>
           </Link>
         </div>
       )):(

@@ -20,7 +20,7 @@ const ChapterItem: React.FC<{ chapter: ChapterDetail; premium: boolean }> = Reac
     {premium ? (
       <div className="flex items-center mb-2">
         <H3 className="mr-2">Chapter {chapter.chapter}: {chapter.title}</H3>
-        <Badge>Premium</Badge>
+        <Badge>Coming Soon</Badge>
       </div>
     ) : (
       <H3 className="mb-2">Chapter {chapter.chapter}: {chapter.title}</H3>
@@ -142,7 +142,7 @@ export default function PostList({ premium = false }) {
 
   return (
     <div className="flex flex-col" ref={mainDivRef} role="feed" aria-busy={loading} aria-live="polite">
-      <h2 className="sr-only">{premium ? "Premium" : "Free"} Webnovel Chapters</h2>
+      <h2 className="sr-only">{premium ? "Upcoming" : "Latest"} Webnovel Chapters</h2>
       {chapters.chapters.length > 0 ? chapters.chapters.map((chapter) => (
         <ChapterItem key={chapter.slug} chapter={chapter} premium={premium} />
       )) : (

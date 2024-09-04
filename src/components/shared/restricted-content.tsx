@@ -7,6 +7,8 @@ import { SignInButton } from "@clerk/nextjs"
 import { Button } from "../ui/button"
 import { ReactNode } from "react"
 import { cn } from "@/lib/utils"
+import { DISCORD_INVITE_URL } from "@/lib/config"
+import Link from "next/link"
 
 const MESSAGE = {
   login: {
@@ -16,23 +18,31 @@ const MESSAGE = {
   premium: { 
     title: "Premium Content",
     message: "We apologize, but this content is exclusive to our premium subscribers. However, we're pleased to inform you that it will be made available to all users free of charge in the near future. Thank you for your patience and continued interest in the novel."
+  },
+  upcoming: {
+    title: "Coming Soon",
+    message: "This chapter will be available soon. Keep Reading!"
   }
 }
 
-export default function RestrictedContent({ children, type="login" }: { children: ReactNode, type?: "login" | "premium" }) {
+export default function RestrictedContent({ children, type="login" }: { children: ReactNode, type?: "login" | "premium" | "upcoming" }) {
   return (
     <div className="flex relative flex-col bg-background">
       <div className="mx-auto absolute text-center backdrop-blur-sm h-full w-full flex flex-col items-center justify-center">
         <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Restricted Content</div>
         <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">{MESSAGE[type].title}</h1>
         <p className="mt-4 text-muted-foreground max-w-md">{MESSAGE[type].message}</p>
-        <div className={cn("mt-6", { "hidden": (type !== "login") })}>
+        <div className={cn("mt-6")}>
+        {type === "login"?(
           <SignInButton>
             <Button>
               <LogInIcon className="mr-2 h-4 w-4" />
               Login
             </Button>
           </SignInButton>
+        ): (
+          <Button asChild><Link href={DISCORD_INVITE_URL}>Join Discord</Link></Button>
+        )}
         </div>
       </div>
       <div className="px-3 overflow-hidden max-h-[700px]">
