@@ -6,8 +6,8 @@ export default function Home() {
     <div className="p-4">
       <Tabs defaultValue="free">
         <TabsList className="mb-2">
-          <TabsTrigger value="free">Free</TabsTrigger>
-          <TabsTrigger value="premium">Premium</TabsTrigger>
+          <TabsTrigger value="free">Latest</TabsTrigger>
+          <TabsTrigger value="premium">Upcoming</TabsTrigger>
         </TabsList>
         <TabsContent value="free">
           <PostList />
