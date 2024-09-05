@@ -40,10 +40,13 @@ export const getLatestReleases = async ({ premium=false, take=10, skip=0 }) => {
       }
     },
     where: {
-      premium
+      premium,
+      publishedAt: {
+        not: null,
+      }
     }
   })
-  console.log(`Fetchded ${chapters.length} chapters from "getLatestReleases".`)
+  console.log(`Fetched ${chapters.length} chapters from "getLatestReleases".`)
   return chapters;
 }
 
@@ -91,7 +94,11 @@ export const getNovel = async (slug: string) => {
       slug
     },
     include: {
-      Volume: true,
+      Volume: {
+        where: {
+          publishedAt: { not: null }
+        }
+      },
     }
   });
 
@@ -99,6 +106,7 @@ export const getNovel = async (slug: string) => {
     prisma.chapter.findMany({
       where: {
         novelId: novel.id,
+        publishedAt: { not: null }
       },
       take: 1,
       select: {
@@ -115,6 +123,7 @@ export const getNovel = async (slug: string) => {
     prisma.chapter.findMany({
       where: {
         novelId: novel.id,
+        publishedAt: { not: null }
       },
       take: -1,
       select: {
@@ -149,6 +158,9 @@ export const getVolume = async(id: string) => {
           title: true,
           slug: true,
           premium: true,
+        },
+        where: {
+          publishedAt: { not: null }
         }
       },
       novel: {
@@ -166,7 +178,8 @@ export const getVolume = async(id: string) => {
 export const getChapter = async (slug: string) => {
   const chapter = await prisma.chapter.findUniqueOrThrow({
     where: {
-      slug: slug
+      slug: slug,
+      publishedAt: { not: null }
     },
     select: {
       number: true,
@@ -193,7 +206,8 @@ export const getChapter = async (slug: string) => {
         novelSerial: {
           serial: chapter.serial-1,
           novelId: chapter.novelId
-        }
+        },
+        publishedAt: { not: null }
       }
     }),
     prisma.chapter.findUnique({
@@ -201,7 +215,8 @@ export const getChapter = async (slug: string) => {
         novelSerial: {
           serial: chapter.serial+1,
           novelId: chapter.novelId
-        }
+        },
+        publishedAt: { not: null }
       }
     })
   ])
