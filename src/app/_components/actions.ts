@@ -1,5 +1,5 @@
 "use server";
 
-import { getLatestPosts } from "@/lib/hygraph/query";
+import { getLatestReleases } from "@/lib/prisma/query";
 
-export const action = getLatestPosts
+export const action = getLatestReleases;
