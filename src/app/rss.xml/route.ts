@@ -1,60 +1,42 @@
+import { prisma } from "@/lib/prisma/query";
+import { shortifyString } from "@/lib/utils";
 import RSS from "rss";
-type FeedChapter = {
-  chapter: number;
-  description: string;
-  id: string;
-  slug: string;
-  title: string;
-  published: Date;
-  novel: {
-    slug: string;
-  }
-  volume: {
-    number: number
-  }
-}
 
 export async function GET(req: Request) {
   const time = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
   const url = new URL(req.url);
-  const response = await fetch(process.env.HYGRAPH_URL || "", {
-    cache: "no-store",
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      'gcms-stage': 'PUBLISHED',
-    },
-    body: JSON.stringify({
-      query: `query MyQuery {
-                chapters(
-                  where: {premium: false, published_gte: "${time.toISOString()}"}
-                  first: 100
-                  orderBy: published_DESC
-                ) {
-                  id
-                  slug
-                  chapter
-                  title
-                  description
-                  published
-                  novel {
-                    slug
-                  }
-                  volume {
-                    number
-                  }
-                }
-              }`
-    })
+
+  const chapters = await prisma.chapter.findMany({
+    orderBy: [
+      {
+        publishedAt: "desc"
+      }
+    ],
+    where: {
+      publishedAt: { gte: time.toISOString() }
+    }, 
+    select: {
+      novel: {
+        select: {
+          slug: true
+        }
+      },
+      volume: {
+        select: {
+          number: true,
+        }
+      },
+      number: true,
+      publishedAt: true,
+      createdAt: true,
+      slug: true,
+      content: {
+        select: {
+          text: true,
+        }
+      }
+    }
   });
-  const data = await response.json();
-
-  if(!response.ok) {
-    console.error(data)
-    throw "Something is wrong! Please try again."
-  }
-
-  const chapters:FeedChapter[] = data.data.chapters;
   
   const feed = new RSS({
     title: "Quaslation",
@@ -67,10 +49,10 @@ export async function GET(req: Request) {
 
   for (const chapter of chapters) {
     feed.item({
-      title: `${chapter.novel.slug} ${chapter.volume.number > 0 ? `Volume ${chapter.volume.number} ` : ""}Chapter ${chapter.chapter}`,
-      description: chapter.description,
+      title: `${chapter.novel.slug} ${chapter.volume.number > 0 ? `Volume ${chapter.volume.number} ` : ""}Chapter ${chapter.number}`,
+      description: shortifyString(chapter.content.text, 255),
       url: `${url.origin}/novels/${chapter.novel.slug}/${chapter.slug}`,
-      date: new Date(chapter.published),
+      date: new Date(chapter.publishedAt ?? chapter.createdAt),
       categories: [chapter.novel.slug],
     })
   }
