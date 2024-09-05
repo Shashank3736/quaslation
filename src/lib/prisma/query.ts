@@ -159,3 +159,49 @@ export const getVolume = async(id: string) => {
   console.log(`Fetched Volume ${volume.number} of ${volume.novel.slug} and ${volume.Chapter.length} chapters.`)
   return volume
 }
+
+export const getChapter = async (slug: string) => {
+  const chapter = await prisma.chapter.findUniqueOrThrow({
+    where: {
+      slug: slug
+    },
+    select: {
+      number: true,
+      title: true,
+      premium: true,
+      serial: true,
+      novelId: true,
+      content: {
+        select: {
+          html: true
+        }
+      },
+      novel: {
+        select: {
+          slug: true,
+        }
+      }
+    }
+  })
+
+  const [previous, next] = await prisma.$transaction([
+    prisma.chapter.findUnique({
+      where: {
+        novelSerial: {
+          serial: chapter.serial-1,
+          novelId: chapter.novelId
+        }
+      }
+    }),
+    prisma.chapter.findUnique({
+      where: {
+        novelSerial: {
+          serial: chapter.serial+1,
+          novelId: chapter.novelId
+        }
+      }
+    })
+  ])
+
+  return { ...chapter, previous, next }
+}
