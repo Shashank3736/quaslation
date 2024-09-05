@@ -1,48 +1,45 @@
-import { runQuery } from "@/lib/hygraph/query";
+import { prisma } from "@/lib/prisma/query";
+import { shortifyString } from "@/lib/utils";
 import RSS from "rss";
-
-type FeedChapter = {
-  chapter: number;
-  description: string;
-  id: string;
-  slug: string;
-  title: string;
-  published: Date;
-  novel: {
-    slug: string;
-  }
-  volume: {
-    number: number
-  }
-}
 
 const ms = (days:number) => (days*24*60*60*1000)
 
 export async function GET(req: Request, { params }:{ params: { slug: string }}) {
   const time = new Date(new Date().getTime() - ms(7))
   const url = new URL(req.url);
-  const QUERY = `query MyQuery {
-    chapters(
-      last: 100
-      where: {novel: {slug: "${params.slug}"}, premium: false, published_gte: "${time.toISOString()}"}
-      orderBy: createdAt_DESC
-    ) {
-      chapter
-      description
-      id
-      slug
-      title
-      published
-      novel {
-        slug
+
+  const chapters= await prisma.chapter.findMany({
+    orderBy: [
+      {
+        publishedAt: "desc"
       }
-      volume {
-        number
+    ],
+    where: {
+      publishedAt: { gte: time.toISOString() },
+      novel: { slug: params.slug }
+    }, 
+    select: {
+      novel: {
+        select: {
+          slug: true
+        }
+      },
+      volume: {
+        select: {
+          number: true,
+        }
+      },
+      number: true,
+      publishedAt: true,
+      createdAt: true,
+      slug: true,
+      content: {
+        select: {
+          text: true,
+        }
       }
     }
-  }`
-
-  const { chapters }:{ chapters: FeedChapter[] } = await runQuery(QUERY);
+  });
   const feed = new RSS({
     title: "Quaslation",
     description: "Quality ai translations.",
@@ -54,10 +51,10 @@ export async function GET(req: Request, { params }:{ params: { slug: string }}) 
 
   for (const chapter of chapters) {
     feed.item({
-      title: `${chapter.novel.slug} ${chapter.volume.number > 0 ? `Volume ${chapter.volume.number} ` : ""}Chapter ${chapter.chapter}`,
-      description: chapter.description,
+      title: `${chapter.novel.slug} ${chapter.volume.number > 0 ? `Volume ${chapter.volume.number} ` : ""}Chapter ${chapter.number}`,
+      description: shortifyString(chapter.content.text, 255),
       url: `${url.origin}/novels/${chapter.novel.slug}/${chapter.slug}`,
-      date: new Date(chapter.published),
+      date: new Date(chapter.publishedAt ?? chapter.createdAt),
       categories: [chapter.novel.slug],
     })
   }
