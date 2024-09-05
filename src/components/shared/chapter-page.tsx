@@ -1,5 +1,3 @@
-
-import { FullChapter } from '@/lib/hygraph/query'
 import React from 'react'
 import H3 from '../typography/h3'
 import { SignedIn, SignedOut } from '@clerk/nextjs'
@@ -8,11 +6,14 @@ import LimitedContent from './limited-content'
 import { Button } from '../ui/button'
 import Link from 'next/link'
 import { ChapterNavigation, ScrollToTop } from './chapter-navigation'
+import { getChapter } from '@/lib/prisma/query'
+
+type FullChapter = Awaited<ReturnType<typeof getChapter>>
 
 export const ChapterPage = ({ chapter }: { chapter: FullChapter }) => {
   return (
     <div className='p-4'>
-      <H3 className='mb-4'>Chapter {chapter.chapter}: {chapter.title}</H3>
+      <H3 className='mb-4'>Chapter {chapter.number}: {chapter.title}</H3>
       {(chapter.premium) ? 
       <>
       <SignedIn>
