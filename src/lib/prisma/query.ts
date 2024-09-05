@@ -40,12 +40,12 @@ export const getLatestReleases = async ({ premium=false, take=10, skip=0 }) => {
       premium
     }
   })
-  console.log(`Fetchded ${chapters.length} chapters.`)
+  console.log(`Fetchded ${chapters.length} chapters from "getLatestReleases".`)
   return chapters;
 }
 
 export const getNovels = async () => {
-  return await prisma.novel.findMany({
+  const novels = await prisma.novel.findMany({
     select: {
       slug: true,
       title: true,
@@ -77,4 +77,85 @@ export const getNovels = async () => {
       }
     ]
   })
+
+  console.log(`Fetched ${novels.length} novels by "getNovels" method.`)
+  return novels
+}
+
+export const getNovel = async (slug: string) => {
+  const novel = await prisma.novel.findUniqueOrThrow({
+    where: {
+      slug
+    },
+    include: {
+      Volume: true,
+    }
+  });
+
+  const [first, last] = await prisma.$transaction([
+    prisma.chapter.findMany({
+      where: {
+        novelId: novel.id,
+      },
+      take: 1,
+      select: {
+        volume: {
+          select: {
+            number: true
+          }
+        },
+        number: true,
+        slug: true,
+        premium: true,
+      }
+    }),
+    prisma.chapter.findMany({
+      where: {
+        novelId: novel.id,
+      },
+      take: -1,
+      select: {
+        volume: {
+          select: {
+            number: true
+          }
+        },
+        number: true,
+        slug: true,
+        premium: true,
+      }
+    })
+  ])
+
+  console.log(`Fetched ${novel.title} info from "getNovel"`)
+
+  return { novel, first: first[0], last: last[0] }
+}
+
+export const getVolume = async(id: string) => {
+  const volume = await prisma.volume.findUniqueOrThrow({
+    where: {
+      id
+    },
+    select: {
+      number: true,
+      title: true,
+      Chapter: {
+        select: {
+          number: true,
+          title: true,
+          slug: true,
+          premium: true,
+        }
+      },
+      novel: {
+        select: {
+          slug: true
+        }
+      }
+    }
+  })
+
+  console.log(`Fetched Volume ${volume.number} of ${volume.novel.slug} and ${volume.Chapter.length} chapters.`)
+  return volume
 }
