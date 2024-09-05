@@ -1,7 +1,7 @@
 import "server-only";
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient()
+export const prisma = new PrismaClient()
 
 export const getLatestReleases = async ({ premium=false, take=10, skip=0 }) => {
   const chapters = await prisma.chapter.findMany({
