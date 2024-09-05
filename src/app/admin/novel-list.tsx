@@ -1,12 +1,14 @@
 import { Skeleton } from '@/components/ui/skeleton';
-import { getPremiumChapters, PremiumChaptersNovel } from '@/lib/hygraph/query'
 import React from 'react'
 import { FreeNovelChapterDialog } from './novel-box-dialog';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { getPremiumChapters } from '@/lib/prisma/query';
 
-async function NovelBoxAdmin({ novel }:{ novel: PremiumChaptersNovel }) {
+export type PremiumChapters = Awaited<ReturnType<typeof getPremiumChapters>>
+
+async function NovelBoxAdmin({ novel }:{ novel: PremiumChapters[number] }) {
   return (
     <div className={cn('border m-4 p-4 rounded-lg lg:text-lg')}>
       <p className='mb-2'>{novel.title}</p>

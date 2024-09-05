@@ -1,21 +1,21 @@
 "use client"
 
-import { PremiumChaptersNovel } from '@/lib/hygraph/query';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button';
-import { freeChapter } from '@/lib/hygraph/mutation';
 import { toast } from '@/components/ui/use-toast';
+import { PremiumChapters } from './novel-list';
+import { freeChapter } from './actions';
 
-export const FreeNovelChapterDialog = ({ novel }:{ novel: PremiumChaptersNovel }) => {
+export const FreeNovelChapterDialog = ({ novel }:{ novel: PremiumChapters[number] }) => {
   const [loading, setLoading] = useState(false);
   const [index, setIndex] = useState(0);
-  const chapters = useMemo(() => novel.chapters, [novel]);
+  const chapters = useMemo(() => novel.Chapter, [novel]);
   const chapter = useMemo(() => chapters.at(index), [chapters, index]);
 
   if(chapters.length === 0) return (
     <Button variant={"secondary"} disabled>Free</Button>
-  ) 
+  )
   else if (chapter == undefined) {
     return <Button disabled>Limit Reached</Button>
   }
@@ -23,7 +23,7 @@ export const FreeNovelChapterDialog = ({ novel }:{ novel: PremiumChaptersNovel }
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button disabled={loading}>{`Free v${chapter.volume.number}c${chapter.chapter}`}</Button>
+        <Button disabled={loading}>{`Free v${chapter.volume.number}c${chapter.number}`}</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogTitle>{chapter.title}</DialogTitle>
@@ -33,7 +33,7 @@ export const FreeNovelChapterDialog = ({ novel }:{ novel: PremiumChaptersNovel }
           </p>
           <p>Title: {chapter.title}</p>
           <p>Volume: {chapter.volume.number}</p>
-          <p>Chapter: {chapter.chapter}</p>
+          <p>Chapter: {chapter.number}</p>
         </DialogDescription>
         <DialogFooter>
           <DialogClose asChild>
@@ -53,7 +53,7 @@ export const FreeNovelChapterDialog = ({ novel }:{ novel: PremiumChaptersNovel }
               toast({
                 title: "New Free Chapter",
                 description: `Novel: ${release.novel.title}\n
-                Vol. ${release.volume.number} Chapter ${release.chapter}: ${chapter.title}`
+                Vol. ${release.volume.number} Chapter ${release.number}: ${chapter.title}`
               })
             }}
             >
