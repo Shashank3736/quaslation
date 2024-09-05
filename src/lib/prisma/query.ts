@@ -9,6 +9,9 @@ export const getLatestReleases = async ({ premium=false, take=10, skip=0 }) => {
     skip,
     orderBy: [
       {
+        publishedAt: "desc"
+      },
+      {
         createdAt: "desc"
       }
     ],
