@@ -1,5 +1,6 @@
 import { ChapterPage } from '@/components/shared/chapter-page';
-import { getChapter, getChapterSlug } from '@/lib/hygraph/query'
+import { getChapterSlug } from '@/lib/hygraph/query'
+import { getChapter } from '@/lib/prisma/query';
 import React from 'react'
 
 export default async function Page({ params }: { params: { id: string }}) {
