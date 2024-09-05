@@ -36,7 +36,9 @@ model Chapter {
   publishedAt DateTime?
   updatedAt   DateTime  @updatedAt
 
+  @@unique([volumeId, number], name: "volumeChapter")
   @@unique([novelId, serial], name: "novelSerial")
+  @@index([premium])
 }
 
 model Volume {
