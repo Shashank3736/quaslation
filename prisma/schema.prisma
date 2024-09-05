@@ -29,13 +29,14 @@ model Chapter {
   volumeId    String    @db.ObjectId
   volume      Volume    @relation(fields: [volumeId], references: [id])
   serial      Int
+  number      Float
   title       String
   content     RichText
   createdAt   DateTime  @default(now())
   publishedAt DateTime?
   updatedAt   DateTime  @updatedAt
 
-  @@unique([novelId, serial])
+  @@unique([novelId, serial], name: "novelSerial")
 }
 
 model Volume {
@@ -43,7 +44,7 @@ model Volume {
   createdAt   DateTime  @default(now())
   publishedAt DateTime?
   updatedAt   DateTime  @updatedAt
-  number      String
+  number      Float
   title       String?
   novelId     String    @db.ObjectId
   novel       Novel     @relation(fields: [novelId], references: [id])
