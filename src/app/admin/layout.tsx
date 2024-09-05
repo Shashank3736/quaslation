@@ -20,7 +20,8 @@ const AdminLayout = ({ children }:{ children: React.ReactNode }) => {
               </p>
             </Link>
           </Button>
-          <Button className='mb-4' asChild><Link href={"/admin"}>Premium</Link></Button>
+          <Button className='mb-4' asChild><Link href={"/admin"}>Free Chapters</Link></Button>
+          <Button className='mb-4' asChild><Link href={"/admin/chapter"}>Chapters</Link></Button>
           <ModeToggle showTheme />
         </div>
         <H2>Quaslation</H2>
