@@ -56,26 +56,27 @@ export const getNovels = async () => {
       slug: true,
       title: true,
       thumbnail: true,
-      Chapter: {
-        take: 2,
-        where: {
-          premium: false
-        },
-        orderBy: [
-          {
-            createdAt: "desc"
-          }
-        ],
-        select: {
-          volume: {
-            select: {
-              number: true
-            }
-          },
-          number: true,
-          title: true
-        }
-      }
+      id: true,
+      // Chapter: {
+      //   take: 2,
+      //   where: {
+      //     premium: false
+      //   },
+      //   orderBy: [
+      //     {
+      //       createdAt: "desc"
+      //     }
+      //   ],
+      //   select: {
+      //     volume: {
+      //       select: {
+      //         number: true
+      //       }
+      //     },
+      //     number: true,
+      //     title: true
+      //   }
+      // }
     },
     orderBy: [
       {
@@ -276,4 +277,37 @@ export const putFreeChapter = async (slug: string) => {
   });
 
   return release;
+}
+
+export const getAdminChapters = async (options?:{ novelId?: string, skip?: number }) => {
+  return await prisma.chapter.findMany({
+    take: 25,
+    skip: options?.skip,
+    where: {
+      novelId: options?.novelId
+    },
+    orderBy: [
+      {
+        createdAt: "desc",
+      }
+    ],
+    select: {
+      id: true,
+      number: true,
+      serial: true,
+      novel: {
+        select: {
+          title: true,
+          id: true,
+        }
+      },
+      volume: {
+        select: {
+          number: true
+        }
+      },
+      title: true,
+      publishedAt: true
+    }
+  })
 }
