@@ -43,3 +43,38 @@ export const getLatestReleases = async ({ premium=false, take=10, skip=0 }) => {
   console.log(`Fetchded ${chapters.length} chapters.`)
   return chapters;
 }
+
+export const getNovels = async () => {
+  return await prisma.novel.findMany({
+    select: {
+      slug: true,
+      title: true,
+      thumbnail: true,
+      Chapter: {
+        take: 2,
+        where: {
+          premium: false
+        },
+        orderBy: [
+          {
+            createdAt: "desc"
+          }
+        ],
+        select: {
+          volume: {
+            select: {
+              number: true
+            }
+          },
+          number: true,
+          title: true
+        }
+      }
+    },
+    orderBy: [
+      {
+        updatedAt: "desc"
+      }
+    ]
+  })
+}
