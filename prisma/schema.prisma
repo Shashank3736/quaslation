@@ -1,0 +1,66 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Novel {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  slug        String    @unique
+  title       String    @unique
+  description RichText
+  thumbnail   String?
+  Chapter     Chapter[]
+  Volume      Volume[]
+  createdAt   DateTime @default(now())
+  publishedAt DateTime?
+  updatedAt   DateTime @updatedAt
+}
+
+model Chapter {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  premium     Boolean  @default(true)
+  slug        String   @unique
+  novel       Novel    @relation(fields: [novelId], references: [id])
+  novelId     String   @db.ObjectId
+  volumeId    String   @db.ObjectId
+  volume      Volume   @relation(fields: [volumeId], references: [id])
+  serial      Int
+  title       String
+  content     RichText
+  createdAt   DateTime @default(now())
+  publishedAt DateTime?
+  updatedAt   DateTime @updatedAt
+
+  @@unique([novelId, serial])
+}
+
+model Volume {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime @default(now())
+  publishedAt DateTime?
+  updatedAt   DateTime @updatedAt
+  number      String
+  title       String?
+  novelId     String    @db.ObjectId
+  novel       Novel     @relation(fields: [novelId], references: [id])
+  Chapter     Chapter[]
+
+  @@unique([novelId, number])
+}
+
+model User {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  clerkId    String  @unique
+  admin      Boolean @default(false)
+  subscriber Boolean @default(false)
+}
+
+type RichText {
+  raw      String
+  html     String
+  markdown String
+}
