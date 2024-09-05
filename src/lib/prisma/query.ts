@@ -223,3 +223,57 @@ export const getChapter = async (slug: string) => {
 
   return { ...chapter, previous, next }
 }
+
+export const getPremiumChapters = async () => {
+  return await prisma.novel.findMany({
+    select: {
+      title: true,
+      slug: true,
+      Chapter: {
+        where: {
+          premium: true,
+          publishedAt: { not: null },
+        },
+        select: {
+          volume: {
+            select: {
+              number: true,
+            }
+          },
+          number: true,
+          title: true,
+          slug: true,
+        },
+        take: 3,
+      },
+    }
+  })
+}
+
+export const putFreeChapter = async (slug: string) => {
+  const release = await prisma.chapter.update({
+    where: {
+      slug
+    },
+    data: {
+      premium: false,
+      publishedAt: new Date(),
+    },
+    select: {
+      number: true,
+      title: true,
+      volume: {
+        select: {
+          number: true
+        }
+      },
+      novel: {
+        select: {
+          title: true
+        }
+      }
+    }
+  });
+
+  return release;
+}
