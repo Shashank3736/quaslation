@@ -1,11 +1,11 @@
 import H2 from '@/components/typography/h2'
 import { Separator } from '@/components/ui/separator'
-import { getNovels } from '@/lib/hygraph/query'
+import { getNovelList } from '@/lib/db/query'
 import Link from 'next/link'
 import React from 'react'
 
 export default async function NovelList() {
-  const novels = await getNovels({})
+  const novels = await getNovelList()
   return (
     <div className='p-4'>
       <H2 className='text-center'>List of Novels</H2>

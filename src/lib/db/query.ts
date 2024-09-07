@@ -22,5 +22,6 @@ export async function getNovelList() {
   return db.select({
     slug: novel.slug,
     title: novel.title,
+    id: novel.id,
   }).from(novel).orderBy(novel.title)
 }
