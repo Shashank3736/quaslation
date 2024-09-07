@@ -2,7 +2,7 @@ import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import React from 'react'
 
-const Volume = () => {
+export const Volume = () => {
   return (
     <div className='mt-2'>
       <Skeleton className='h-3 w-32' />
