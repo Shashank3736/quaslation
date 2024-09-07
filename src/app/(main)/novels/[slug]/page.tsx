@@ -25,11 +25,14 @@ export default async function NovelPage({ params }:{ params: { slug: string }}) 
         <div className='p-4'>
           <H2 className='text-center'>{novel.title}</H2>
           <div className='flex space-x-4 mt-8'>
+            {/* @TODO
+            * Novels first and last chapter link support
+            */}
             <Button asChild>
-              <Link href={`/novels/${novel.id}/chapter/0`}>Read First</Link>
+              <Link href={`/novels/${params.slug}/0`}>Read First</Link>
             </Button>
             <Button variant={"secondary"} asChild>
-              <Link href={`/novels/${novel.id}/chapter/-1`}>Read Last</Link>
+              <Link href={`/novels/${params.slug}/-1`}>Read Last</Link>
             </Button>
           </div>
         </div>
