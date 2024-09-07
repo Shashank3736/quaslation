@@ -1,10 +1,10 @@
 import { ChapterPage } from '@/components/shared/chapter-page';
-import { getChapter } from '@/lib/hygraph/query'
+import { getChapterBySlug } from '@/lib/db/query';
 import React from 'react'
 
 export default async function Page({ params }: { params: { slug: string, chapter: string }}) {
-  const chapter = await getChapter(params.chapter);
+  const chapter = await getChapterBySlug(params.chapter);
   return (
-    <ChapterPage chapter={chapter} />
+    <ChapterPage chapter={chapter} novelSlug={params.slug} />
   )
 }
