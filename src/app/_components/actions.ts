@@ -1,5 +1,5 @@
 "use server";
 
-import { getLatestPosts } from "@/lib/hygraph/query";
+import { getReleases } from "@/lib/db/query";
 
-export const action = getLatestPosts
+export const action = getReleases
