@@ -1,7 +1,7 @@
 import "server-only";
 import { db } from "."
 import { chapter, novel, richText, volume } from "./schema";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq, gte, lte } from "drizzle-orm";
 
 export async function getReleases({ skip=0, premium=false }) {
   return db.select({
@@ -55,3 +55,26 @@ export const getNovelChapters = async({ novelId, skip=0, limit=25 }:{ novelId: n
   .orderBy(chapter.serial)
   .offset(skip).limit(limit)
 }
+
+export const getChapterBySlug = async (slug: string) => {
+  const data = await db.select({
+    number: chapter.number,
+    title: chapter.title,
+    premium: chapter.premium,
+    content: richText.html,
+    serial: chapter.serial,
+    novelId: chapter.novelId,
+    slug: chapter.slug,
+  })
+  .from(chapter)
+  .where(eq(chapter.slug, slug))
+  .innerJoin(richText, eq(chapter.richTextId, richText.id))
+  return data[0]
+}
+
+export const getNovelChaptersBetweenSerial = async({ novelId, first, last }:{ novelId: number, first: number, last: number }) => {
+  return db.select({
+    slug: chapter.slug
+  }).from(chapter)
+  .where(and(gte(chapter.number, first), lte(chapter.number, last), eq(chapter.novelId, novelId)))
+} 
