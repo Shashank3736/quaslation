@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { getData } from './actions'
 import { Volume } from '../loading'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 
 type Chapters = Awaited<ReturnType<typeof getData>>
 
@@ -43,7 +44,7 @@ export default function ChapterList({ novelId, novelSlug }:{ novelId: number, no
         {(chap.volume && chap.volume.number !== -1 && (i === 0 || chap.volume.number !== chapters[i-1].volume?.number)) ? (
           <Muted>Volume {chap.volume.number}{chap.volume.title ? `: ${chap.volume.title}`:""}</Muted>
         ):null}
-        <Link className='hover:underline' href={`/novels/${novelSlug}/${chap.slug}`}>{`${chap.number}. ${chap.title}`}</Link>
+        <Link className='hover:underline' href={`/novels/${novelSlug}/${chap.slug}`}>{`${chap.number}. ${chap.title}`} {chap.premium ? (<Badge>Coming Soon</Badge>):null}</Link>
         </>
       ))}
       {more ? (
