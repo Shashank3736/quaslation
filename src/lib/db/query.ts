@@ -49,6 +49,7 @@ export const getNovelChapters = async({ novelId, skip=0, limit=25 }:{ novelId: n
       title: volume.title
     },
     number: chapter.number,
+    premium: chapter.premium,
   }).from(chapter)
   .where(eq(chapter.novelId, novelId))
   .leftJoin(volume, eq(chapter.volumeId, volume.id))
