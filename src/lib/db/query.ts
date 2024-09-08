@@ -76,5 +76,31 @@ export const getNovelChaptersBetweenSerial = async({ novelId, first, last }:{ no
   return db.select({
     slug: chapter.slug
   }).from(chapter)
-  .where(and(gte(chapter.number, first), lte(chapter.number, last), eq(chapter.novelId, novelId)))
+  .where(and(gte(chapter.serial, first), lte(chapter.serial, last), eq(chapter.novelId, novelId)))
 } 
+
+export const getNovelFirstChapter = async(novelId: number) => {
+  const data = await db.select({
+    slug: chapter.slug,
+    novel: novel.slug,
+  }).from(chapter)
+  .where(eq(chapter.novelId, novelId))
+  .innerJoin(novel, eq(chapter.novelId, novel.id))
+  .orderBy(chapter.serial)
+  .limit(1)
+
+  return data[0]
+}
+
+export const getNovelLastChapter = async(novelId: number) => {
+  const data = await db.select({
+    slug: chapter.slug,
+    novel: novel.slug,
+  }).from(chapter)
+  .where(eq(chapter.novelId, novelId))
+  .innerJoin(novel, eq(chapter.novelId, novel.id))
+  .orderBy(desc(chapter.serial))
+  .limit(1);
+
+  return data[0]
+}
