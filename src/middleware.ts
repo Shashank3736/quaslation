@@ -1,5 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { getChapterSlug } from "./lib/hygraph/query";
+import { getChapterSlug } from "./lib/_hygraph/query";
 import { NextResponse } from "next/server";
 import { getNovelFirstChapter, getNovelLastChapter } from "./lib/db/query";
 
