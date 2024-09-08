@@ -1,5 +1,12 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import remarkRehype from 'remark-rehype'
+import rehypeStringify from 'rehype-stringify'
+import remarkGfm from 'remark-gfm'
+import remarkParse from 'remark-parse'
+import {remark} from 'remark'
+import strip from 'strip-markdown'
+import {unified} from 'unified'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -157,3 +164,22 @@ export function formatDate(date: Date): string {
 }
 
 export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+export const markdownToHtml = async (markdown: string) => {
+  const file = await unified()
+  .use(remarkParse)
+  .use(remarkGfm)
+  .use(remarkRehype)
+  .use(rehypeStringify)
+  .process(markdown)
+
+  return String(file);
+}
+
+export const markdownToText = async (markdown: string) => {
+  const file = await remark()
+  .use(strip)
+  .process(markdown)
+
+  return String(file);
+}
