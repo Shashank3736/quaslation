@@ -137,5 +137,5 @@ export const publishChapters = async({ novelId, serial }:{ novelId: number, seri
   return db.update(chapter).set({
     publishedAt: new Date().toISOString()
   })
-  .where(and(lte(chapter.serial, serial), isNull(chapter.publishedAt)))
+  .where(and(lte(chapter.serial, serial), isNull(chapter.publishedAt), eq(chapter.novelId, novelId)))
 }
