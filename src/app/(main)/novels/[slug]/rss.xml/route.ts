@@ -1,48 +1,40 @@
-import { runQuery } from "@/lib/hygraph/query";
+import { db } from "@/lib/db";
+import { chapterTable, novelTable, richText, volumeTable } from "@/lib/db/schema";
+import { and, eq, gte, isNotNull } from "drizzle-orm";
 import RSS from "rss";
-
-type FeedChapter = {
-  chapter: number;
-  description: string;
-  id: string;
-  slug: string;
-  title: string;
-  published: Date;
-  novel: {
-    slug: string;
-  }
-  volume: {
-    number: number
-  }
-}
 
 const ms = (days:number) => (days*24*60*60*1000)
 
 export async function GET(req: Request, { params }:{ params: { slug: string }}) {
   const time = new Date(new Date().getTime() - ms(7))
   const url = new URL(req.url);
-  const QUERY = `query MyQuery {
-    chapters(
-      last: 100
-      where: {novel: {slug: "${params.slug}"}, premium: false, published_gte: "${time.toISOString()}"}
-      orderBy: createdAt_DESC
-    ) {
-      chapter
-      description
-      id
-      slug
-      title
-      published
-      novel {
-        slug
-      }
-      volume {
-        number
-      }
-    }
-  }`
 
-  const { chapters }:{ chapters: FeedChapter[] } = await runQuery(QUERY);
+  const novel = (await db.select({
+    id: novelTable.id,
+  }).from(novelTable).where(eq(novelTable.slug, params.slug)))[0]
+
+  const chapters = await db.select({
+    chapter: chapterTable.number,
+    slug: chapterTable.slug,
+    description: richText.text,
+    published: chapterTable.publishedAt,
+    novel: {
+      slug: novelTable.slug,
+    },
+    volume: {
+      number: volumeTable.number,
+    }
+  })
+  .from(chapterTable)
+  .innerJoin(novelTable, eq(chapterTable.novelId, novelTable.id))
+  .innerJoin(richText, eq(chapterTable.richTextId, richText.id))
+  .innerJoin(volumeTable, eq(chapterTable.volumeId, volumeTable.id))
+  .where(and(
+    isNotNull(chapterTable.publishedAt),
+    gte(chapterTable.publishedAt, time.toISOString()), 
+    eq(chapterTable.premium, false),
+    eq(chapterTable.novelId, novel.id)
+  ));
   const feed = new RSS({
     title: "Quaslation",
     description: "Quality ai translations.",
@@ -57,7 +49,7 @@ export async function GET(req: Request, { params }:{ params: { slug: string }}) 
       title: `${chapter.novel.slug} ${chapter.volume.number > 0 ? `Volume ${chapter.volume.number} ` : ""}Chapter ${chapter.chapter}`,
       description: chapter.description,
       url: `${url.origin}/novels/${chapter.novel.slug}/${chapter.slug}`,
-      date: new Date(chapter.published),
+      date: new Date(chapter.published || ""),
       categories: [chapter.novel.slug],
     })
   }
