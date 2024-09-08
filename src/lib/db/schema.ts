@@ -109,3 +109,9 @@ export const chapter = pgTable("Chapter", {
 		}).onUpdate("cascade").onDelete("restrict"),
 	}
 });
+
+export const chapterTable = chapter;
+export const volumeTable = volume;
+export const novelTable = novel;
+export const roleEnum = role;
+export const richTextTable = richText;
