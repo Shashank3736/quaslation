@@ -1,7 +1,7 @@
 import "server-only";
 import { db } from "."
 import { chapter, novel, richText, volume } from "./schema";
-import { and, desc, eq, gte, lte } from "drizzle-orm";
+import { and, count, desc, eq, gte, lte, or } from "drizzle-orm";
 
 export async function getReleases({ skip=0, premium=false }) {
   return db.select({
@@ -104,4 +104,31 @@ export const getNovelLastChapter = async(novelId: number) => {
   .limit(1);
 
   return data[0]
+}
+
+export const getChapters = async({ novelId, skip=0, limit=25 }:{ novelId?: number, skip?: number, limit?: number }) => {
+  const data = db.select({
+    id: chapter.id,
+    serial: chapter.serial,
+    number: chapter.number,
+    title: chapter.title,
+    publishedAt: chapter.publishedAt,
+    premium: chapter.premium,
+    novel: {
+      title: novel.title,
+      id: novel.id,
+    }
+  }).from(chapter).innerJoin(novel, eq(chapter.novelId, novel.id))
+  if(novelId) data.where(eq(chapter.novelId, novelId)).orderBy(desc(chapter.serial))
+  else data.orderBy(desc(chapter.createdAt))
+  
+  return await data.limit(limit).offset(skip);
+}
+
+export const freeChapters = async({ novelId, first, last }:{ novelId: number, first: number, last: number}) => {
+  return db.update(chapter).set({
+    premium: false,
+    publishedAt: new Date().toISOString()
+  })
+  .where(and(eq(chapter.novelId, novelId), gte(chapter.serial, first), lte(chapter.serial, last)))
 }
