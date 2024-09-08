@@ -6,7 +6,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { getChapters } from '@/lib/db/query';
 import { shortifyString } from '@/lib/utils';
 import React from 'react'
-import { freeChapter } from './actions';
+import { freeChapter, publish } from './actions';
 
 const WrenchSVG = () => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -45,6 +45,9 @@ export const ChaptersTable = ({ data }:{ data: Awaited<ReturnType<typeof getChap
                 <DropdownMenuContent>
                   <DropdownMenuItem className='cursor-pointer' onClick={() => freeChapter(chap.novel.id, chap.serial)}>
                     Free Chapter
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className='cursor-pointer' onClick={() => publish({ novelId: chap.novel.id, serial: chap.serial})}>
+                    Publish
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
