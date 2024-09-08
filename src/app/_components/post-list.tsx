@@ -86,7 +86,7 @@ export default function PostList({ premium = false }) {
     setError(null)
     try {
       const data = await getLatestPosts({ skip, premium })
-      if(data.length === 0) {
+      if(data.length < 10) {
         setMore(false)
       }
       if (skip) {
