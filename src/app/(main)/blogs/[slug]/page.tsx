@@ -1,7 +1,7 @@
 import H1 from '@/components/typography/h1';
 import Muted from '@/components/typography/muted';
 import { Separator } from '@/components/ui/separator';
-import { getBlog } from '@/lib/hygraph/query'
+import { getBlog } from '@/lib/_hygraph/query'
 import { formatDate } from '@/lib/utils';
 import React from 'react'
 
