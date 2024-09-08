@@ -46,9 +46,11 @@ export const ChaptersTable = ({ data }:{ data: Awaited<ReturnType<typeof getChap
                   <DropdownMenuItem className='cursor-pointer' onClick={() => freeChapter(chap.novel.id, chap.serial)}>
                     Free Chapter
                   </DropdownMenuItem>
+                  {chap.publishedAt ? null: (
                   <DropdownMenuItem className='cursor-pointer' onClick={() => publish({ novelId: chap.novel.id, serial: chap.serial})}>
                     Publish
                   </DropdownMenuItem>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             </TableCell>
