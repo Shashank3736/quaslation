@@ -7,6 +7,7 @@ import { getChapters } from '@/lib/db/query';
 import { shortifyString } from '@/lib/utils';
 import React from 'react'
 import { freeChapter, publish } from './actions';
+import Link from 'next/link';
 
 const WrenchSVG = () => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -51,6 +52,9 @@ export const ChaptersTable = ({ data }:{ data: Awaited<ReturnType<typeof getChap
                     Publish
                   </DropdownMenuItem>
                   )}
+                  <DropdownMenuItem asChild>
+                    <Link href={`/admin/chapters/edit/${chap.id}`}>Edit</Link>
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </TableCell>
