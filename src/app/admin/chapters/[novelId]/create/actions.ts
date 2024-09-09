@@ -6,6 +6,7 @@ import { db } from "@/lib/db"
 import { chapterTable, richTextTable, volumeTable } from "@/lib/db/schema"
 import { markdownToHtml, markdownToText, slugify } from "@/lib/utils"
 import { and, eq } from "drizzle-orm"
+import { revalidatePath } from "next/cache"
 
 export const createChapter = async (novelId:number, values: z.infer<typeof createChapterFormSchema>) => {
   try {
@@ -34,6 +35,8 @@ export const createChapter = async (novelId:number, values: z.infer<typeof creat
         novelId: novelId,
         volumeId: volumeData[0].id,
       })
+
+      revalidatePath(`/admin/chapters/${novelId}/create`);
     } catch (error) {
       await db.delete(richTextTable).where(eq(richTextTable.id, content[0].id));
       console.error(error);
