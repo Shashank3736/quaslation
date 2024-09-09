@@ -15,6 +15,7 @@ const AdminNovelChapters = async({ params, searchParams }:{ params: { novelId: s
   return (
     <div className='m-4'>
       <Button asChild><Link href={`${novelId}/create`}>Create Chapter +</Link></Button>
+      <Button className='ml-4' asChild><Link href={`/admin/volumes/${novelId}/create`}>Create Volume +</Link></Button>
       <ChaptersTable data={chapters} />
       <div className='flex space-x-4'>
         <Button disabled={page === 1}>
