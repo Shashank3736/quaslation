@@ -161,3 +161,7 @@ export const getLatestChapter = async(novelId: number) => {
     throw new Error("Something seems wrong.");
   }
 }
+
+export const getNovelFromId = async(id: number) => {
+  return (await db.select().from(novel).where(eq(novel.id, id))).at(0)
+}
