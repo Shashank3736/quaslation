@@ -20,7 +20,7 @@ export const volume = pgTable("Volume", {
 	id: serial("id").primaryKey().notNull(),
 	createdAt: timestamp("createdAt", { precision: 3, mode: 'string' }).default(sql`CURRENT_TIMESTAMP`).notNull(),
 	publishedAt: timestamp("publishedAt", { precision: 3, mode: 'string' }),
-	updatedAt: timestamp("updatedAt", { precision: 3, mode: 'string' }).notNull(),
+	updatedAt: timestamp("updatedAt", { precision: 3, mode: 'string' }).notNull().defaultNow(),
 	number: doublePrecision("number").notNull(),
 	title: text("title"),
 	novelId: integer("novelId").notNull(),
@@ -55,7 +55,7 @@ export const novel = pgTable("Novel", {
 	thumbnail: text("thumbnail"),
 	createdAt: timestamp("createdAt", { precision: 3, mode: 'string' }).default(sql`CURRENT_TIMESTAMP`).notNull(),
 	publishedAt: timestamp("publishedAt", { precision: 3, mode: 'string' }),
-	updatedAt: timestamp("updatedAt", { precision: 3, mode: 'string' }).notNull(),
+	updatedAt: timestamp("updatedAt", { precision: 3, mode: 'string' }).notNull().defaultNow(),
 	richTextId: integer("richTextId").notNull(),
 },
 (table) => {
@@ -82,7 +82,7 @@ export const chapter = pgTable("Chapter", {
 	title: text("title").notNull(),
 	createdAt: timestamp("createdAt", { precision: 3, mode: 'string' }).default(sql`CURRENT_TIMESTAMP`).notNull(),
 	publishedAt: timestamp("publishedAt", { precision: 3, mode: 'string' }),
-	updatedAt: timestamp("updatedAt", { precision: 3, mode: 'string' }).notNull(),
+	updatedAt: timestamp("updatedAt", { precision: 3, mode: 'string' }).notNull().defaultNow(),
 	richTextId: integer("richTextId").notNull(),
 },
 (table) => {
