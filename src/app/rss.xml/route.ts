@@ -1,3 +1,7 @@
+import { db } from "@/lib/db";
+import { chapterTable, novelTable, richText, volumeTable } from "@/lib/db/schema";
+import { shortifyString } from "@/lib/utils";
+import { and, eq, isNotNull, gte } from "drizzle-orm";
 import RSS from "rss";
 type FeedChapter = {
   chapter: number;
@@ -17,44 +21,25 @@ type FeedChapter = {
 export async function GET(req: Request) {
   const time = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
   const url = new URL(req.url);
-  const response = await fetch(process.env.HYGRAPH_URL || "", {
-    cache: "no-store",
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      'gcms-stage': 'PUBLISHED',
+  
+
+  const chapters = await db.select({
+    chapter: chapterTable.number,
+    slug: chapterTable.slug,
+    description: richText.text,
+    published: chapterTable.publishedAt,
+    novel: {
+      slug: novelTable.slug,
     },
-    body: JSON.stringify({
-      query: `query MyQuery {
-                chapters(
-                  where: {premium: false, published_gte: "${time.toISOString()}"}
-                  first: 100
-                  orderBy: published_DESC
-                ) {
-                  id
-                  slug
-                  chapter
-                  title
-                  description
-                  published
-                  novel {
-                    slug
-                  }
-                  volume {
-                    number
-                  }
-                }
-              }`
-    })
-  });
-  const data = await response.json();
-
-  if(!response.ok) {
-    console.error(data)
-    throw "Something is wrong! Please try again."
-  }
-
-  const chapters:FeedChapter[] = data.data.chapters;
+    volume: {
+      number: volumeTable.number,
+    }
+  })
+  .from(chapterTable)
+  .innerJoin(novelTable, eq(chapterTable.novelId, novelTable.id))
+  .innerJoin(richText, eq(chapterTable.richTextId, richText.id))
+  .innerJoin(volumeTable, eq(chapterTable.volumeId, volumeTable.id))
+  .where(and(isNotNull(chapterTable.publishedAt),gte(chapterTable.publishedAt, time.toISOString()), eq(chapterTable.premium, false)));
   
   const feed = new RSS({
     title: "Quaslation",
@@ -68,9 +53,9 @@ export async function GET(req: Request) {
   for (const chapter of chapters) {
     feed.item({
       title: `${chapter.novel.slug} ${chapter.volume.number > 0 ? `Volume ${chapter.volume.number} ` : ""}Chapter ${chapter.chapter}`,
-      description: chapter.description,
+      description: shortifyString(chapter.description, 255),
       url: `${url.origin}/novels/${chapter.novel.slug}/${chapter.slug}`,
-      date: new Date(chapter.published),
+      date: new Date(chapter.published || ""),
       categories: [chapter.novel.slug],
     })
   }
