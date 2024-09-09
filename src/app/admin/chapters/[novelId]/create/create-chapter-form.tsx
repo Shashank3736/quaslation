@@ -1,7 +1,7 @@
 "use client";
 
 import { getLatestChapter } from '@/lib/db/query';
-import React from 'react'
+import React, { useState } from 'react'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -37,12 +37,16 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
       volume: previousChapter?.volume
     }
   })
+  
+  const [submiting, setSubmiting] = useState(false);
 
   const onSubmit = async (values: z.infer<typeof createChapterFormSchema>) => {
+    setSubmiting(true);
     await createChapter(novelId, values) 
     toast({
       description: "Completed."
     })
+    setSubmiting(false);
   }
   return (
     <Form {...form}>
@@ -117,7 +121,7 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
             </FormItem>
           )} 
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" disabled={submiting}>Submit</Button>
       </form>
     </Form>
   )
