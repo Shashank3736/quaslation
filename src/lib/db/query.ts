@@ -139,3 +139,25 @@ export const publishChapters = async({ novelId, serial }:{ novelId: number, seri
   })
   .where(and(lte(chapter.serial, serial), isNull(chapter.publishedAt), eq(chapter.novelId, novelId)))
 }
+
+export const getLatestChapter = async(novelId: number) => {
+  try {
+    const data = await db.select({
+      serial: chapter.serial,
+      number: chapter.number,
+      volume: volume.number,
+      novel: novel.title
+    })
+    .from(chapter)
+    .where(eq(chapter.novelId, novelId))
+    .innerJoin(volume, eq(chapter.volumeId, volume.id))
+    .innerJoin(novel, eq(chapter.novelId, novel.id))
+    .orderBy(desc(chapter.serial))
+    .limit(1)
+
+    return data.at(0);
+  } catch (error) {
+    console.error(error)
+    throw new Error("Something seems wrong.");
+  }
+}
