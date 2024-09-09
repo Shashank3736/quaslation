@@ -11,7 +11,7 @@ const CreateChapter = async({ params }:{ params: { novelId: string }}) => {
   const previousChapter = await getLatestChapter(novelId);
   return (
     <div className='m-4'>
-      <H2>Create Chapter</H2>
+      <H2>Create Chapter ({previousChapter?.novel})</H2>
       <CreateChapterForm previousChapter={previousChapter} novelId={novelId} />
     </div>
   )
