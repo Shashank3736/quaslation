@@ -22,9 +22,9 @@ import { createChapter } from './actions';
 
 export const createChapterFormSchema = z.object({
   title: z.string(),
-  serial: z.number(),
-  number: z.number(),
-  volume: z.number(),
+  serial: z.coerce.number(),
+  number: z.coerce.number(),
+  volume: z.coerce.number(),
   content: z.string()
 })
 
