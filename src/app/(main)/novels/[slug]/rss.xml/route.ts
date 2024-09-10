@@ -31,7 +31,7 @@ export async function GET(req: Request, { params }:{ params: { slug: string }}) 
   .innerJoin(volumeTable, eq(chapterTable.volumeId, volumeTable.id))
   .where(and(
     isNotNull(chapterTable.publishedAt),
-    gte(chapterTable.publishedAt, time.toISOString()), 
+    gte(chapterTable.publishedAt, time), 
     eq(chapterTable.premium, false),
     eq(chapterTable.novelId, novel.id)
   ));

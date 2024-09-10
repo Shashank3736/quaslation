@@ -19,7 +19,6 @@ export default clerkMiddleware(async (auth, req) => {
   }
   if(url.pathname.startsWith("/_series")) {
     const [_1, _2, novelId, pos] = url.pathname.split("/");
-    console.log(novelId)
     let chapter = {
       slug:"",
       novel:""

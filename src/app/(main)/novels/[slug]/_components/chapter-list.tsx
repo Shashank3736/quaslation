@@ -28,7 +28,6 @@ export default function ChapterList({ novelId, novelSlug }:{ novelId: number, no
   }, [novelId])
 
   useEffect(() => {
-    console.log("Fetching chapter in useEffect.")
     fetchChapters({})
   },[fetchChapters])
 

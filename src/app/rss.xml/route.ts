@@ -3,20 +3,6 @@ import { chapterTable, novelTable, richText, volumeTable } from "@/lib/db/schema
 import { shortifyString } from "@/lib/utils";
 import { and, eq, isNotNull, gte } from "drizzle-orm";
 import RSS from "rss";
-type FeedChapter = {
-  chapter: number;
-  description: string;
-  id: string;
-  slug: string;
-  title: string;
-  published: Date;
-  novel: {
-    slug: string;
-  }
-  volume: {
-    number: number
-  }
-}
 
 export async function GET(req: Request) {
   const time = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
@@ -39,7 +25,7 @@ export async function GET(req: Request) {
   .innerJoin(novelTable, eq(chapterTable.novelId, novelTable.id))
   .innerJoin(richText, eq(chapterTable.richTextId, richText.id))
   .innerJoin(volumeTable, eq(chapterTable.volumeId, volumeTable.id))
-  .where(and(isNotNull(chapterTable.publishedAt),gte(chapterTable.publishedAt, time.toISOString()), eq(chapterTable.premium, false)));
+  .where(and(isNotNull(chapterTable.publishedAt),gte(chapterTable.publishedAt, time), eq(chapterTable.premium, false)));
   
   const feed = new RSS({
     title: "Quaslation",

@@ -128,14 +128,14 @@ export const getChapters = async({ novelId, skip=0, limit=25 }:{ novelId?: numbe
 export const freeChapters = async({ novelId, first, last }:{ novelId: number, first: number, last: number}) => {
   return db.update(chapter).set({
     premium: false,
-    publishedAt: new Date().toISOString()
+    publishedAt: new Date()
   })
   .where(and(eq(chapter.novelId, novelId), gte(chapter.serial, first), lte(chapter.serial, last)))
 }
 
 export const publishChapters = async({ novelId, serial }:{ novelId: number, serial: number}) => {
   return db.update(chapter).set({
-    publishedAt: new Date().toISOString()
+    publishedAt: new Date()
   })
   .where(and(lte(chapter.serial, serial), isNull(chapter.publishedAt), eq(chapter.novelId, novelId)))
 }
