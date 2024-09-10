@@ -46,6 +46,10 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
     toast({
       description: "Completed."
     })
+    form.setValue("content", "")
+    form.setValue("number", values.number+1)
+    form.setValue("title", "")
+    form.setValue("serial", values.serial+1)
     setSubmiting(false);
   }
   return (
