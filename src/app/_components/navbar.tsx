@@ -1,7 +1,6 @@
 import { ModeToggle } from '@/components/system/dark-mode-button'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
@@ -48,12 +47,12 @@ export default function Navbar() {
         <ModeToggle />
       </div>
       <div className='flex space-x-2 justify-center items-center'>
-        <SignedIn>
+        {/* <SignedIn>
           <UserButton userProfileMode='navigation' userProfileUrl='/user-profile' />
         </SignedIn>
         <SignedOut>
           <SignInButton><Button>Sign In</Button></SignInButton>
-        </SignedOut>
+        </SignedOut> */}
       </div>
     </div>
   )

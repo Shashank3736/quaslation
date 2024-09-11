@@ -3,7 +3,6 @@
  * @see https://v0.dev/t/SssAURYGzoD
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
-import { SignInButton } from "@clerk/nextjs"
 import { Button } from "../ui/button"
 import { ReactNode } from "react"
 import { cn } from "@/lib/utils"
@@ -34,12 +33,12 @@ export default function RestrictedContent({ children, type="login" }: { children
         <p className="mt-4 text-muted-foreground max-w-md">{MESSAGE[type].message}</p>
         <div className={cn("mt-6")}>
         {type === "login"?(
-          <SignInButton>
-            <Button>
-              <LogInIcon className="mr-2 h-4 w-4" />
-              Login
-            </Button>
-          </SignInButton>
+          <Button asChild>
+            <Link href={"/auth/login"}>
+            <LogInIcon className="mr-2 h-4 w-4" />
+            Login
+            </Link>
+          </Button>
         ): (
           <Button asChild><Link href={DISCORD_INVITE_URL}>Join Discord</Link></Button>
         )}

@@ -1,6 +1,5 @@
 import React from 'react'
 import H3 from '../typography/h3'
-import { SignedIn, SignedOut } from '@clerk/nextjs'
 import RestrictedContent from './restricted-content'
 import LimitedContent from './limited-content'
 import { Button } from '../ui/button'
@@ -16,17 +15,10 @@ export const ChapterPage = async ({ chapter, novelSlug }: { chapter: Awaited<Ret
     <div className='p-4'>
       <H3 className='mb-4'>Chapter {chapter.number}: {chapter.title}</H3>
       {(chapter.premium) ? 
-      <>
-      <SignedIn>
-        <article className='space-y-2 prose lg:prose-xl dark:prose-invert max-w-none' dangerouslySetInnerHTML={{__html: chapter.content}} />
-      </SignedIn>
-      <SignedOut>
         <RestrictedContent type={"upcoming"}>
           <LimitedContent htmlContent={chapter.content} />
         </RestrictedContent>
-      </SignedOut>
-      </>
-      :(
+        :(
         <article className='space-y-2 prose lg:prose-xl dark:prose-invert max-w-none' dangerouslySetInnerHTML={{__html: chapter.content}} />
       )}
       <div className='flex justify-between pt-12 pb-4'>
