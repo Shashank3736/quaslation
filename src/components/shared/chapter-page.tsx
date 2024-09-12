@@ -6,16 +6,19 @@ import { Button } from '../ui/button'
 import Link from 'next/link'
 import { ChapterNavigation, ScrollToTop } from './chapter-navigation'
 import { getChapterBySlug, getNovelChaptersBetweenSerial } from '@/lib/db/query'
+import { createClient } from '@/lib/supabase/server'
 
 export const ChapterPage = async ({ chapter, novelSlug }: { chapter: Awaited<ReturnType<typeof getChapterBySlug>>, novelSlug: string }) => {
   const navigations = await getNovelChaptersBetweenSerial({ novelId: chapter.novelId, first: chapter.serial-1, last: chapter.serial+1 })
   const previous = navigations.at(0)?.slug !== chapter.slug ? navigations.at(0) : null
   const next = navigations.at(-1)?.slug !== chapter.slug ? navigations.at(-1): null
+  const supabase = createClient();
+  const { data }= await supabase.auth.getUser();
   return (
     <div className='p-4'>
       <H3 className='mb-4'>Chapter {chapter.number}: {chapter.title}</H3>
-      {(chapter.premium) ? 
-        <RestrictedContent type={"upcoming"}>
+      {(chapter.premium && !data.user) ? 
+        <RestrictedContent type={"login"} url={`/novels/${novelSlug}/${chapter.slug}`}>
           <LimitedContent htmlContent={chapter.content} />
         </RestrictedContent>
         :(
