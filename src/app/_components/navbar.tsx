@@ -5,8 +5,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import { Separator } from '@/components/ui/separator'
+import { createClient } from '@/lib/supabase/server'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import Profile from './profile'
 
-export default function Navbar() {
+export default async function Navbar() {
+  const supabase = createClient();
+  const { data: { user }} = await supabase.auth.getUser();
   return (
     <div className='flex justify-between p-4'>
       <div className='flex justify-center items-center'>
@@ -46,14 +52,11 @@ export default function Navbar() {
         <Button variant={"outline"} asChild><Link href={"/novels/"}>Novels</Link></Button>
         <ModeToggle />
       </div>
-      <div className='flex space-x-2 justify-center items-center'>
-        {/* <SignedIn>
-          <UserButton userProfileMode='navigation' userProfileUrl='/user-profile' />
-        </SignedIn>
-        <SignedOut>
-          <SignInButton><Button>Sign In</Button></SignInButton>
-        </SignedOut> */}
-      </div>
+      {user?(
+        <div className='flex space-x-2 justify-center items-center'>
+          <Profile user={user} />
+        </div>
+      ):(null)}
     </div>
   )
 }
