@@ -115,3 +115,4 @@ export const volumeTable = volume;
 export const novelTable = novel;
 export const roleEnum = role;
 export const richTextTable = richText;
+export const userTable = user;
