@@ -4,11 +4,23 @@ import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { getNovelBySlug } from '@/lib/db/query';
+import { getNovelBySlug, getNovelChapters, getNovelList } from '@/lib/db/query';
 import ChapterList from './_components/chapter-list';
+
+export async function generateStaticParams() {
+  const novels = await getNovelList();
+
+  return novels.map((novel) => ({
+    slug: novel.slug,
+  }))
+}
+
+export const revalidate = 30*60;
+export const dynamicParams = true;
 
 export default async function NovelPage({ params }:{ params: { slug: string }}) {
   const novel = await getNovelBySlug(params.slug);
+  const chapters = await getNovelChapters({ novelId: novel.id });
 
   return (
     <div className='p-4'>
@@ -40,7 +52,7 @@ export default async function NovelPage({ params }:{ params: { slug: string }}) 
       />
       <Separator />
       <div className='mt-4'>
-        <ChapterList novelId={novel.id} novelSlug={params.slug} />
+        <ChapterList novelId={novel.id} novelSlug={params.slug} data={chapters} />
       </div>
     </div>
   )

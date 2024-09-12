@@ -3,16 +3,15 @@ import Muted from '@/components/typography/muted'
 import Link from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
 import { getData } from './actions'
-import { Volume } from '../loading'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 
 type Chapters = Awaited<ReturnType<typeof getData>>
 
-export default function ChapterList({ novelId, novelSlug }:{ novelId: number, novelSlug: string }) {
-  const [chapters, setChapters] = useState<Chapters|null>(null)
+export default function ChapterList({ novelId, novelSlug, data }:{ novelId: number, novelSlug: string, data: Chapters }) {
+  const [chapters, setChapters] = useState<Chapters>(data)
   const [loading, setLoading] = useState(false)
-  const [more, setMore] = useState(true)
+  const [more, setMore] = useState<Boolean>(data.length === 25)
 
   const fetchChapters = useCallback(async ({ skip=0 }:{ skip?: number}) => {
     setLoading(true)
@@ -26,16 +25,6 @@ export default function ChapterList({ novelId, novelSlug }:{ novelId: number, no
     })
     setLoading(false)
   }, [novelId])
-
-  useEffect(() => {
-    fetchChapters({})
-  },[fetchChapters])
-
-  if(chapters === null) {
-    return (
-      <Volume />
-    )
-  }
   return (
     <div className='flex flex-col'>
       {chapters.map((chap, i) => (
