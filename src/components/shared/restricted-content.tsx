@@ -8,6 +8,7 @@ import { ReactNode } from "react"
 import { cn } from "@/lib/utils"
 import { DISCORD_INVITE_URL } from "@/lib/config"
 import Link from "next/link"
+import SignInWithDiscord from "../system/sign-in-discord"
 
 const MESSAGE = {
   login: {
@@ -24,7 +25,7 @@ const MESSAGE = {
   }
 }
 
-export default function RestrictedContent({ children, type="login" }: { children: ReactNode, type?: "login" | "premium" | "upcoming" }) {
+export default function RestrictedContent({ children, type="login", url }: { children: ReactNode, type?: "login" | "premium" | "upcoming", url:string }) {
   return (
     <div className="flex relative flex-col bg-background">
       <div className="mx-auto absolute text-center backdrop-blur-sm h-full w-full flex flex-col items-center justify-center">
@@ -33,12 +34,7 @@ export default function RestrictedContent({ children, type="login" }: { children
         <p className="mt-4 text-muted-foreground max-w-md">{MESSAGE[type].message}</p>
         <div className={cn("mt-6")}>
         {type === "login"?(
-          <Button asChild>
-            <Link href={"/auth/login"}>
-            <LogInIcon className="mr-2 h-4 w-4" />
-            Login
-            </Link>
-          </Button>
+          <SignInWithDiscord next={url} />
         ): (
           <Button asChild><Link href={DISCORD_INVITE_URL}>Join Discord</Link></Button>
         )}
