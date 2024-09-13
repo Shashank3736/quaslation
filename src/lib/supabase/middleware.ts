@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { db } from '../db'
 import { userTable } from '../db/schema'
 import { eq } from 'drizzle-orm'
+import { getNovelFirstChapter, getNovelLastChapter } from '../db/query'
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -52,6 +53,27 @@ export async function updateSession(request: NextRequest) {
     if(!userRole || userRole.role !== "ADMIN") {
       const url = request.nextUrl.clone()
       url.pathname = '/'
+      return NextResponse.redirect(url);
+    }
+  }
+  // _series logic 
+  if(request.nextUrl.pathname.startsWith("/_series")) {
+    const breakdown = request.nextUrl.pathname.split("/");
+    const novelId = breakdown.at(-2);
+    const position = breakdown.at(-1);
+
+    if(novelId && position) {
+      const url = request.nextUrl.clone();
+      let data = {
+        novel: "",
+        slug: ""
+      };
+      if(position === "-1") {
+        data = await getNovelLastChapter(parseInt(novelId));
+      } else {
+        data = await getNovelFirstChapter(parseInt(novelId));
+      }
+      url.pathname = `/novels/${data.novel}/${data.slug}`;
       return NextResponse.redirect(url);
     }
   }
