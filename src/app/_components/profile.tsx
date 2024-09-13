@@ -4,13 +4,15 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { createClient } from '@/lib/supabase/client';
 import { User } from '@supabase/supabase-js';
+import { useRouter } from 'next/navigation';
 import React from 'react'
 
 const Profile = ({ user }:{ user: User }) => {
   const supabase = createClient();
+  const router = useRouter();
   async function signOut() {
     await supabase.auth.signOut();
-    window.location.reload();
+    router.refresh();
   }
   return (
     <DropdownMenu>
