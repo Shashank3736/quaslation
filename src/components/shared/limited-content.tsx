@@ -2,6 +2,7 @@ import React from 'react';
 import parse from 'html-react-parser';
 
 const LimitedContent = ({ htmlContent }: { htmlContent: string }) => {
+  htmlContent = htmlContent.replace(/\n/g, "");
   const limitToThreeElements = (html: string) => {
     const parsedContent = parse(html);
     
