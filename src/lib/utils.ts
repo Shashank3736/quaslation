@@ -182,7 +182,7 @@ export const markdownToHtml = async (markdown: string) => {
   .use(rehypeStringify)
   .process(markdown)
 
-  return String(file);
+  return String(file).replace(/\n/g, "");
 }
 
 export const markdownToText = async (markdown: string) => {

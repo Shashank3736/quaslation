@@ -18,3 +18,5 @@ export default async function NovelList() {
     </div>
   )
 }
+
+export const revalidate = 3600;

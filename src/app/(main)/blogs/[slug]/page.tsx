@@ -1,9 +1,17 @@
 import H1 from '@/components/typography/h1';
 import Muted from '@/components/typography/muted';
 import { Separator } from '@/components/ui/separator';
-import { getBlog } from '@/lib/_hygraph/query'
+import { getBlog, getBlogs } from '@/lib/_hygraph/query'
 import { formatDate } from '@/lib/utils';
 import React from 'react'
+
+export async function generateStaticParams() {
+  const blogs = await getBlogs({});
+
+  return blogs.map((blog) => ({
+    slug: blog.slug,
+  }));
+}
 
 export default async function Blog({ params }: { params: { slug: string }}) {
   const blog = await getBlog(params.slug);

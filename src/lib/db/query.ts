@@ -15,7 +15,28 @@ export async function getReleases({ skip=0, premium=false }) {
     description: richText.text,
     publishedAt: chapter.publishedAt,
     createdAt: chapter.createdAt,
-  }).from(chapter).where(and(eq(chapter.premium, premium), isNotNull(chapter.publishedAt))).orderBy(desc(chapter.publishedAt), desc(chapter.createdAt)).innerJoin(novel, eq(chapter.novelId, novel.id)).innerJoin(richText, eq(chapter.richTextId, richText.id)).offset(skip).limit(10);
+  }).from(chapter)
+  .where(
+    and(
+      eq(chapter.premium, premium), 
+      isNotNull(chapter.publishedAt)
+    )
+  ).orderBy(
+    desc(chapter.publishedAt), 
+    desc(chapter.createdAt)
+  ).innerJoin(novel, eq(chapter.novelId, novel.id))
+  .innerJoin(richText, eq(chapter.richTextId, richText.id)
+  ).offset(skip).limit(10);
+}
+
+export async function getChapterSlugMany() {
+  return await db.select({
+    chapter: chapter.slug,
+    slug: novel.slug,
+  }).from(chapter)
+  .where(isNotNull(chapter.publishedAt))
+  .orderBy(desc(chapter.publishedAt), desc(chapter.createdAt))
+  .innerJoin(novel, eq(novel.id, chapter.novelId))
 }
 
 export async function getNovelList() {
