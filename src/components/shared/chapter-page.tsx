@@ -21,7 +21,7 @@ export const ChapterPage = async ({ chapter, novelSlug }: { chapter: Awaited<Ret
         <article className='space-y-2 prose lg:prose-xl dark:prose-invert max-w-none' dangerouslySetInnerHTML={{__html: chapter.content}} />
       </SignedIn>
       <SignedOut>
-        <RestrictedContent type={"upcoming"}>
+        <RestrictedContent type={"login"}>
           <LimitedContent htmlContent={chapter.content} />
         </RestrictedContent>
       </SignedOut>
