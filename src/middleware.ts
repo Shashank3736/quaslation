@@ -1,17 +1,22 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { getChapterSlug } from "./lib/_hygraph/query";
 import { NextResponse } from "next/server";
-import { getNovelFirstChapter, getNovelLastChapter } from "./lib/db/query";
+import { getNovelFirstChapter, getNovelLastChapter, getUserRole } from "./lib/db/query";
 
 const isProtectedRoute = createRouteMatcher([
   "/admin(.*)"
 ])
 
 export default clerkMiddleware(async (auth, req) => {
-  if(!auth().userId && isProtectedRoute(req)) return auth().redirectToSignIn();
-  if((auth().userId !== process.env.ADMIN_USER_ID) && isProtectedRoute(req)) {
-    return NextResponse.redirect(new URL("/not-found", req.url))
+  if(isProtectedRoute(req)) {
+    if(auth().userId) {
+      const data = await getUserRole(auth().userId || "");
+      if(data !== "ADMIN") return NextResponse.redirect(new URL("/", req.url));
+    } else {
+      auth().redirectToSignIn();
+    }
   }
+  
   const url = new URL(req.url)
   if(url.pathname.startsWith("/chapter")) {
     const chapterSlugs = await getChapterSlug(url.pathname.split("/")[2]);

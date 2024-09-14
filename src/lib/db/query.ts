@@ -1,6 +1,6 @@
 import "server-only";
 import { db } from "."
-import { chapter, novel, richText, volume } from "./schema";
+import { chapter, novel, richText, userTable, volume } from "./schema";
 import { and, count, desc, eq, gte, isNotNull, isNull, lte, not, or } from "drizzle-orm";
 
 export async function getReleases({ skip=0, premium=false }) {
@@ -185,4 +185,11 @@ export const getLatestChapter = async(novelId: number) => {
 
 export const getNovelFromId = async(id: number) => {
   return (await db.select().from(novel).where(eq(novel.id, id))).at(0)
+}
+
+export const getUserRole = async(id: string) => {
+  const data = await db.select().from(userTable).where(eq(userTable.clerkId, id));
+  const userData = data.at(0);
+
+  return userData ? userData.role : "MEMBER"
 }
