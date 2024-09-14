@@ -1,5 +1,3 @@
-'use client'
-
 import { DISCORD_INVITE_URL } from "@/lib/config"
 import Link from "next/link"
 
