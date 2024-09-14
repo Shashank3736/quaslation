@@ -1,6 +1,5 @@
 import React from 'react'
 import Navbar from '../_components/navbar'
-import { SetOrganization } from '@/components/system/clerk-organization'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { DISCORD_INVITE_URL } from '@/lib/config'
@@ -24,7 +23,6 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         </AlertDescription>
       </Alert>
       {children}
-      <SetOrganization />
     </div>
   )
 }
