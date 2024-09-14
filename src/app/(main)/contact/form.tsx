@@ -27,16 +27,10 @@ export default function ContactForm() {
 
   const onSubmit = async (values: ContactFormInputs) => {
     setSubmiting(true);
-    const { errors, message } = await submitContactForm(values);
-    if(errors) {
-      form.setError("root", {
-        message
-      });
-    } else {
-      toast({
+    const { message } = await submitContactForm(values);
+    toast({
         description: message
-      })
-    }
+    })
     setSubmiting(false)
   }
   return (
