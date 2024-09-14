@@ -39,6 +39,9 @@ export default function RootLayout({
       <html lang="en">
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ""} />
         <Analytics />
+        <head>
+          <meta name="google-site-verification" content="WGuYF9ls3LP9w_YEzcHyJjm6fJW89UuqIbzkFreANR4" />
+        </head>
         <body className={inter.className}>
           <ThemeProvider
             attribute="class"
