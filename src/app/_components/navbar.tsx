@@ -7,6 +7,22 @@ import Link from 'next/link'
 import React from 'react'
 import { Separator } from '@/components/ui/separator'
 
+const navLinks = [
+  {
+    title: "Home",
+    href: "/home"
+  },{
+    title: "Blogs",
+    href: "/blogs"
+  },{
+    title: "Novels",
+    href: "/novels"
+  }, {
+    title: "Contact Us",
+    href: "/contact"
+  }
+]
+
 export default function Navbar() {
   return (
     <div className='flex justify-between p-4'>
@@ -24,15 +40,11 @@ export default function Navbar() {
                 Index
               </SheetTitle>
               <Separator />
-              <SheetClose asChild>
-                <Button variant={"outline"} asChild><Link href={"/"}>Home</Link></Button>
-              </SheetClose>
-              <SheetClose asChild>
-                <Button variant={"outline"} asChild><Link href={"/blogs/"}>Blogs</Link></Button>
-              </SheetClose>
-              <SheetClose asChild>
-                <Button variant={"outline"} asChild><Link href={"/novels/"}>Novels</Link></Button>
-              </SheetClose>
+              {navLinks.map((data) => (
+                <SheetClose key={data.title} asChild>
+                  <Button variant={"outline"} asChild><Link href={data.href}>{data.title}</Link></Button>
+                </SheetClose>
+              ))}
               <SheetClose className='flex justify-center'>
                 <ModeToggle showTheme />
               </SheetClose>
@@ -42,9 +54,9 @@ export default function Navbar() {
         <Link href={"/"} className='ml-4 text-2xl font-semibold'>Quaslation</Link>
       </div>
       <div className='hidden md:flex space-x-2 justify-center items-center'>
-        <Button variant={"outline"} asChild><Link href={"/"}>Home</Link></Button>
-        <Button variant={"outline"} asChild><Link href={"/blogs/"}>Blogs</Link></Button>
-        <Button variant={"outline"} asChild><Link href={"/novels/"}>Novels</Link></Button>
+        {navLinks.map((data) => (
+          <Button key={data.title} variant={"outline"} asChild><Link href={data.href}>{data.title}</Link></Button>
+        ))}
         <ModeToggle />
       </div>
       <div className='flex space-x-2 justify-center items-center'>
