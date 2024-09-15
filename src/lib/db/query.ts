@@ -50,7 +50,10 @@ export async function getNovelList() {
 export async function getNovelBySlug(slug: string) {
   const data = await db.select({
     id: novel.id,
-    description: richText.html,
+    description: {
+      html: richText.html,
+      text: richText.text
+    },
     title: novel.title,
     thumbnail: novel.thumbnail,
   }).from(novel).where(eq(novel.slug, slug)).innerJoin(richText, eq(novel.richTextId, richText.id))
@@ -84,13 +87,18 @@ export const getChapterBySlug = async (slug: string) => {
     title: chapter.title,
     premium: chapter.premium,
     content: richText.html,
+    textContent: richText.text,
     serial: chapter.serial,
     novelId: chapter.novelId,
+    novelTitle: novel.title,
+    volumeNumber: volume.number,
     slug: chapter.slug,
   })
   .from(chapter)
   .where(and(eq(chapter.slug, slug), isNotNull(chapter.publishedAt)))
   .innerJoin(richText, eq(chapter.richTextId, richText.id))
+  .innerJoin(novel, eq(novel.id, chapter.novelId))
+  .innerJoin(volume, eq(volume.id, chapter.volumeId))
   return data[0]
 }
 

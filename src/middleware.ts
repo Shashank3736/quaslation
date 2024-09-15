@@ -18,7 +18,7 @@ export default clerkMiddleware(async (auth, req) => {
   }
   
   const url = new URL(req.url)
-  if(url.pathname.startsWith("/chapter")) {
+  if(url.pathname.startsWith("/chapter/")) {
     const chapterSlugs = await getChapterSlug(url.pathname.split("/")[2]);
     return NextResponse.redirect(new URL(`/novels/${chapterSlugs.novel.slug}/${chapterSlugs.slug}`, req.url));
   }

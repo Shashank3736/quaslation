@@ -1,11 +1,12 @@
 import H2 from '@/components/typography/h2';
 import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
+import { cn, shortifyString } from '@/lib/utils';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { getNovelBySlug, getNovelChapters, getNovelList } from '@/lib/db/query';
 import ChapterList from './_components/chapter-list';
+import { Metadata } from 'next';
 
 export async function generateStaticParams() {
   const novels = await getNovelList();
@@ -13,6 +14,14 @@ export async function generateStaticParams() {
   return novels.map((novel) => ({
     slug: novel.slug,
   }))
+}
+
+export async function generateMetadata({ params }:{ params: { slug: string }}): Promise<Metadata> {
+  const novel = await getNovelBySlug(params.slug);
+  return {
+    title: `${novel.title} | Quaslation`,
+    description: shortifyString(novel.description.text, 512)
+  }
 }
 
 export const revalidate = 30*60;
@@ -48,7 +57,7 @@ export default async function NovelPage({ params }:{ params: { slug: string }}) 
       </div>
       <article
         className={cn("my-4 prose dark:prose-invert", "max-w-none")}
-        dangerouslySetInnerHTML={{ __html: novel.description }}
+        dangerouslySetInnerHTML={{ __html: novel.description.html }}
       />
       <Separator />
       <div className='mt-4'>

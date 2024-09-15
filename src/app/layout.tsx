@@ -11,8 +11,8 @@ import { GoogleAnalytics } from '@next/third-parties/google'
 const inter = AR_One_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Quaslation",
-  description: "Quality translation of japanese web novels.",
+  title: "Quaslation - Quality translation of asian web novels.",
+  description: "Discover the best fan translations of Asian web novels. Immerse yourself in captivating stories from across Asia.",
   icons: {
     icon: "/logo/logo100x100.jpg",
   },
