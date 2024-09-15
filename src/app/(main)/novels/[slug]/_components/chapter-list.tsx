@@ -1,7 +1,7 @@
 "use client"
 
 import Link from 'next/link'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { getData } from './actions'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -35,16 +35,19 @@ const getVolumes = (data: Chapters, volumes: Volumes) => {
 }
 
 export default function ChapterList({ novelId, novelSlug, data }:{ novelId: number, novelSlug: string, data: Chapters }) {
+  const NOVEL_CHAPTERS_LIMIT = 50;
   const [chapters, setChapters] = useState<Chapters>(data)
   const [loading, setLoading] = useState(false)
-  const [more, setMore] = useState<Boolean>(data.length === 25)
+  const [more, setMore] = useState<Boolean>(data.length === NOVEL_CHAPTERS_LIMIT)
+  const loader = useRef(null);
 
   const volumes = useMemo(() => getVolumes(chapters, []), [chapters]);
 
   const fetchChapters = useCallback(async ({ skip=0 }:{ skip?: number}) => {
+    if (loading || !more) return;
     setLoading(true)
     const data = await getData({ novelId, skip })
-    if(data.length < 25) {
+    if(data.length < NOVEL_CHAPTERS_LIMIT) {
       setMore(false)
     }
     setChapters(chaps => {
@@ -52,7 +55,33 @@ export default function ChapterList({ novelId, novelSlug, data }:{ novelId: numb
       return chaps.concat(data);
     })
     setLoading(false)
-  }, [novelId])
+  }, [novelId, loading, more])
+
+  useEffect(() => {
+    const options = {
+      root: null,
+      rootMargin: "20px",
+      threshold: 1.0
+    };
+
+    const observer = new IntersectionObserver(handleObserver, options);
+    if (loader.current) {
+      observer.observe(loader.current)
+    }
+
+    return () => {
+      if (loader.current) {
+        observer.unobserve(loader.current)
+      }
+    }
+  }, []);
+
+  const handleObserver = useCallback((entries: IntersectionObserverEntry[]) => {
+    const target = entries[0];
+    if (target.isIntersecting) {
+      fetchChapters({ skip: chapters.length });
+    }
+  }, [fetchChapters, chapters.length]);
   return (
     <div className='flex flex-col space-y-4'>
       {volumes.map(volume => (
@@ -73,8 +102,10 @@ export default function ChapterList({ novelId, novelSlug, data }:{ novelId: numb
         </section>
       ))}
       {more ? (
-        <Button className='m-4 w-fit' disabled={loading} onClick={() => fetchChapters({ skip: chapters.length })}>{loading ? "Loading":"Load More"}</Button>
-      ): null}
+        <div ref={loader} className="h-10 flex items-center justify-center">
+          {loading ? "Loading..." : ""}
+        </div>
+        ): null}
     </div>
   )
 }
