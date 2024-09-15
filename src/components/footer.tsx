@@ -21,19 +21,19 @@ export function FooterComponent() {
             <span>Discord</span>
           </Link>
           <Link
-            href="/blogs/who-are-we"
+            href="/about"
             className="text-sm font-medium hover:underline underline-offset-4"
           >
             About Us
           </Link>
           <Link
-            href="/blogs/privacy-policy"
+            href="/privacy"
             className="text-sm font-medium hover:underline underline-offset-4"
           >
             Privacy Policy
           </Link>
           <Link
-            href="/blogs/terms-of-service"
+            href="/terms-of-service"
             className="text-sm font-medium hover:underline underline-offset-4"
           >
             Terms of Service
