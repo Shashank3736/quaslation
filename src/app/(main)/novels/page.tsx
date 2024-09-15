@@ -1,8 +1,14 @@
 import H2 from '@/components/typography/h2'
 import { Separator } from '@/components/ui/separator'
 import { getNovelList } from '@/lib/db/query'
+import { Metadata } from 'next'
 import Link from 'next/link'
 import React from 'react'
+
+export const metadata: Metadata = {
+  title: "Novels | Quaslation",
+  description: "A list of asian web novels fan translated by the translators of Quaslation."
+}
 
 export default async function NovelList() {
   const novels = await getNovelList()
