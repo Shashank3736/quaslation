@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/react";
 import { GoogleAnalytics } from '@next/third-parties/google'
+import NextTopLoader from 'nextjs-toploader';
 
 const inter = AR_One_Sans({ subsets: ["latin"] });
 
@@ -49,6 +50,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <NextTopLoader />
             {children}
             <Toaster />
           </ThemeProvider>

@@ -76,7 +76,7 @@ export const getNovelChapters = async({ novelId, skip=0, limit=25 }:{ novelId: n
     premium: chapter.premium,
   }).from(chapter)
   .where(and(eq(chapter.novelId, novelId), isNotNull(chapter.publishedAt)))
-  .leftJoin(volume, eq(chapter.volumeId, volume.id))
+  .innerJoin(volume, eq(chapter.volumeId, volume.id))
   .orderBy(chapter.serial)
   .offset(skip).limit(limit)
 }
