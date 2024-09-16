@@ -4,6 +4,7 @@ import { chapter, novel, richText, userTable, volume } from "./schema";
 import { and, desc, eq, gte, isNotNull, isNull, lte, } from "drizzle-orm";
 
 export async function getReleases({ skip=0, premium=false }) {
+  console.log("Request for releases skip:", skip, "premium:", premium);
   return db.select({
     number: chapter.number,
     title: chapter.title,
@@ -40,6 +41,7 @@ export async function getChapterSlugMany() {
 }
 
 export async function getNovelList() {
+  console.log("Requesting for novels list.");
   return db.select({
     slug: novel.slug,
     title: novel.title,
@@ -48,6 +50,7 @@ export async function getNovelList() {
 }
 
 export async function getNovelBySlug(slug: string) {
+  console.log("Request novel data from slug:", slug);
   const data = await db.select({
     id: novel.id,
     description: {
@@ -61,10 +64,12 @@ export async function getNovelBySlug(slug: string) {
 }
 
 export async function getNovelVolumes(novelId: number) {
+  console.log("Requesting novel volumes from ID:", novelId);
   return db.select().from(volume).where(eq(volume.novelId, novelId))
 }
 
 export const getNovelChapters = async({ novelId, skip=0, limit=50 }:{ novelId: number, skip?: number, limit?: number }) => {
+  console.log("Requesting ", limit, " chapters after ", skip, " chapter(s) of novel ID:", novelId);
   return db.select({
     slug: chapter.slug,
     title: chapter.title,
@@ -82,6 +87,7 @@ export const getNovelChapters = async({ novelId, skip=0, limit=50 }:{ novelId: n
 }
 
 export const getChapterBySlug = async (slug: string) => {
+  console.log("Requesting chapter data from slug:", slug);
   const data = await db.select({
     number: chapter.number,
     title: chapter.title,
@@ -103,6 +109,7 @@ export const getChapterBySlug = async (slug: string) => {
 }
 
 export const getNovelChaptersBetweenSerial = async({ novelId, first, last }:{ novelId: number, first: number, last: number }) => {
+  console.log("Request novel chapters between serial:", first, last, " of novel ID:", novelId);
   return db.select({
     slug: chapter.slug
   }).from(chapter)
