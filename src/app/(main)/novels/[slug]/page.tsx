@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { getNovelBySlug, getNovelChapters, getNovelList } from '@/lib/db/query';
 import ChapterList from './_components/chapter-list';
 import { Metadata } from 'next';
+import { unstable_cache } from 'next/cache';
 
 export async function generateStaticParams() {
   const novels = await getNovelList();
@@ -16,20 +17,20 @@ export async function generateStaticParams() {
   }))
 }
 
+const getNovelCached = unstable_cache(getNovelBySlug, ["novel"], { tags:["novel"], revalidate: false });
+const getChaptersCached = unstable_cache(getNovelChapters, ["chapters"], { tags:["chapters"], revalidate: 3600 });
+
 export async function generateMetadata({ params }:{ params: { slug: string }}): Promise<Metadata> {
-  const novel = await getNovelBySlug(params.slug);
+  const novel = await getNovelCached(params.slug);
   return {
     title: `${novel.title} | Quaslation`,
     description: shortifyString(novel.description.text, 512)
   }
 }
 
-export const revalidate = 30*60;
-export const dynamicParams = true;
-
 export default async function NovelPage({ params }:{ params: { slug: string }}) {
-  const novel = await getNovelBySlug(params.slug);
-  const chapters = await getNovelChapters({ novelId: novel.id });
+  const novel = await getNovelCached(params.slug);
+  const chapters = await getChaptersCached({ novelId: novel.id });
 
   return (
     <div className='p-4'>

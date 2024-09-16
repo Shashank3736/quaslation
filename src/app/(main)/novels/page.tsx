@@ -2,6 +2,7 @@ import H2 from '@/components/typography/h2'
 import { Separator } from '@/components/ui/separator'
 import { getNovelList } from '@/lib/db/query'
 import { Metadata } from 'next'
+import { unstable_cache } from 'next/cache'
 import Link from 'next/link'
 import React from 'react'
 
@@ -10,8 +11,13 @@ export const metadata: Metadata = {
   description: "A list of asian web novels fan translated by the translators of Quaslation."
 }
 
+const getCacheData = unstable_cache(getNovelList, ["novels"], {
+  tags: ["novelList"],
+  revalidate: false
+});
+
 export default async function NovelList() {
-  const novels = await getNovelList()
+  const novels = await getCacheData()
   return (
     <div className='p-4'>
       <H2 className='text-center'>List of Novels</H2>
@@ -24,5 +30,3 @@ export default async function NovelList() {
     </div>
   )
 }
-
-export const revalidate = 3600;

@@ -7,9 +7,15 @@ import { Button } from '../ui/button'
 import Link from 'next/link'
 import { ChapterNavigation, ScrollToTop } from './chapter-navigation'
 import { getChapterBySlug, getNovelChaptersBetweenSerial } from '@/lib/db/query'
+import { unstable_cache } from 'next/cache'
+
+const getChaptersCached = unstable_cache(getNovelChaptersBetweenSerial, [], {
+  tags: ["chapter"],
+  revalidate: 3600
+});
 
 export const ChapterPage = async ({ chapter, novelSlug }: { chapter: Awaited<ReturnType<typeof getChapterBySlug>>, novelSlug: string }) => {
-  const navigations = await getNovelChaptersBetweenSerial({ novelId: chapter.novelId, first: chapter.serial-1, last: chapter.serial+1 })
+  const navigations = await getChaptersCached({ novelId: chapter.novelId, first: chapter.serial-1, last: chapter.serial+1 })
   const previous = navigations.at(0)?.slug !== chapter.slug ? navigations.at(0) : null
   const next = navigations.at(-1)?.slug !== chapter.slug ? navigations.at(-1): null
   return (
