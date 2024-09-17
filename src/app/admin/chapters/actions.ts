@@ -7,13 +7,14 @@ export const freeChapter = async (novelId: number, serial: number) => {
   await freeChapters({ novelId, first: serial, last: serial });
   revalidatePath(`/admin/chapters/${novelId}`);
   revalidateTag("chapter");
-  revalidateTag("chapters");
-  revalidateTag("novelList");
+  revalidateTag("chapter_update");
+  revalidateTag("chapter_free");
 }
 
 export const publish = async ({ novelId, serial }:{ novelId: number, serial: number}) => {
   await publishChapters({ novelId, serial });
   revalidatePath(`/admin/chapters/${novelId}`);
-  revalidateTag("chapter")
-  revalidateTag("chapters");
+  revalidateTag("chapter");
+  revalidateTag("chapter_update");
+  revalidateTag("chapter_publish");
 };

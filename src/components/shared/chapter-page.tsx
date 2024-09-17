@@ -10,8 +10,8 @@ import { getChapterBySlug, getNovelChaptersBetweenSerial } from '@/lib/db/query'
 import { unstable_cache } from 'next/cache'
 
 const getChaptersCached = unstable_cache(getNovelChaptersBetweenSerial, [], {
-  tags: ["chapter"],
-  revalidate: 3600
+  tags: ["chapter_publish"],
+  revalidate: 12*3600
 });
 
 export const ChapterPage = async ({ chapter, novelSlug }: { chapter: Awaited<ReturnType<typeof getChapterBySlug>>, novelSlug: string }) => {

@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { getData } from './actions'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import H2 from '@/components/typography/h2'
 

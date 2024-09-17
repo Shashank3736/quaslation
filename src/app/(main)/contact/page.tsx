@@ -1,8 +1,4 @@
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import ContactForm from './form';
-import { Terminal } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { DISCORD_INVITE_URL } from '@/lib/config';
 import JoinDiscord from '@/components/shared/join-discord';
 
 export default function ContactPage() {
