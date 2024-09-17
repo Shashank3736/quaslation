@@ -40,7 +40,7 @@ const getNovelList = async () => {
         limit: 2
       }
     },
-    orderBy: (novel, { desc }) => desc(novel.updatedAt)
+    orderBy: (novel) => novel.title
   })
 }
 
