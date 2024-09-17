@@ -45,7 +45,7 @@ const getNovelList = async () => {
 }
 
 const getCacheData = unstable_cache(getNovelList, ["novels"], {
-  tags: ["novelList"],
+  tags: ["chapter_free"],
   revalidate: 24*3600 // auto update every 24 hours
 });
 
