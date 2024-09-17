@@ -8,6 +8,7 @@ export const freeChapter = async (novelId: number, serial: number) => {
   revalidatePath(`/admin/chapters/${novelId}`);
   revalidateTag("chapter");
   revalidateTag("chapters");
+  revalidateTag("novelList");
 }
 
 export const publish = async ({ novelId, serial }:{ novelId: number, serial: number}) => {
