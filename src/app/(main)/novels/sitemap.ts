@@ -2,8 +2,8 @@ import { getNovelList } from "@/lib/db/query";
 import { MetadataRoute } from "next";
 import { unstable_cache } from "next/cache";
 
-const getCached = unstable_cache(getNovelList, ["novels"], {
-  tags: ["novelList"],
+const getCached = unstable_cache(getNovelList, ["sitemapNovels"], {
+  tags: ["novel_create"],
   revalidate: 24*3600
 });
 
