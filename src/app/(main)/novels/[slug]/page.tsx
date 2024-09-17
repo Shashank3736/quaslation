@@ -4,10 +4,12 @@ import { cn, shortifyString } from '@/lib/utils';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { getNovelBySlug, getNovelChapters, getNovelList } from '@/lib/db/query';
+import { getNovelList } from '@/lib/db/query';
 import ChapterList from './_components/chapter-list';
 import { Metadata } from 'next';
 import { unstable_cache } from 'next/cache';
+import { db } from '@/lib/db';
+import { notFound } from 'next/navigation';
 
 export async function generateStaticParams() {
   const novels = await getNovelList();
@@ -17,21 +19,85 @@ export async function generateStaticParams() {
   }))
 }
 
-const getNovelCached = unstable_cache(getNovelBySlug, ["novel"], { tags:["novel"], revalidate: false });
-const getChaptersCached = unstable_cache(getNovelChapters, ["chapters"], { tags:["chapters"], revalidate: 3600 });
+const getNovelMetadata = unstable_cache(async (slug: string) => {
+    return await db.query.novel.findFirst({
+      columns: {
+        title: true,
+      },
+      where: (novel, { eq }) => eq(novel.slug, slug),
+      with: {
+        richText: {
+          columns: {
+            text: true,
+          }
+        }
+      }
+    })
+  }, 
+  [], 
+  {
+    revalidate: 12*3600,
+    tags: ["novel_update"]
+  }
+);
 
 export async function generateMetadata({ params }:{ params: { slug: string }}): Promise<Metadata> {
-  const novel = await getNovelCached(params.slug);
+  const novel = await getNovelMetadata(params.slug);
+  if(!novel) return {
+    title: "Not Found",
+  }
   return {
     title: `${novel.title} | Quaslation`,
-    description: shortifyString(novel.description.text, 512)
+    description: shortifyString(novel.richText.text, 512)
   }
 }
 
-export default async function NovelPage({ params }:{ params: { slug: string }}) {
-  const novel = await getNovelCached(params.slug);
-  const chapters = await getChaptersCached({ novelId: novel.id });
+const getNovel = async (slug: string) => {
+  return await db.query.novel.findFirst({
+    columns: {
+      id: true,
+      title: true,
+      thumbnail: true
+    },
+    where: (novel, { eq }) => eq(novel.slug, slug),
+    with: {
+      richText: {
+        columns: {
+          html: true,
+        }
+      },
+      chapters: {
+        columns: {
+          slug: true,
+          title: true,
+          number: true,
+          premium: true,
+        },
+        where: (chapter, { isNotNull }) => isNotNull(chapter.publishedAt),
+        orderBy: (chapter) => chapter.serial,
+        limit: 50,
+        with: {
+          volume: {
+            columns: {
+              number: true,
+              title: true
+            }
+          }
+        }
+      }
+    }
+  });
+}
 
+const getNovelCache = unstable_cache(getNovel, [], {
+  tags: ["chapter_update"],
+  revalidate: 24*3600
+});
+
+export default async function NovelPage({ params }:{ params: { slug: string }}) {
+  const novel = await getNovelCache(params.slug);
+  if(!novel) notFound();
+  const chapters = novel.chapters;
   return (
     <div className='p-4'>
       <div className='flex p-4 items-center'>
@@ -57,7 +123,7 @@ export default async function NovelPage({ params }:{ params: { slug: string }}) 
       </div>
       <article
         className={cn("my-4 prose dark:prose-invert", "max-w-none")}
-        dangerouslySetInnerHTML={{ __html: novel.description.html }}
+        dangerouslySetInnerHTML={{ __html: novel.richText.html }}
       />
       <Separator />
       <div className='mt-4'>
