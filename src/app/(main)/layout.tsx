@@ -5,10 +5,10 @@ import { FooterComponent } from '@/components/footer'
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="max-w-[1000px] mx-auto flex flex-col min-h-screen">
+    <div className="max-w-[1024px] mx-auto flex flex-col min-h-screen">
       {/* <GoogleAdsense pId={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID || ""} /> */}
       <Navbar />
-      <main className='flex-grow'>
+      <main className='flex-grow mx-4'>
         {children}
       </main>
       <FooterComponent />
