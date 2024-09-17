@@ -36,7 +36,7 @@ const getNovelMetadata = unstable_cache(async (slug: string) => {
   }, 
   [], 
   {
-    revalidate: 12*3600,
+    revalidate: 24*3600,
     tags: ["novel_update"]
   }
 );
@@ -91,7 +91,7 @@ const getNovel = async (slug: string) => {
 
 const getNovelCache = unstable_cache(getNovel, [], {
   tags: ["chapter_update"],
-  revalidate: 24*3600
+  revalidate: 12*3600
 });
 
 export default async function NovelPage({ params }:{ params: { slug: string }}) {
