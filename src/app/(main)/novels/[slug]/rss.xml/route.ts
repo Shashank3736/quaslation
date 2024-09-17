@@ -48,7 +48,9 @@ export async function GET(req: Request, { params }:{ params: { slug: string }}) 
   const url = new URL(req.url);
 
   const novel = await getChapters(new Date(time.getFullYear(), time.getMonth(), time.getDate(), 0, 0, 0, 0), params.slug);
-  if(!novel) return {"message": "Novel not found!"}
+  if(!novel) return Response.json({
+    message: "No novel found",
+  })
   const chapters = novel.chapters;
   const feed = new RSS({
     title: "Quaslation",
