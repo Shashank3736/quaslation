@@ -6,6 +6,7 @@ import { unstable_cache } from "next/cache";
 import RSS from "rss";
 
 const getLatestChapters = async (time: Date) => {
+  console.log("Here")
   return await db.select({
     chapter: chapterTable.number,
     slug: chapterTable.slug,
@@ -34,7 +35,7 @@ export async function GET(req: Request) {
   const time = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
   const url = new URL(req.url);
   
-  const chapters = await getCache(time);
+  const chapters = await getCache(new Date(time.getFullYear(), time.getMonth(), time.getDate(), 0, 0, 0, 0));
   
   const feed = new RSS({
     title: "Quaslation",
