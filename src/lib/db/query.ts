@@ -1,6 +1,6 @@
 import "server-only";
 import { db } from "."
-import { chapter, novel, richText, userTable, volume } from "./schema";
+import { chapter, novel, richText, user as userTable, volume } from "./schema";
 import { and, desc, eq, gte, isNotNull, isNull, lte, } from "drizzle-orm";
 
 export async function getReleases({ skip=0, premium=false }) {

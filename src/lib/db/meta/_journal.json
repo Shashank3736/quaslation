@@ -15,6 +15,13 @@
       "when": 1725865007465,
       "tag": "0001_ambiguous_ink",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1726585237325,
+      "tag": "0002_sticky_scarlet_witch",
+      "breakpoints": true
     }
   ]
 }
