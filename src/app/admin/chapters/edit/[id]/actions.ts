@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { chapterTable, novelTable, richTextTable, volumeTable } from "@/lib/db/schema";
+import { chapter as chapterTable, novel as novelTable, richText as richTextTable, volume as volumeTable } from "@/lib/db/schema";
 import { markdownToHtml, markdownToText } from "@/lib/utils";
 import { eq } from "drizzle-orm";
 

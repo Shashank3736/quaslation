@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { chapterTable, novelTable, richText, volumeTable } from "@/lib/db/schema";
+import { chapter as chapterTable, novel as novelTable, richText, volume as volumeTable } from "@/lib/db/schema";
 import { and, eq, gte, isNotNull } from "drizzle-orm";
 import RSS from "rss";
 

@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { chapterTable, novelTable } from "@/lib/db/schema";
+import { chapter as chapterTable, novel as novelTable } from "@/lib/db/schema";
 import { eq, isNotNull } from "drizzle-orm";
 import { MetadataRoute } from "next";
 
