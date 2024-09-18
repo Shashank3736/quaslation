@@ -42,20 +42,30 @@ export default function ChapterList({ novelId, novelSlug, data }:{ novelId: numb
 
   const volumes = useMemo(() => getVolumes(chapters, []), [chapters]);
 
-  const fetchChapters = useCallback(async ({ skip=0 }:{ skip?: number}) => {
+  const fetchChapters = useCallback(async ({ skip }:{ skip: number }) => {
     if (loading || !more) return;
     setLoading(true)
+    
     const data = await getData({ novelId, skip })
+    console.log("Size of fetched data:", data.length)
     if(data.length < NOVEL_CHAPTERS_LIMIT) {
       setMore(false)
     }
     setChapters(chaps => {
+      console.log(chaps.length, skip);
+      if(chaps.length !== skip) return chaps;
       if(chaps === null || skip === 0) return data;
       return chaps.concat(data);
     })
     setLoading(false)
   }, [novelId, loading, more])
-
+  
+  const handleObserver = useCallback((entries: IntersectionObserverEntry[]) => {
+    const target = entries[0];
+    if (target.isIntersecting) {
+      fetchChapters({ skip: chapters.length });
+    }
+  }, [fetchChapters, chapters.length]);
   useEffect(() => {
     const options = {
       root: null,
@@ -68,19 +78,15 @@ export default function ChapterList({ novelId, novelSlug, data }:{ novelId: numb
       observer.observe(loader.current)
     }
 
+    const current = loader.current
+
     return () => {
-      if (loader.current) {
-        observer.unobserve(loader.current)
+      if (current) {
+        observer.unobserve(current)
       }
     }
-  }, []);
+  }, [handleObserver]);
 
-  const handleObserver = useCallback((entries: IntersectionObserverEntry[]) => {
-    const target = entries[0];
-    if (target.isIntersecting) {
-      fetchChapters({ skip: chapters.length });
-    }
-  }, [fetchChapters, chapters.length]);
   return (
     <div className='flex flex-col space-y-4'>
       {volumes.map(volume => (
