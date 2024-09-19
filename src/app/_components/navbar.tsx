@@ -12,9 +12,6 @@ const navLinks = [
     title: "Home",
     href: "/home"
   },{
-    title: "Blogs",
-    href: "/blogs"
-  },{
     title: "Novels",
     href: "/novels"
   }, {
