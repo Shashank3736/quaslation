@@ -68,3 +68,17 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .link {
+    @apply relative;
+  }
+  
+  .link::after {
+    @apply absolute content-[''] right-0 bottom-[-4px] w-0 h-[2px] rounded-[8px] bg-primary transition-all ease-in-out duration-300;
+  }
+  
+  .link:hover::after {
+    @apply w-full;
+  }
+}
