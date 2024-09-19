@@ -6,18 +6,11 @@ import LimitedContent from './limited-content'
 import { Button } from '../ui/button'
 import Link from 'next/link'
 import { ChapterNavigation, ScrollToTop } from './chapter-navigation'
-import { getChapterBySlug, getNovelChaptersBetweenSerial } from '@/lib/db/query'
-import { unstable_cache } from 'next/cache'
-
-const getChaptersCached = unstable_cache(getNovelChaptersBetweenSerial, [], {
-  tags: ["chapter_publish"],
-  revalidate: 12*3600
-});
+import { getChapterBySlug } from '@/lib/db/query'
 
 export const ChapterPage = async ({ chapter, novelSlug }: { chapter: Awaited<ReturnType<typeof getChapterBySlug>>, novelSlug: string }) => {
-  const navigations = await getChaptersCached({ novelId: chapter.novelId, first: chapter.serial-1, last: chapter.serial+1 })
-  const previous = navigations.at(0)?.slug !== chapter.slug ? navigations.at(0) : null
-  const next = navigations.at(-1)?.slug !== chapter.slug ? navigations.at(-1): null
+  const previous = chapter.previous
+  const next = chapter.next
   return (
     <div className='p-4'>
       <H3 className='mb-4'>Chapter {chapter.number}: {chapter.title}</H3>
