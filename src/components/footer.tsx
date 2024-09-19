@@ -1,6 +1,25 @@
 import { DISCORD_INVITE_URL } from "@/lib/config"
 import Link from "next/link"
 
+const footerLinks = [
+  {
+    name: "Discord",
+    href: DISCORD_INVITE_URL,
+  },
+  {
+    name: "About Us",
+    href: "/about",
+  },
+  {
+    name: "Privacy Policy",
+    href: "/privacy",
+  },
+  {
+    name: "Terms of Service",
+    href: "/terms-of-service",
+  },
+];
+
 export function FooterComponent() {
   return (
     <footer className="w-full border-t bg-background">
@@ -14,30 +33,11 @@ export function FooterComponent() {
           </p>
         </div>
         <nav className="flex gap-4 sm:gap-6">
-          <Link
-            href={DISCORD_INVITE_URL}
-            className="text-sm font-medium hover:underline underline-offset-4 flex items-center"
-          >
-            <span>Discord</span>
-          </Link>
-          <Link
-            href="/about"
-            className="text-sm font-medium hover:underline underline-offset-4"
-          >
-            About Us
-          </Link>
-          <Link
-            href="/privacy"
-            className="text-sm font-medium hover:underline underline-offset-4"
-          >
-            Privacy Policy
-          </Link>
-          <Link
-            href="/terms-of-service"
-            className="text-sm font-medium hover:underline underline-offset-4"
-          >
-            Terms of Service
-          </Link>
+          {footerLinks.map((link) => (
+            <Link className="text-sm font-medium link" key={link.href} href={link.href}>
+              {link.name}
+            </Link>
+          ))}
         </nav>
       </div>
     </footer>
