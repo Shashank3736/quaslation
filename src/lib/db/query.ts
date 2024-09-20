@@ -1,7 +1,7 @@
 import "server-only";
 import { db } from "."
 import { chapter, novel, richText, user as userTable, volume } from "./schema";
-import { and, desc, eq, gte, isNotNull, isNull, lte, } from "drizzle-orm";
+import { and, desc, eq, gte, isNotNull, isNull, lte, sql, } from "drizzle-orm";
 
 export async function getReleases({ skip=0, premium=false }) {
   console.log("Request for releases skip:", skip, "premium:", premium);
@@ -88,6 +88,28 @@ export const getNovelChapters = async({ novelId, skip=0, limit=50 }:{ novelId: n
 
 export const getChapterBySlug = async (slug: string) => {
   console.log("Requesting chapter data from slug:", slug);
+  const previousChapterSubquery = db
+  .select({
+    title: chapter.title,
+    nextSerial: sql<typeof chapter.serial>`${chapter.serial} + 1`.as('next_serial'),
+    novelId: chapter.novelId,
+    slug: chapter.slug,
+  })
+  .from(chapter)
+  .where(isNotNull(chapter.publishedAt))
+  .as('previous_chapter');
+
+  const nextChapterSubquery = db
+  .select({
+    title: chapter.title,
+    prevSerial: sql<typeof chapter.serial>`${chapter.serial} - 1`.as('prev_serial'),
+    novelId: chapter.novelId,
+    slug: chapter.slug,
+  })
+  .from(chapter)
+  .where(isNotNull(chapter.publishedAt))
+  .as('next_chapter');
+
   const data = await db.select({
     number: chapter.number,
     title: chapter.title,
@@ -99,12 +121,34 @@ export const getChapterBySlug = async (slug: string) => {
     novelTitle: novel.title,
     volumeNumber: volume.number,
     slug: chapter.slug,
+    previous: {
+      slug: previousChapterSubquery.slug,
+      title: previousChapterSubquery.title
+    },
+    next: {
+      slug: nextChapterSubquery.slug,
+      title: nextChapterSubquery.title
+    }
   })
   .from(chapter)
   .where(and(eq(chapter.slug, slug), isNotNull(chapter.publishedAt)))
   .innerJoin(richText, eq(chapter.richTextId, richText.id))
   .innerJoin(novel, eq(novel.id, chapter.novelId))
   .innerJoin(volume, eq(volume.id, chapter.volumeId))
+  .leftJoin(
+    previousChapterSubquery,
+    and(
+      eq(chapter.serial, previousChapterSubquery.nextSerial),
+      eq(chapter.novelId, previousChapterSubquery.novelId),
+    )
+  )
+  .leftJoin(
+    nextChapterSubquery,
+    and(
+      eq(chapter.serial, nextChapterSubquery.prevSerial),
+      eq(chapter.novelId, nextChapterSubquery.novelId)
+    )
+  )
   return data[0]
 }
 

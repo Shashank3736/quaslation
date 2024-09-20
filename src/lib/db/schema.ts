@@ -3,8 +3,6 @@ import { pgTable, varchar, timestamp, text, integer, uniqueIndex, foreignKey, se
 
 export const role = pgEnum("Role", ['ADMIN', 'SUBSCRIBER', 'MEMBER'])
 
-
-
 export const prismaMigrations = pgTable("_prisma_migrations", {
 	id: varchar("id", { length: 36 }).primaryKey().notNull(),
 	checksum: varchar("checksum", { length: 64 }).notNull(),
@@ -18,9 +16,9 @@ export const prismaMigrations = pgTable("_prisma_migrations", {
 
 export const volume = pgTable("Volume", {
 	id: serial("id").primaryKey().notNull(),
-	createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
-	publishedAt: timestamp("publishedAt"),
-	updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+	createdAt: timestamp("createdAt", { precision: 3 }).default(sql`CURRENT_TIMESTAMP`).notNull(),
+	publishedAt: timestamp("publishedAt", { precision: 3 }),
+	updatedAt: timestamp("updatedAt", { precision: 3 }).notNull().defaultNow(),
 	number: doublePrecision("number").notNull(),
 	title: text("title"),
 	novelId: integer("novelId").notNull(),
@@ -53,9 +51,9 @@ export const novel = pgTable("Novel", {
 	slug: text("slug").notNull(),
 	title: text("title").notNull(),
 	thumbnail: text("thumbnail"),
-	createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
-	publishedAt: timestamp("publishedAt"),
-	updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+	createdAt: timestamp("createdAt", { precision: 3 }).default(sql`CURRENT_TIMESTAMP`).notNull(),
+	publishedAt: timestamp("publishedAt", { precision: 3 }),
+	updatedAt: timestamp("updatedAt", { precision: 3 }).notNull().defaultNow(),
 	richTextId: integer("richTextId").notNull(),
 },
 (table) => {
@@ -80,9 +78,9 @@ export const chapter = pgTable("Chapter", {
 	serial: integer("serial").notNull(),
 	number: doublePrecision("number").notNull(),
 	title: text("title").notNull(),
-	createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
-	publishedAt: timestamp("publishedAt"),
-	updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+	createdAt: timestamp("createdAt", { precision: 3 }).default(sql`CURRENT_TIMESTAMP`).notNull(),
+	publishedAt: timestamp("publishedAt", { precision: 3 }),
+	updatedAt: timestamp("updatedAt", { precision: 3 }).notNull().defaultNow(),
 	richTextId: integer("richTextId").notNull(),
 },
 (table) => {
