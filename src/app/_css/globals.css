@@ -81,4 +81,8 @@
   .link:hover::after {
     @apply w-full;
   }
+
+  #disqus_thread { 
+    color-scheme: none; 
+  }
 }
