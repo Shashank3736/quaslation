@@ -29,6 +29,7 @@
     "@vercel/postgres": "^0.10.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "disqus-react": "^1.1.5",
     "drizzle-orm": "^0.33.0",
     "html-react-parser": "^5.1.12",
     "lucide-react": "^0.417.0",
