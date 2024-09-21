@@ -7,13 +7,14 @@ import { Button } from '../ui/button'
 import Link from 'next/link'
 import { ChapterNavigation, ScrollToTop } from './chapter-navigation'
 import { getChapterBySlug } from '@/lib/db/query'
+import Comments from './comments'
 
 export const ChapterPage = async ({ chapter, novelSlug }: { chapter: Awaited<ReturnType<typeof getChapterBySlug>>, novelSlug: string }) => {
   const previous = chapter.previous
   const next = chapter.next
   return (
-    <div className='p-4'>
-      <H3 className='mb-4'>Chapter {chapter.number}: {chapter.title}</H3>
+    <div className='p-4 space-y-4'>
+      <H3>Chapter {chapter.number}: {chapter.title}</H3>
       {(chapter.premium) ? 
       <>
       <SignedIn>
@@ -46,6 +47,7 @@ export const ChapterPage = async ({ chapter, novelSlug }: { chapter: Awaited<Ret
         )}
         <ChapterNavigation previousLink={previous ? `/novels/${novelSlug}/${previous.slug}` : undefined} nextLink={next ? `/novels/${novelSlug}/${next.slug}` : undefined} />
       </div>
+      <Comments id={chapter.slug} title={chapter.title} />
       <ScrollToTop />
     </div>
   )
