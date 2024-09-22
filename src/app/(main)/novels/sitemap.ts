@@ -1,0 +1,22 @@
+import { getNovelList } from "@/lib/db/query";
+import { MetadataRoute } from "next";
+import { unstable_cache } from "next/cache";
+
+const getCached = unstable_cache(getNovelList, ["sitemapNovels"], {
+  tags: ["novel_create"],
+  revalidate: 24*3600
+});
+
+export default async function sitemap():Promise<MetadataRoute.Sitemap> {
+  const base = "https://quaslation.xyz"
+  
+  const novels = await getCached();
+  return novels.map(novel => (
+    {
+      url: `${base}/novels/${novel.slug}`,
+      lastModified: new Date()
+    }
+  ));
+}
+
+export const revalidate = 24*60*60

@@ -1,9 +1,10 @@
 import "server-only";
 import { db } from "."
-import { chapter, novel, richText, volume } from "./schema";
-import { and, count, desc, eq, gte, isNotNull, isNull, lte, not, or } from "drizzle-orm";
+import { chapter, novel, richText, user as userTable, volume } from "./schema";
+import { and, desc, eq, gte, isNotNull, isNull, lte, sql, } from "drizzle-orm";
 
 export async function getReleases({ skip=0, premium=false }) {
+  console.log("Request for releases skip:", skip, "premium:", premium);
   return db.select({
     number: chapter.number,
     title: chapter.title,
@@ -40,6 +41,7 @@ export async function getChapterSlugMany() {
 }
 
 export async function getNovelList() {
+  console.log("Requesting for novels list.");
   return db.select({
     slug: novel.slug,
     title: novel.title,
@@ -48,9 +50,13 @@ export async function getNovelList() {
 }
 
 export async function getNovelBySlug(slug: string) {
+  console.log("Request novel data from slug:", slug);
   const data = await db.select({
     id: novel.id,
-    description: richText.html,
+    description: {
+      html: richText.html,
+      text: richText.text
+    },
     title: novel.title,
     thumbnail: novel.thumbnail,
   }).from(novel).where(eq(novel.slug, slug)).innerJoin(richText, eq(novel.richTextId, richText.id))
@@ -58,10 +64,12 @@ export async function getNovelBySlug(slug: string) {
 }
 
 export async function getNovelVolumes(novelId: number) {
+  console.log("Requesting novel volumes from ID:", novelId);
   return db.select().from(volume).where(eq(volume.novelId, novelId))
 }
 
-export const getNovelChapters = async({ novelId, skip=0, limit=25 }:{ novelId: number, skip?: number, limit?: number }) => {
+export const getNovelChapters = async({ novelId, skip=0, limit=50 }:{ novelId: number, skip?: number, limit?: number }) => {
+  console.log("Requesting ", limit, " chapters after ", skip, " chapter(s) of novel ID:", novelId);
   return db.select({
     slug: chapter.slug,
     title: chapter.title,
@@ -73,28 +81,79 @@ export const getNovelChapters = async({ novelId, skip=0, limit=25 }:{ novelId: n
     premium: chapter.premium,
   }).from(chapter)
   .where(and(eq(chapter.novelId, novelId), isNotNull(chapter.publishedAt)))
-  .leftJoin(volume, eq(chapter.volumeId, volume.id))
+  .innerJoin(volume, eq(chapter.volumeId, volume.id))
   .orderBy(chapter.serial)
   .offset(skip).limit(limit)
 }
 
 export const getChapterBySlug = async (slug: string) => {
+  console.log("Requesting chapter data from slug:", slug);
+  const previousChapterSubquery = db
+  .select({
+    title: chapter.title,
+    nextSerial: sql<typeof chapter.serial>`${chapter.serial} + 1`.as('next_serial'),
+    novelId: chapter.novelId,
+    slug: chapter.slug,
+  })
+  .from(chapter)
+  .where(isNotNull(chapter.publishedAt))
+  .as('previous_chapter');
+
+  const nextChapterSubquery = db
+  .select({
+    title: chapter.title,
+    prevSerial: sql<typeof chapter.serial>`${chapter.serial} - 1`.as('prev_serial'),
+    novelId: chapter.novelId,
+    slug: chapter.slug,
+  })
+  .from(chapter)
+  .where(isNotNull(chapter.publishedAt))
+  .as('next_chapter');
+
   const data = await db.select({
     number: chapter.number,
     title: chapter.title,
     premium: chapter.premium,
     content: richText.html,
+    textContent: richText.text,
     serial: chapter.serial,
     novelId: chapter.novelId,
+    novelTitle: novel.title,
+    volumeNumber: volume.number,
     slug: chapter.slug,
+    previous: {
+      slug: previousChapterSubquery.slug,
+      title: previousChapterSubquery.title
+    },
+    next: {
+      slug: nextChapterSubquery.slug,
+      title: nextChapterSubquery.title
+    }
   })
   .from(chapter)
   .where(and(eq(chapter.slug, slug), isNotNull(chapter.publishedAt)))
   .innerJoin(richText, eq(chapter.richTextId, richText.id))
+  .innerJoin(novel, eq(novel.id, chapter.novelId))
+  .innerJoin(volume, eq(volume.id, chapter.volumeId))
+  .leftJoin(
+    previousChapterSubquery,
+    and(
+      eq(chapter.serial, previousChapterSubquery.nextSerial),
+      eq(chapter.novelId, previousChapterSubquery.novelId),
+    )
+  )
+  .leftJoin(
+    nextChapterSubquery,
+    and(
+      eq(chapter.serial, nextChapterSubquery.prevSerial),
+      eq(chapter.novelId, nextChapterSubquery.novelId)
+    )
+  )
   return data[0]
 }
 
 export const getNovelChaptersBetweenSerial = async({ novelId, first, last }:{ novelId: number, first: number, last: number }) => {
+  console.log("Request novel chapters between serial:", first, last, " of novel ID:", novelId);
   return db.select({
     slug: chapter.slug
   }).from(chapter)
@@ -185,4 +244,11 @@ export const getLatestChapter = async(novelId: number) => {
 
 export const getNovelFromId = async(id: number) => {
   return (await db.select().from(novel).where(eq(novel.id, id))).at(0)
+}
+
+export const getUserRole = async(id: string) => {
+  const data = await db.select().from(userTable).where(eq(userTable.clerkId, id));
+  const userData = data.at(0);
+
+  return userData ? userData.role : "MEMBER"
 }

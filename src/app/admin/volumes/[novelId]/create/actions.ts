@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { volumeTable } from "@/lib/db/schema";
+import { volume as volumeTable } from "@/lib/db/schema";
 
 export const createVolume = async ({ novelId, number, title }:{ novelId: number, number: number, title?: string}) => {
   try {

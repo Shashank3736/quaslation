@@ -42,14 +42,20 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
 
   const onSubmit = async (values: z.infer<typeof createChapterFormSchema>) => {
     setSubmiting(true);
-    await createChapter(novelId, values) 
-    toast({
-      description: "Completed."
-    })
-    form.setValue("content", "")
-    form.setValue("number", values.number+1)
-    form.setValue("title", "")
-    form.setValue("serial", values.serial+1)
+    try {
+      await createChapter(novelId, values)
+      toast({
+        description: "Completed."
+      })
+      form.setValue("content", "")
+      form.setValue("number", values.number+1)
+      form.setValue("title", "")
+      form.setValue("serial", values.serial+1)
+    } catch (error) {
+      toast({
+        description: "Something went wrong. Check if the volume or novel is already created or not."
+      });
+    }
     setSubmiting(false);
   }
   return (

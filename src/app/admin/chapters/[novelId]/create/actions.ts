@@ -3,7 +3,7 @@
 import { z } from "zod"
 import { createChapterFormSchema } from "./create-chapter-form"
 import { db } from "@/lib/db"
-import { chapterTable, richTextTable, volumeTable } from "@/lib/db/schema"
+import { chapter as chapterTable, richText as richTextTable, volume as volumeTable } from "@/lib/db/schema"
 import { markdownToHtml, markdownToText, slugify } from "@/lib/utils"
 import { and, eq } from "drizzle-orm"
 import { revalidatePath } from "next/cache"

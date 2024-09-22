@@ -1,34 +1,52 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/Yy7JwTbRhrB
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { ExternalLink, Home } from "lucide-react"
+import { DISCORD_INVITE_URL } from "@/lib/config"
 
-export default function Error() {
+export default function Component() {
   return (
-    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-md text-center">
-        <div className="mx-auto h-12 w-12 text-primary" />
-        <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-          Oops, something went wrong!
-        </h1>
-        <p className="mt-4 text-muted-foreground">
-          We&apos;re sorry, but an unexpected error has occurred. Please try again later or contact support if the issue
-          persists.
-        </p>
-        <div className="mt-6">
-          <Link
-            href="/"
-            className="mr-4 inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-            prefetch={false}
+    <div className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground p-4">
+      <div className="max-w-md w-full space-y-8">
+        <div className="text-center">
+          <svg
+            className="mx-auto h-24 w-24 text-muted-foreground"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
           >
-            Go to Homepage
-          </Link>
-          <Button variant={"outline"} onClick={() => window.location.reload()}>Refresh</Button>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <h2 className="mt-6 text-3xl font-extrabold">Oops! Something went wrong</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {`We're sorry, but it seems like we've encountered an error.`}
+          </p>
+        </div>
+        <div className="mt-8 space-y-4">
+          <p className="text-center text-sm text-muted-foreground">
+            Please help us improve by reporting this issue on our Discord server, or return to the home page.
+          </p>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Link href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer">
+              <Button className="w-full" variant="default">
+                <ExternalLink className="mr-2 h-4 w-4" />
+                Join Discord
+              </Button>
+            </Link>
+            <Link href="/home">
+              <Button className="w-full" variant="outline">
+                <Home className="mr-2 h-4 w-4" />
+                Go to Home
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

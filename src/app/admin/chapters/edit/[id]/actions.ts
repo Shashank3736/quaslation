@@ -1,9 +1,10 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { chapterTable, novelTable, richTextTable, volumeTable } from "@/lib/db/schema";
+import { chapter as chapterTable, novel as novelTable, richText as richTextTable, volume as volumeTable } from "@/lib/db/schema";
 import { markdownToHtml, markdownToText } from "@/lib/utils";
 import { eq } from "drizzle-orm";
+import { revalidateTag } from "next/cache";
 
 export const getChapter = async(id:number) => {
   return (await db.select({
@@ -28,4 +29,5 @@ export const updateChapterContent = async(richTextId: number, markdown: string) 
   await db.update(richTextTable).set({
     text, html, markdown
   }).where(eq(richTextTable.id, richTextId))
+  revalidateTag("chapter_update");
 }

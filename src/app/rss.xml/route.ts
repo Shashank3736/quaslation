@@ -1,15 +1,13 @@
 import { db } from "@/lib/db";
-import { chapterTable, novelTable, richText, volumeTable } from "@/lib/db/schema";
+import { chapter as chapterTable, novel as novelTable, richText, volume as volumeTable } from "@/lib/db/schema";
 import { shortifyString } from "@/lib/utils";
 import { and, eq, isNotNull, gte } from "drizzle-orm";
+import { unstable_cache } from "next/cache";
 import RSS from "rss";
 
-export async function GET(req: Request) {
-  const time = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
-  const url = new URL(req.url);
-  
-
-  const chapters = await db.select({
+const getLatestChapters = async (time: Date) => {
+  console.log("Here")
+  return await db.select({
     chapter: chapterTable.number,
     slug: chapterTable.slug,
     description: richText.text,
@@ -26,6 +24,18 @@ export async function GET(req: Request) {
   .innerJoin(richText, eq(chapterTable.richTextId, richText.id))
   .innerJoin(volumeTable, eq(chapterTable.volumeId, volumeTable.id))
   .where(and(isNotNull(chapterTable.publishedAt),gte(chapterTable.publishedAt, time), eq(chapterTable.premium, false)));
+}
+
+const getCache = unstable_cache(getLatestChapters, [], {
+  tags: ["chapter_update"],
+  revalidate: 3600
+})
+
+export async function GET(req: Request) {
+  const time = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
+  const url = new URL(req.url);
+  
+  const chapters = await getCache(new Date(time.getFullYear(), time.getMonth(), time.getDate(), 0, 0, 0, 0));
   
   const feed = new RSS({
     title: "Quaslation",
