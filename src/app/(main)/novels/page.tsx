@@ -2,7 +2,7 @@ import H2 from '@/components/typography/h2'
 import Muted from '@/components/typography/muted'
 import { Separator } from '@/components/ui/separator'
 import { db } from '@/lib/db'
-import { timeAgo } from '@/lib/utils'
+import { shortifyString, timeAgo } from '@/lib/utils'
 import { Metadata } from 'next'
 import { unstable_cache } from 'next/cache'
 import Image from 'next/image'
@@ -55,14 +55,14 @@ export default async function NovelList() {
     <div className='p-4'>
       <H2 className='text-center'>List of Novels</H2>
       <Separator />
-      <div className='flex flex-wrap mt-4'>
+      <div className='grid lg:grid-cols-2 mt-4'>
       {novels.map(novel => novel.chapters.length > 0 ? (
-        <div key={novel.slug} className='lg:w-1/2 w-full p-4'>
+        <div key={novel.slug} className='p-4'>
           <div className="border border-gray p-6 rounded-lg flex flex-col md:flex-row items-center w-full">
             <Image className='w-24 h-fit m-4' src={novel.thumbnail || "/dummy/NoImageFound_light_400x600.png"} alt='thumbnail' width={400} height={600} />
             <div className='flex flex-col space-y-2 w-full'>
-              <h2 className='md:text-xl text-center'>
-                <Link href={`/novels/${novel.slug}`} className='hover:underline'>{novel.title}</Link>
+              <h2 className='md:text-xl text-center link mb-2'>
+                <Link href={`/novels/${novel.slug}`} title={novel.title}>{novel.title}</Link>
               </h2>
               <Separator />
               {novel.chapters.map(chap => (
