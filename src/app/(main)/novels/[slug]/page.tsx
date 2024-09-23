@@ -19,30 +19,30 @@ export async function generateStaticParams() {
   }))
 }
 
-const getNovelMetadata = unstable_cache(async (slug: string) => {
-    return await db.query.novel.findFirst({
-      columns: {
-        title: true,
-      },
-      where: (novel, { eq }) => eq(novel.slug, slug),
-      with: {
-        richText: {
-          columns: {
-            text: true,
-          }
-        }
-      }
-    })
-  }, 
-  [], 
-  {
-    revalidate: 24*3600,
-    tags: ["novel_update"]
-  }
-);
 
 export async function generateMetadata({ params }:{ params: { slug: string }}): Promise<Metadata> {
-  const novel = await getNovelMetadata(params.slug);
+  const getNovelMetadata = unstable_cache(async () => {
+      return await db.query.novel.findFirst({
+        columns: {
+          title: true,
+        },
+        where: (novel, { eq }) => eq(novel.slug, params.slug),
+        with: {
+          richText: {
+            columns: {
+              text: true,
+            }
+          }
+        }
+      })
+    }, 
+    [], 
+    {
+      revalidate: 24*3600,
+      tags: [`novel:update:${params.slug}`]
+    }
+  );
+  const novel = await getNovelMetadata();
   if(!novel) return {
     title: "Not Found",
   }
@@ -89,14 +89,17 @@ const getNovel = async (slug: string) => {
   });
 }
 
-const getNovelCache = unstable_cache(getNovel, [], {
-  tags: ["chapter_update"],
-  revalidate: 12*3600
-});
 
 export default async function NovelPage({ params }:{ params: { slug: string }}) {
+  const getNovelCache = unstable_cache(getNovel, [], {
+    tags: [`novel:update:${params.slug}`],
+    revalidate: 12*3600
+  });
+
   const novel = await getNovelCache(params.slug);
+  
   if(!novel) notFound();
+  
   const chapters = novel.chapters;
   return (
     <div className='p-4'>

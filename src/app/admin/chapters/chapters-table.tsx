@@ -44,11 +44,11 @@ export const ChaptersTable = ({ data }:{ data: Awaited<ReturnType<typeof getChap
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem className='cursor-pointer' onClick={() => freeChapter(chap.novel.id, chap.serial)}>
+                  <DropdownMenuItem className='cursor-pointer' onClick={() => freeChapter(chap.novel.id, chap.serial, chap.novel.slug)}>
                     Free Chapter
                   </DropdownMenuItem>
                   {chap.publishedAt ? null: (
-                  <DropdownMenuItem className='cursor-pointer' onClick={() => publish({ novelId: chap.novel.id, serial: chap.serial})}>
+                  <DropdownMenuItem className='cursor-pointer' onClick={() => publish({ novelId: chap.novel.id, serial: chap.serial, novelSlug: chap.novel.slug })}>
                     Publish
                   </DropdownMenuItem>
                   )}

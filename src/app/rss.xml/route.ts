@@ -27,9 +27,9 @@ const getLatestChapters = async (time: Date) => {
 }
 
 const getCache = unstable_cache(getLatestChapters, [], {
-  tags: ["chapter_update"],
-  revalidate: 3600
-})
+  tags: ["chapter:update:free"],
+  revalidate: 3600*12
+});
 
 export async function GET(req: Request) {
   const time = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);

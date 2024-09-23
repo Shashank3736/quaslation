@@ -9,6 +9,7 @@ import { revalidateTag } from "next/cache";
 export const getChapter = async(id:number) => {
   return (await db.select({
     id: chapterTable.number,
+    slug: chapterTable.slug,
     title: chapterTable.title,
     number: chapterTable.number,
     richText: {
@@ -22,12 +23,14 @@ export const getChapter = async(id:number) => {
   )[0]
 }
 
-export const updateChapterContent = async(richTextId: number, markdown: string) => {
+export const updateChapterContent = async(richTextId: number, markdown: string, chapterSlug: string) => {
   const text = await markdownToText(markdown);
   const html = await markdownToHtml(markdown);
 
   await db.update(richTextTable).set({
     text, html, markdown
   }).where(eq(richTextTable.id, richTextId))
-  revalidateTag("chapter_update");
+  revalidateTag(`chapter:update:${chapterSlug}`);
+  revalidateTag(`chapter:update:richText:${chapterSlug}`);
+  revalidateTag(`chapter:update:content:${chapterSlug}`);
 }

@@ -183,7 +183,7 @@ export const getNovelLastChapter = async(novelId: number) => {
   .orderBy(desc(chapter.serial))
   .limit(1);
 
-  return data[0]
+  return data.at(0)
 }
 
 export const getChapters = async({ novelId, skip=0, limit=25 }:{ novelId?: number, skip?: number, limit?: number }) => {
@@ -197,6 +197,7 @@ export const getChapters = async({ novelId, skip=0, limit=25 }:{ novelId?: numbe
     novel: {
       title: novel.title,
       id: novel.id,
+      slug: novel.slug,
     }
   }).from(chapter).innerJoin(novel, eq(chapter.novelId, novel.id))
   if(novelId) data.where(eq(chapter.novelId, novelId)).orderBy(desc(chapter.serial))
@@ -210,14 +211,32 @@ export const freeChapters = async({ novelId, first, last }:{ novelId: number, fi
     premium: false,
     publishedAt: new Date()
   })
-  .where(and(eq(chapter.novelId, novelId), gte(chapter.serial, first), lte(chapter.serial, last)))
+  .where(
+    and(
+      eq(chapter.novelId, novelId), 
+      gte(chapter.serial, first), 
+      lte(chapter.serial, last)
+    )
+  )
+  .returning({
+    slug: chapter.slug
+  });
 }
 
 export const publishChapters = async({ novelId, serial }:{ novelId: number, serial: number}) => {
   return db.update(chapter).set({
     publishedAt: new Date()
   })
-  .where(and(lte(chapter.serial, serial), isNull(chapter.publishedAt), eq(chapter.novelId, novelId)))
+  .where(
+    and(
+      lte(chapter.serial, serial), 
+      isNull(chapter.publishedAt), 
+      eq(chapter.novelId, novelId)
+    )
+  )
+  .returning({
+    slug: chapter.slug
+  });
 }
 
 export const getLatestChapter = async(novelId: number) => {

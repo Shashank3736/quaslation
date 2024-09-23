@@ -37,7 +37,7 @@ export const EditChapterForm = ({ data }:{ data: Awaited<ReturnType<typeof getCh
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if(data.richText.content !== values.content) {
-      await updateChapterContent(data.richText.id, values.content);
+      await updateChapterContent(data.richText.id, values.content, data.slug);
       toast({
         description: "Chapter updated successfully!"
       })

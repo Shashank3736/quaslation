@@ -46,7 +46,7 @@ export default function ChapterList({ novelId, novelSlug, data }:{ novelId: numb
     if (loading || !more) return;
     setLoading(true)
     
-    const data = await getData({ novelId, skip })
+    const data = await getData({ novelId, skip, slug: novelSlug });
     console.log("Size of fetched data:", data.length)
     if(data.length < NOVEL_CHAPTERS_LIMIT) {
       setMore(false)
@@ -58,7 +58,7 @@ export default function ChapterList({ novelId, novelSlug, data }:{ novelId: numb
       return chaps.concat(data);
     })
     setLoading(false)
-  }, [novelId, loading, more])
+  }, [novelId, loading, more, novelSlug])
   
   const handleObserver = useCallback((entries: IntersectionObserverEntry[]) => {
     const target = entries[0];

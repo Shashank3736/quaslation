@@ -2,7 +2,7 @@ import H2 from '@/components/typography/h2'
 import Muted from '@/components/typography/muted'
 import { Separator } from '@/components/ui/separator'
 import { db } from '@/lib/db'
-import { shortifyString, timeAgo } from '@/lib/utils'
+import { timeAgo } from '@/lib/utils'
 import { Metadata } from 'next'
 import { unstable_cache } from 'next/cache'
 import Image from 'next/image'
@@ -45,7 +45,7 @@ const getNovelList = async () => {
 }
 
 const getCacheData = unstable_cache(getNovelList, ["novels"], {
-  tags: ["chapter_free", "novel_update"],
+  tags: ["chapter:update:free", "novel:update", "novel:create"],
   revalidate: 12*3600
 });
 

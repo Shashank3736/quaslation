@@ -15,7 +15,7 @@ const getCache = unstable_cache(async () => {
   .where(isNotNull(chapterTable.publishedAt))
   .innerJoin(novelTable, eq(chapterTable.novelId, novelTable.id));
 }, [], {
-  tags: ["chapter_publish"],
+  tags: ["chapter:update:publish"],
   revalidate: 24*3600
 });
 

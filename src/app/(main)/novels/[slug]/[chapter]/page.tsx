@@ -9,12 +9,12 @@ export async function generateStaticParams() {
   return await getChapterSlugMany();
 }
 
-const getCacheData = unstable_cache(getChapterBySlug, ["chapter"], {
-  tags: ["chapter_update"],
-  revalidate: 12*3600
-})
 
 export async function generateMetadata({ params }:{ params: { chapter: string }}): Promise<Metadata> {
+  const getCacheData = unstable_cache(getChapterBySlug, ["chapter"], {
+    tags: [`chapter:update:content:${params.chapter}`],
+    revalidate: 7*24*3600
+  });
   const chapter = await getCacheData(params.chapter);
   return {
     title: `${chapter.volumeNumber < 0 ? "":`Vol. ${chapter.volumeNumber} `}Chapter ${chapter.number} - ${chapter.novelTitle} | Quaslation`,
@@ -23,6 +23,10 @@ export async function generateMetadata({ params }:{ params: { chapter: string }}
 }
 
 export default async function Page({ params }: { params: { slug: string, chapter: string }}) {
+  const getCacheData = unstable_cache(getChapterBySlug, ["chapter"], {
+    tags: [`chapter:update:${params.chapter}`],
+    revalidate: 24*3600
+  });
   const chapter = await getCacheData(params.chapter);
   return (
     <ChapterPage chapter={chapter} novelSlug={params.slug} />

@@ -3,7 +3,7 @@ import { MetadataRoute } from "next";
 import { unstable_cache } from "next/cache";
 
 const getCached = unstable_cache(getNovelList, ["sitemapNovels"], {
-  tags: ["novel_create"],
+  tags: ["novel:create"],
   revalidate: 24*3600
 });
 

@@ -5,7 +5,7 @@ import RSS from "rss";
 
 const ms = (days:number) => (days*24*60*60*1000)
 
-const getChapters = unstable_cache(async (time: Date, slug: string) => {
+const getChapters = async (time: Date, slug: string) => {
   return await db.query.novel.findFirst({
     columns: {
       slug: true,
@@ -38,16 +38,17 @@ const getChapters = unstable_cache(async (time: Date, slug: string) => {
       }
     }
   })
-}, [], {
-  tags: ["chapter_free"],
-  revalidate: 6*3600
-});
+}
 
 export async function GET(req: Request, { params }:{ params: { slug: string }}) {
   const time = new Date(new Date().getTime() - ms(7))
   const url = new URL(req.url);
 
-  const novel = await getChapters(new Date(time.getFullYear(), time.getMonth(), time.getDate(), 0, 0, 0, 0), params.slug);
+  const getCache = unstable_cache(getChapters, [], {
+    tags: [`novel:update:${params.slug}`]
+  })
+
+  const novel = await getCache(new Date(time.getFullYear(), time.getMonth(), time.getDate(), 0, 0, 0, 0), params.slug);
   if(!novel) return Response.json({
     message: "No novel found",
   })
