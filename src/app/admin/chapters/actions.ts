@@ -16,8 +16,8 @@ export const freeChapter = async (novelId: number, serial: number, novelSlug: st
 }
 
 export const publish = async ({ novelId, serial, novelSlug }:{ novelId: number, serial: number, novelSlug: string }) => {
-  const data = await publishChapters({ novelId, serial });
   const previousChapter = await getNovelLastChapter(novelId);
+  const data = await publishChapters({ novelId, serial });
   revalidatePath(`/admin/chapters/${novelId}`);
   revalidateTag("chapter");
   revalidateTag("chapter:update");
