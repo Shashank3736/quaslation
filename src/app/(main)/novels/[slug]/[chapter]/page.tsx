@@ -11,7 +11,7 @@ export async function generateStaticParams() {
 
 
 export async function generateMetadata({ params }:{ params: { chapter: string }}): Promise<Metadata> {
-  const getCacheData = unstable_cache(getChapterBySlug, ["chapter"], {
+  const getCacheData = unstable_cache(getChapterBySlug, [], {
     tags: [`chapter:update:content:${params.chapter}`],
     revalidate: 7*24*3600
   });
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }:{ params: { chapter: string }}
 }
 
 export default async function Page({ params }: { params: { slug: string, chapter: string }}) {
-  const getCacheData = unstable_cache(getChapterBySlug, ["chapter"], {
+  const getCacheData = unstable_cache(getChapterBySlug, [], {
     tags: [`chapter:update:${params.chapter}`],
     revalidate: 24*3600
   });
