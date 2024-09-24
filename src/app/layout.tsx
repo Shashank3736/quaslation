@@ -12,7 +12,10 @@ import NextTopLoader from 'nextjs-toploader';
 const inter = AR_One_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Quaslation - Quality translation of asian web novels.",
+  title: {
+    default: "Quaslation - Quality translation of asian web novels.",
+    template: "%s | Quaslation",
+  },
   description: "Discover the best fan translations of Asian web novels. Immerse yourself in captivating stories from across Asia.",
   icons: {
     icon: "/logo/logo100x100.jpg",
