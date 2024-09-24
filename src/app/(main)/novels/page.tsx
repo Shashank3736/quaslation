@@ -10,7 +10,7 @@ import Link from 'next/link'
 import React from 'react'
 
 export const metadata: Metadata = {
-  title: "Novels | Quaslation",
+  title: "Novels",
   description: "A list of asian web novels fan translated by the translators of Quaslation."
 }
 

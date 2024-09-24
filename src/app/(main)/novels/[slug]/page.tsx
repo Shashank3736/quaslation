@@ -47,7 +47,7 @@ export async function generateMetadata({ params }:{ params: { slug: string }}): 
     title: "Not Found",
   }
   return {
-    title: `${novel.title} | Quaslation`,
+    title: novel.title,
     description: shortifyString(novel.richText.text, 512)
   }
 }

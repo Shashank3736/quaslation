@@ -17,7 +17,7 @@ export async function generateMetadata({ params }:{ params: { chapter: string }}
   });
   const chapter = await getCacheData(params.chapter);
   return {
-    title: `${chapter.volumeNumber < 0 ? "":`Vol. ${chapter.volumeNumber} `}Chapter ${chapter.number} - ${chapter.novelTitle} | Quaslation`,
+    title: `${chapter.volumeNumber < 0 ? "":`Vol. ${chapter.volumeNumber} `}Chapter ${chapter.number} - ${chapter.novelTitle}`,
     description: chapter.title+"\n"+shortifyString(chapter.textContent, 400)
   }
 }
