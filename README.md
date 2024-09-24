@@ -11,6 +11,7 @@ The website I use to share the novels I translate. If you want to read my fan tr
 - Visually appealing
   - Support light and dark mode
   - Support all screen sizes (mobile, tab, laptop, tv)
+  - Infinite scroll
 - RSS feed available to follow the content the old way.
 - Sitemap for google bots to index the website
 - Disqus comments for better community engagement
