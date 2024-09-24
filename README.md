@@ -23,7 +23,7 @@ The website I use to share the novels I translate. If you want to read my fan tr
   - Privacy Policy
   - Contact Us
   - Comment Policy
-
+- Support `MDX`
 
 > [!NOTE]
 > This is not an open source project but more like source available project for educational purpose. It's not a licensed work so re deployment of the project is not allowed without my permission. If you want a website like this or any other style contact me at shreyashr267@gmail.com
