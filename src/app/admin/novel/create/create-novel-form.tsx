@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
+import { optional, z } from "zod"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -21,12 +21,13 @@ import Link from 'next/link'
 import { createNovel } from './actions'
 import { markdownToHtml } from '@/lib/utils'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import AutoResizeTextarea from '@/components/auto-resize-textarea'
 
 export const createNovelSchema = z.object({
   title: z.string().min(2),
   description: z.string().min(2),
-  thumbnail: z.string().url().optional()
-})
+  thumbnail: z.coerce.string().url().or(z.literal(""))
+});
 
 export default function CreateNovelForm() {
   const [preview, setPreview] = useState('')
@@ -83,7 +84,7 @@ export default function CreateNovelForm() {
             <FormItem>
               <FormLabel>Image</FormLabel>
               <FormControl>
-                <Input placeholder="Url of novel thumbnail" {...field} />
+                <Input required={false} placeholder="Url of novel thumbnail" {...field} />
               </FormControl>
               <FormDescription>Image of novel taken from supabase.</FormDescription>
               <FormMessage />
@@ -103,7 +104,7 @@ export default function CreateNovelForm() {
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea 
+                    <AutoResizeTextarea 
                       placeholder="Novel description." 
                       {...field} 
                       onChange={(e) => {

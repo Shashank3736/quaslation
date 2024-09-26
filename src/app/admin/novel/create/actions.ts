@@ -22,7 +22,7 @@ export async function createNovel(values: z.infer<typeof createNovelSchema>):Pro
       slug: slugify(values.title),
       title: values.title,
       richTextId: richTextData[0].id,
-      thumbnail: values.thumbnail
+      thumbnail: values.thumbnail == "" ? undefined : values.thumbnail
     }).returning({
       slug: novelTable.slug,
     });
