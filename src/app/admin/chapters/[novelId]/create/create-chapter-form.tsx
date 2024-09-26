@@ -16,9 +16,10 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/components/ui/use-toast';
 import { createChapter } from './actions';
+import AutoResizeTextarea from '@/components/auto-resize-textarea';
+import { markdownToHtml } from '@/lib/utils';
 
 export const createChapterFormSchema = z.object({
   title: z.string(),
@@ -39,6 +40,7 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
   })
   
   const [submiting, setSubmiting] = useState(false);
+  const [preview, setPreview] = useState("")
 
   const onSubmit = async (values: z.infer<typeof createChapterFormSchema>) => {
     setSubmiting(true);
@@ -75,20 +77,37 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
             </FormItem>
           )} 
         />
-        <FormField
-          control={form.control}
-          name="content"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Content</FormLabel>
-              <FormControl>
-                <Textarea placeholder='Write markdown here...' {...field} />
-              </FormControl>
-              <FormDescription>Write markdown.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )} 
-        />
+        <div className="grid grid-cols-2 space-x-2">
+          <FormField
+            control={form.control}
+            name="content"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Content</FormLabel>
+                <FormControl>
+                  <AutoResizeTextarea 
+                    placeholder='Write markdown here...' 
+                    {...field} 
+                    onChange={(e) => {
+                      field.onChange(e)
+                      markdownToHtml(e.target.value)
+                      .then(data => setPreview(data));
+                    }}
+                  />
+                </FormControl>
+                <FormDescription>Write markdown.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )} 
+          />
+          <div className="overflow-y-auto">
+            <h3 className="font-semibold mb-2">Preview</h3>
+            <article 
+              className="prose dark:prose-invert max-w-none p-4 rounded-md border"
+              dangerouslySetInnerHTML={{ __html: preview }}
+            />
+          </div>
+        </div>
         <FormField
           control={form.control}
           name="serial"
