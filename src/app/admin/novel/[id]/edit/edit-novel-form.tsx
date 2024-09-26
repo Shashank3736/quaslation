@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -28,8 +28,8 @@ export const editNovelSchema = z.object({
   thumbnail: z.coerce.string().url().or(z.literal("")),
 });
 
-export default function EditNovelForm({ data }:{ data: Novel }) {
-  const [preview, setPreview] = useState("");
+export default function EditNovelForm({ data, html }:{ data: Novel, html: string }) {
+  const [preview, setPreview] = useState(html);
   const [submitting, setSubmitting] = useState(false)
   
   const form = useForm<z.infer<typeof editNovelSchema>>({
@@ -62,11 +62,6 @@ export default function EditNovelForm({ data }:{ data: Novel }) {
     }
     setSubmitting(false)
   }
-
-  useEffect(() => {
-    markdownToHtml(data.richText.markdown)
-    .then(html => setPreview(html));
-  },[data.richText.markdown]);
 
   return (
     <Form {...form}>
