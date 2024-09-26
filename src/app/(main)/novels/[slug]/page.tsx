@@ -21,12 +21,12 @@ export async function generateStaticParams() {
 
 
 export async function generateMetadata({ params }:{ params: { slug: string }}): Promise<Metadata> {
-  const getNovelMetadata = unstable_cache(async () => {
+  const getNovelMetadata = unstable_cache(async (slug) => {
       return await db.query.novel.findFirst({
         columns: {
           title: true,
         },
-        where: (novel, { eq }) => eq(novel.slug, params.slug),
+        where: (novel, { eq }) => eq(novel.slug, slug),
         with: {
           richText: {
             columns: {
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }:{ params: { slug: string }}): 
       tags: [`novel:update:${params.slug}`]
     }
   );
-  const novel = await getNovelMetadata();
+  const novel = await getNovelMetadata(params.slug);
   if(!novel) return {
     title: "Not Found",
   }
