@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { optional, z } from "zod"
+import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -20,7 +20,6 @@ import { toast } from '@/components/ui/use-toast'
 import Link from 'next/link'
 import { createNovel } from './actions'
 import { markdownToHtml } from '@/lib/utils'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import AutoResizeTextarea from '@/components/auto-resize-textarea'
 
 export const createNovelSchema = z.object({
@@ -91,44 +90,36 @@ export default function CreateNovelForm() {
             </FormItem>
           )}
         />
-        <Tabs defaultValue='form'>
-          <TabsList>
-            <TabsTrigger value='form'>Editor</TabsTrigger>
-            <TabsTrigger value='preview'>Preview</TabsTrigger>
-          </TabsList>
-          <TabsContent value='form'>
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <AutoResizeTextarea 
-                      placeholder="Novel description." 
-                      {...field} 
-                      onChange={(e) => {
-                        field.onChange(e)
-                        markdownToHtml(e.target.value).then(data => setPreview(data))
-                      }}
-                    />
-                  </FormControl>
-                  <FormDescription>Write summary of novel in markdown.</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
+        <div className='grid grid-cols-2 space-x-2'>
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <AutoResizeTextarea 
+                    placeholder="Novel description." 
+                    {...field} 
+                    onChange={(e) => {
+                      field.onChange(e)
+                      markdownToHtml(e.target.value).then(data => setPreview(data))
+                    }}
+                  />
+                </FormControl>
+                <FormDescription>Write summary of novel in markdown.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="overflow-y-auto">
+            <h3 className="font-semibold mb-2">Preview:</h3>
+            <article 
+              className="prose dark:prose-invert max-w-none p-4 rounded-md border"
+              dangerouslySetInnerHTML={{ __html: preview }}
             />
-          </TabsContent>
-          <TabsContent value='preview'>
-            <div className="overflow-y-auto">
-              <h3 className="text-lg font-semibold mb-2">Preview:</h3>
-              <article 
-                className="prose dark:prose-invert max-w-none p-4 rounded-md border"
-                dangerouslySetInnerHTML={{ __html: preview }}
-              />
-            </div>
-          </TabsContent>
-        </Tabs>
+          </div>
+        </div>
         <Button type="submit" disabled={submitting}>Submit</Button>
       </form>
     </Form>
