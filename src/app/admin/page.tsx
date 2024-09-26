@@ -10,8 +10,8 @@ const links = [
     tag: "Chapters",
     href: "/admin/chapters"
   }, {
-    tag: "Create Novel",
-    href: "/admin/novel/create"
+    tag: "Novel",
+    href: "/admin/novel"
   }
 ]
 
