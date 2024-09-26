@@ -53,6 +53,7 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
       form.setValue("number", values.number+1)
       form.setValue("title", "")
       form.setValue("serial", values.serial+1)
+      setPreview("");
     } catch (error) {
       toast({
         description: "Something went wrong. Check if the volume or novel is already created or not."
