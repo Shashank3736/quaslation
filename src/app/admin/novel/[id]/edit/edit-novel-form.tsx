@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -26,13 +26,10 @@ export const editNovelSchema = z.object({
   title: z.string().min(2),
   description: z.string().min(2),
   thumbnail: z.coerce.string().url().or(z.literal("")),
-  richTextId: z.coerce.number().readonly(),
-  id: z.coerce.number().readonly(),
-  slug: z.string().readonly()
 });
 
 export default function EditNovelForm({ data }:{ data: Novel }) {
-  const [preview, setPreview] = useState('')
+  const [preview, setPreview] = useState("");
   const [submitting, setSubmitting] = useState(false)
   
   const form = useForm<z.infer<typeof editNovelSchema>>({
@@ -41,16 +38,18 @@ export default function EditNovelForm({ data }:{ data: Novel }) {
       title: data.title,
       description: data.richText.markdown,
       thumbnail: data.thumbnail || "",
-      richTextId: data.richText.id,
-      id: data.id,
-      slug: data.slug
     }
   })
   
-  if(!data) return null;
   const onSubmit = async (values: z.infer<typeof editNovelSchema>) => {
+    if(values.title == data.title && values.description == data.richText.markdown && (values.thumbnail == "" ? data.thumbnail === null : data.thumbnail == values.thumbnail)) {
+      toast({
+        description: "First fill something you dumbass.",
+      });
+      return
+    }
     setSubmitting(true)
-    const newNovelData = await updateNovel(values);
+    const newNovelData = await updateNovel(values, data);
     if (newNovelData.message === "ok") {
       toast({
         description: `Updated novel with name: ${values.title}`,
@@ -61,10 +60,13 @@ export default function EditNovelForm({ data }:{ data: Novel }) {
         description: `Something feels wrong with the novel.`
       })
     }
-    form.reset()
     setSubmitting(false)
-    setPreview('')
   }
+
+  useEffect(() => {
+    markdownToHtml(data.richText.markdown)
+    .then(html => setPreview(html));
+  },[data.richText.markdown]);
 
   return (
     <Form {...form}>
@@ -122,7 +124,7 @@ export default function EditNovelForm({ data }:{ data: Novel }) {
           <div className="overflow-y-auto">
             <h3 className="font-semibold mb-2">Preview:</h3>
             <article 
-              className="prose dark:prose-invert max-w-none p-4 rounded-md border"
+              className="prose dark:prose-invert max-w-none p-2 prose-sm rounded-md border"
               dangerouslySetInnerHTML={{ __html: preview }}
             />
           </div>
