@@ -2,13 +2,18 @@ import H1 from '@/components/typography/h1'
 import { Separator } from '@/components/ui/separator'
 import Link from 'next/link'
 
-const links = [{
-  tag: "Back to Main",
-  href: "/"
-}, {
-  tag: "Chapters",
-  href: "/admin/chapters"
-}]
+const links = [
+  {
+    tag: "Back to Main",
+    href: "/"
+  }, {
+    tag: "Chapters",
+    href: "/admin/chapters"
+  }, {
+    tag: "Create Novel",
+    href: "/admin/novel/create"
+  }
+]
 
 const AdminPage = () => {
   return (

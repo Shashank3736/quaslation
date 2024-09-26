@@ -6,8 +6,8 @@ import React from 'react'
 
 const AdminLayout = ({ children }:{ children: React.ReactNode }) => {
   return (
-    <div className='flex h-screen w-screen'>
-      <aside className='border m-4 p-8 rounded-lg min-w-60 hidden md:flex flex-col justify-between'>
+    <div className='flex h-screen w-screen p-4'>
+      <aside className='border p-8 mr-4 rounded-lg min-w-60 hidden md:flex flex-col justify-between'>
         <div className='flex flex-col'>
           <H2 className='text-center mb-8'>Actions</H2>
           <Button className='mb-4' variant={"outline"} asChild>
@@ -21,6 +21,7 @@ const AdminLayout = ({ children }:{ children: React.ReactNode }) => {
             </Link>
           </Button>
           <Button className='mb-4' asChild><Link href={"/admin"}>Admin Page</Link></Button>
+          <Button className='mb-4' asChild><Link href={"/admin/novel/create"}>+ Create Novel</Link></Button>
           <ModeToggle showTheme />
         </div>
         <H2>Quaslation</H2>
