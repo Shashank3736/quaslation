@@ -6,7 +6,7 @@ import { unstable_cache } from "next/cache";
 import RSS from "rss";
 
 const getLatestChapters = async (time: Date) => {
-  console.log("Here")
+  // console.log("Here")
   return await db.select({
     chapter: chapterTable.number,
     slug: chapterTable.slug,

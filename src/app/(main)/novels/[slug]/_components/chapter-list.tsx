@@ -47,12 +47,12 @@ export default function ChapterList({ novelId, novelSlug, data }:{ novelId: numb
     setLoading(true)
     
     const data = await getData({ novelId, skip, slug: novelSlug });
-    console.log("Size of fetched data:", data.length)
+    // console.log("Size of fetched data:", data.length)
     if(data.length < NOVEL_CHAPTERS_LIMIT) {
       setMore(false)
     }
     setChapters(chaps => {
-      console.log(chaps.length, skip);
+      // console.log(chaps.length, skip);
       if(chaps.length !== skip) return chaps;
       if(chaps === null || skip === 0) return data;
       return chaps.concat(data);
