@@ -104,7 +104,7 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
           <div className="overflow-y-auto">
             <h3 className="font-semibold mb-2">Preview</h3>
             <article 
-              className="prose dark:prose-invert max-w-none p-4 rounded-md border"
+              className="prose dark:prose-invert max-w-none p-4 rounded-md border text-sm"
               dangerouslySetInnerHTML={{ __html: preview }}
             />
           </div>
