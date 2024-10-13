@@ -190,6 +190,7 @@ export const getChapters = async({ novelId, skip=0, limit=25 }:{ novelId?: numbe
   const data = db.select({
     id: chapter.id,
     serial: chapter.serial,
+    slug: chapter.slug,
     number: chapter.number,
     title: chapter.title,
     publishedAt: chapter.publishedAt,
