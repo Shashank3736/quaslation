@@ -42,7 +42,7 @@ export async function GET(req: Request) {
     description: "Quality ai translations.",
     site_url: url.origin,
     feed_url: url.href,
-    image_url: `${url.origin}/logo/logo100x100.jpg`,
+    image_url: `${url.origin}/icon.jpg`,
     categories: chapters.map(chap => chap.novel.slug).filter((value, index, array) => array.indexOf(value) === index),
   })
 

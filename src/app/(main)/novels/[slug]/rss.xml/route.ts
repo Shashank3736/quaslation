@@ -58,7 +58,7 @@ export async function GET(req: Request, { params }:{ params: { slug: string }}) 
     description: "Quality ai translations.",
     site_url: url.origin,
     feed_url: url.href,
-    image_url: `${url.origin}/logo/logo100x100.jpg`,
+    image_url: `${url.origin}/icon.jpg`,
     categories: [novel.slug],
   })
 

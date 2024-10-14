@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   },
   description: "Discover the best fan translations of Asian web novels. Immerse yourself in captivating stories from across Asia.",
   icons: {
-    icon: "/logo/logo100x100.jpg",
+    icon: "/icon.jpg",
   },
   alternates: {
     canonical: "/",
