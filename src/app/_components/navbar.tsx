@@ -24,7 +24,7 @@ export default function Navbar() {
   return (
     <div className='flex justify-between p-4'>
       <div className='flex justify-center items-center'>
-        <Image alt='logo' src={"/icon.jpg"} width={100} height={100} className='rounded-full w-12 h-12 hidden md:block' />
+        <Image alt='logo' src={"/icon.jpg"} width={256} height={256} className='rounded-full w-12 h-12 hidden md:block' />
         <Sheet>
           <SheetTrigger className='md:hidden'>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
