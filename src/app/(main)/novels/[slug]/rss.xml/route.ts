@@ -9,6 +9,7 @@ const getChapters = async (time: Date, slug: string) => {
   return await db.query.novel.findFirst({
     columns: {
       slug: true,
+      title: true,
     },
     where: (novel, { eq }) => eq(novel.slug, slug),
     with: {
@@ -37,21 +38,21 @@ const getChapters = async (time: Date, slug: string) => {
         }
       }
     }
-  })
+  });
 }
 
 export async function GET(req: Request, { params }:{ params: { slug: string }}) {
-  const time = new Date(new Date().getTime() - ms(7))
+  const time = new Date(new Date().getTime() - ms(30))
   const url = new URL(req.url);
 
   const getCache = unstable_cache(getChapters, [], {
     tags: [`novel:update:${params.slug}`]
-  })
+  });
 
   const novel = await getCache(new Date(time.getFullYear(), time.getMonth(), time.getDate(), 0, 0, 0, 0), params.slug);
   if(!novel) return Response.json({
     message: "No novel found",
-  })
+  });
   const chapters = novel.chapters;
   const feed = new RSS({
     title: "Quaslation",
@@ -60,15 +61,16 @@ export async function GET(req: Request, { params }:{ params: { slug: string }}) 
     feed_url: url.href,
     image_url: `${url.origin}/icon.jpg`,
     categories: [novel.slug],
-  })
+  });
 
   for (const chapter of chapters) {
     feed.item({
-      title: `${novel.slug} ${chapter.volume.number > 0 ? `Volume ${chapter.volume.number} ` : ""}Chapter ${chapter.number}`,
+      title: `${novel.title} ${chapter.volume.number > 0 ? `Volume ${chapter.volume.number} ` : ""}Chapter ${chapter.number}`,
       description: shortifyString(chapter.richText.text, 255),
       url: `${url.origin}/novels/${novel.slug}/${chapter.slug}`,
       date: new Date(chapter.publishedAt || ""),
       categories: [novel.slug],
+      guid: chapter.slug,
     });
   }
   

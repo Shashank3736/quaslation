@@ -1,30 +1,37 @@
 import { db } from "@/lib/db";
-import { chapter as chapterTable, novel as novelTable, richText, volume as volumeTable } from "@/lib/db/schema";
 import { shortifyString } from "@/lib/utils";
-import { and, eq, isNotNull, gte } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 import RSS from "rss";
 
 const getLatestChapters = async (time: Date) => {
-  // console.log("Here")
-  return await db.select({
-    chapter: chapterTable.number,
-    slug: chapterTable.slug,
-    description: richText.text,
-    published: chapterTable.publishedAt,
-    novel: {
-      slug: novelTable.slug,
-      title: novelTable.title
+  return await db.query.chapter.findMany({
+    where: (chapter, { gte }) => gte(chapter.publishedAt, time),
+    columns: {
+      slug: true,
+      publishedAt: true,
+      number: true
     },
-    volume: {
-      number: volumeTable.number,
+    with: {
+      richText: {
+        columns: {
+          text: true,
+        }
+      },
+
+      volume: {
+        columns: {
+          number: true,
+        }
+      },
+
+      novel: {
+        columns: {
+          title: true,
+          slug: true
+        }
+      }
     }
   })
-  .from(chapterTable)
-  .innerJoin(novelTable, eq(chapterTable.novelId, novelTable.id))
-  .innerJoin(richText, eq(chapterTable.richTextId, richText.id))
-  .innerJoin(volumeTable, eq(chapterTable.volumeId, volumeTable.id))
-  .where(and(isNotNull(chapterTable.publishedAt),gte(chapterTable.publishedAt, time), eq(chapterTable.premium, false)));
 }
 
 const getCache = unstable_cache(getLatestChapters, [], {
@@ -49,10 +56,11 @@ export async function GET(req: Request) {
 
   for (const chapter of chapters) {
     feed.item({
-      title: `${chapter.novel.title} ${chapter.volume.number > 0 ? `Volume ${chapter.volume.number} ` : ""}Chapter ${chapter.chapter}`,
-      description: shortifyString(chapter.description, 255),
+      title: `${chapter.novel.title} ${chapter.volume.number > 0 ? `Volume ${chapter.volume.number} ` : ""}Chapter ${chapter.number}`,
+      description: shortifyString(chapter.richText.text, 255),
       url: `${url.origin}/novels/${chapter.novel.slug}/${chapter.slug}`,
-      date: new Date(chapter.published || ""),
+      guid: chapter.slug,
+      date: new Date(chapter.publishedAt || ""),
       categories: [chapter.novel.slug],
     })
   }
