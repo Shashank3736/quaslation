@@ -14,6 +14,7 @@ const getLatestChapters = async (time: Date) => {
     published: chapterTable.publishedAt,
     novel: {
       slug: novelTable.slug,
+      title: novelTable.title
     },
     volume: {
       number: volumeTable.number,
@@ -32,7 +33,7 @@ const getCache = unstable_cache(getLatestChapters, [], {
 });
 
 export async function GET(req: Request) {
-  const time = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
+  const time = new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000);
   const url = new URL(req.url);
   
   const chapters = await getCache(new Date(time.getFullYear(), time.getMonth(), time.getDate(), 0, 0, 0, 0));
@@ -44,11 +45,11 @@ export async function GET(req: Request) {
     feed_url: url.href,
     image_url: `${url.origin}/icon.jpg`,
     categories: chapters.map(chap => chap.novel.slug).filter((value, index, array) => array.indexOf(value) === index),
-  })
+  });
 
   for (const chapter of chapters) {
     feed.item({
-      title: `${chapter.novel.slug} ${chapter.volume.number > 0 ? `Volume ${chapter.volume.number} ` : ""}Chapter ${chapter.chapter}`,
+      title: `${chapter.novel.title} ${chapter.volume.number > 0 ? `Volume ${chapter.volume.number} ` : ""}Chapter ${chapter.chapter}`,
       description: shortifyString(chapter.description, 255),
       url: `${url.origin}/novels/${chapter.novel.slug}/${chapter.slug}`,
       date: new Date(chapter.published || ""),
