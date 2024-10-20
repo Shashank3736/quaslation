@@ -1,3 +1,4 @@
+import { MAIN_HOST } from "@/lib/config";
 import { db } from "@/lib/db";
 import { sendDiscordEmbed, shortifyString } from "@/lib/utils";
 import "server-only";
@@ -35,12 +36,12 @@ export const postChapterDiscord = async (slug: string) => {
 
   await sendDiscordEmbed({
     title: `${chapter?.volume.number > -1 ? `Volume ${chapter.volume.number} `:""} Chapter ${chapter.number} ${chapter.title}`,
-    url: `https://quaslation.xyz/novels/${chapter.novel.slug}/${chapter.slug}`,
+    url: `${MAIN_HOST}/novels/${chapter.novel.slug}/${chapter.slug}`,
     description: shortifyString(chapter.richText.text, 50),
     thumbnail: chapter.novel.thumbnail || undefined,
     author: {
       name: chapter.novel.title,
-      url: `https://quaslaion.xyz/novels/${chapter.novel.slug}`
+      url: `${MAIN_HOST}/novels/${chapter.novel.slug}`
     }
   });
 }
