@@ -37,11 +37,12 @@ export const postChapterDiscord = async (slug: string) => {
   await sendDiscordEmbed({
     title: `${chapter?.volume.number > -1 ? `Volume ${chapter.volume.number} `:""} Chapter ${chapter.number} ${chapter.title}`,
     url: `${MAIN_HOST}/novels/${chapter.novel.slug}/${chapter.slug}`,
-    description: shortifyString(chapter.richText.text, 50),
+    description: shortifyString(chapter.richText.text, 256),
     thumbnail: chapter.novel.thumbnail || undefined,
     author: {
       name: chapter.novel.title,
       url: `${MAIN_HOST}/novels/${chapter.novel.slug}`
-    }
+    },
+    color: "blue",
   });
 }
