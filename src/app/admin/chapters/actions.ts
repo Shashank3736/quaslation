@@ -2,6 +2,7 @@
 
 import { freeChapters, getNovelLastChapter, publishChapters } from "@/lib/db/query";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { postChapterDiscord } from "./server";
 
 export const freeChapter = async (novelId: number, serial: number, novelSlug: string) => {
   const data = await freeChapters({ novelId, first: serial, last: serial });
@@ -11,6 +12,7 @@ export const freeChapter = async (novelId: number, serial: number, novelSlug: st
   revalidateTag("chapter:update:free");
   revalidateTag(`novel:update:${novelSlug}`);
   for (const { slug } of data) {
+    await postChapterDiscord(slug);
     revalidateTag(`chapter:update:${slug}`);
   }
 }
