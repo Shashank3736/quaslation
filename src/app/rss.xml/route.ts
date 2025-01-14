@@ -5,7 +5,7 @@ import RSS from "rss";
 
 const getLatestChapters = async (time: Date) => {
   return await db.query.chapter.findMany({
-    where: (chapter, { gte }) => gte(chapter.publishedAt, time),
+    where: (chapter, { gte, and, eq }) => and(gte(chapter.publishedAt, time), eq(chapter.premium, false)),
     columns: {
       slug: true,
       publishedAt: true,
