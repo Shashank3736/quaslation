@@ -55,8 +55,10 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
       form.setValue("serial", values.serial+1)
       setPreview("");
     } catch (error) {
+      console.error(error);
       toast({
-        description: "Something went wrong. Check if the volume or novel is already created or not."
+        description: `${error}` || "Something went wrong.",
+        variant: "destructive"
       });
     }
     setSubmiting(false);

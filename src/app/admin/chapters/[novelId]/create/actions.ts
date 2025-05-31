@@ -25,6 +25,14 @@ export const createChapter = async (novelId:number, values: z.infer<typeof creat
         novelId: volumeTable.novelId,
         id: volumeTable.id,
       }).from(volumeTable).where(and(eq(volumeTable.novelId, novelId), eq(volumeTable.number, values.volume)))
+
+      if (values.title.length < 1) {
+        throw new Error("Title is required.");
+      }
+
+      if (volumeData.length < 1) {
+        throw new Error("Volume does not exist. Please create the volume first.");
+      }
     
       await db.insert(chapterTable).values({
         slug: `${slugify(values.title)}-${values.volume}-${values.number}`,
@@ -39,12 +47,10 @@ export const createChapter = async (novelId:number, values: z.infer<typeof creat
       revalidatePath(`/admin/chapters/${novelId}/create`);
     } catch (error) {
       await db.delete(richTextTable).where(eq(richTextTable.id, content[0].id));
-      console.error(error);
-      throw new Error("Something is wrong about the chapter.")
+      throw new Error((error instanceof Error ? error.message : "Unknown error"));
     }
   
   } catch (error) {
-    console.error(error);
-    throw new Error("Seems like something is wrong.")
+    throw new Error((error instanceof Error ? error.message : "Unknown error"));
   }
 }
