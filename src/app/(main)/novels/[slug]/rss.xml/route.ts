@@ -41,15 +41,16 @@ const getChapters = async (time: Date, slug: string) => {
   });
 }
 
-export async function GET(req: Request, { params }:{ params: { slug: string }}) {
+export async function GET(req: Request, { params }:{ params: Promise<{ slug: string }>}) {
+  const paramsResolved = await params;
   const time = new Date(new Date().getTime() - ms(30))
   const url = new URL(req.url);
 
   const getCache = unstable_cache(getChapters, [], {
-    tags: [`novel:update:${params.slug}`]
+    tags: [`novel:update:${paramsResolved.slug}`]
   });
 
-  const novel = await getCache(new Date(time.getFullYear(), time.getMonth(), time.getDate(), 0, 0, 0, 0), params.slug);
+  const novel = await getCache(new Date(time.getFullYear(), time.getMonth(), time.getDate(), 0, 0, 0, 0), paramsResolved.slug);
   if(!novel) return Response.json({
     message: "No novel found",
   });

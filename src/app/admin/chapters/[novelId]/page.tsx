@@ -5,9 +5,12 @@ import { ChaptersTable } from '../chapters-table';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
-const AdminNovelChapters = async({ params, searchParams }:{ params: { novelId: string }, searchParams: { page?: string }}) => {
-  const novelId = parseInt(params.novelId);
-  let page = searchParams.page ? parseInt(searchParams.page) : 1;
+const AdminNovelChapters = async({ params, searchParams }:{ params: Promise<{ novelId: string }>, searchParams: Promise<{ page?: string }>}) => {
+  const paramsResolved = await params;
+  const searchParamsResolved = await searchParams;
+
+  const novelId = parseInt(paramsResolved.novelId);
+  let page = searchParamsResolved.page ? parseInt(searchParamsResolved.page) : 1;
   const LIMIT = 25
   if(isNaN(page) || page < 1) page = 1;
   if(isNaN(novelId)) notFound();

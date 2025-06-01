@@ -10,25 +10,27 @@ export async function generateStaticParams() {
 }
 
 
-export async function generateMetadata({ params }:{ params: { chapter: string }}): Promise<Metadata> {
+export async function generateMetadata({ params }:{ params: Promise<{ chapter: string }>}): Promise<Metadata> {
+  const paramsResolved = await params;
   const getCacheData = unstable_cache(getChapterBySlug, [], {
-    tags: [`chapter:update:content:${params.chapter}`],
+    tags: [`chapter:update:content:${paramsResolved.chapter}`],
     revalidate: 7*24*3600
   });
-  const chapter = await getCacheData(params.chapter);
+  const chapter = await getCacheData(paramsResolved.chapter);
   return {
     title: `${chapter.volumeNumber < 0 ? "":`Vol. ${chapter.volumeNumber} `}Chapter ${chapter.number} - ${chapter.novelTitle}`,
     description: chapter.title+"\n"+shortifyString(chapter.textContent, 400)
   }
 }
 
-export default async function Page({ params }: { params: { slug: string, chapter: string }}) {
+export default async function Page({ params }: { params: Promise<{ slug: string, chapter: string }>}) {
+  const paramsResolved = await params;
   const getCacheData = unstable_cache(getChapterBySlug, [], {
-    tags: [`chapter:update:${params.chapter}`],
+    tags: [`chapter:update:${paramsResolved.chapter}`],
     revalidate: 24*3600
   });
-  const chapter = await getCacheData(params.chapter);
+  const chapter = await getCacheData(paramsResolved.chapter);
   return (
-    <ChapterPage chapter={chapter} novelSlug={params.slug} />
+    <ChapterPage chapter={chapter} novelSlug={paramsResolved.slug} />
   )
 }

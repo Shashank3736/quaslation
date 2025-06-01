@@ -20,7 +20,8 @@ export async function generateStaticParams() {
 }
 
 
-export async function generateMetadata({ params }:{ params: { slug: string }}): Promise<Metadata> {
+export async function generateMetadata({ params }:{ params: Promise<{ slug: string }>}): Promise<Metadata> {
+  const paramsResolved = await params;
   const getNovelMetadata = unstable_cache(async (slug) => {
       return await db.query.novel.findFirst({
         columns: {
@@ -39,10 +40,10 @@ export async function generateMetadata({ params }:{ params: { slug: string }}): 
     [], 
     {
       revalidate: 24*3600,
-      tags: [`novel:update:${params.slug}`]
+      tags: [`novel:update:${paramsResolved.slug}`]
     }
   );
-  const novel = await getNovelMetadata(params.slug);
+  const novel = await getNovelMetadata(paramsResolved.slug);
   if(!novel) return {
     title: "Not Found",
   }
@@ -90,13 +91,14 @@ const getNovel = async (slug: string) => {
 }
 
 
-export default async function NovelPage({ params }:{ params: { slug: string }}) {
+export default async function NovelPage({ params }:{ params: Promise<{ slug: string }>}) {
+  const paramsResolved = await params;
   const getNovelCache = unstable_cache(getNovel, [], {
-    tags: [`novel:update:${params.slug}`],
+    tags: [`novel:update:${paramsResolved.slug}`],
     revalidate: 12*3600
   });
 
-  const novel = await getNovelCache(params.slug);
+  const novel = await getNovelCache(paramsResolved.slug);
   
   if(!novel) notFound();
   
@@ -118,7 +120,7 @@ export default async function NovelPage({ params }:{ params: { slug: string }}) 
           {chapters.at(0) ? (
           <div className='flex space-x-4 mt-8'>
             <Button asChild>
-              <Link href={`${params.slug}/${chapters[0].slug}`}>Read Now</Link>
+              <Link href={`${paramsResolved.slug}/${chapters[0].slug}`}>Read Now</Link>
             </Button>
           </div>
           ):null}
@@ -130,7 +132,7 @@ export default async function NovelPage({ params }:{ params: { slug: string }}) 
       />
       <Separator />
       <div className='mt-4'>
-        <ChapterList novelId={novel.id} novelSlug={params.slug} data={chapters} />
+        <ChapterList novelId={novel.id} novelSlug={paramsResolved.slug} data={chapters} />
       </div>
     </div>
   )
