@@ -176,11 +176,11 @@ export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, 
 
 export const markdownToHtml = async (markdown: string) => {
   const file = await unified()
-  .use(remarkParse)
-  .use(remarkGfm)
-  .use(remarkRehype)
-  .use(rehypeStringify)
-  .process(markdown)
+    .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeStringify, { allowDangerousHtml: true })
+    .process(markdown.replace(/\r\n/g, '\n').replace(/\n/g, '  \n'));
 
   return String(file).replace(/\n/g, "");
 }
