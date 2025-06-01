@@ -19,4 +19,4 @@ export default async function sitemap():Promise<MetadataRoute.Sitemap> {
   ));
 }
 
-export const revalidate = 86400
+export const revalidate = 86400;

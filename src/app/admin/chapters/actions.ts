@@ -35,7 +35,6 @@ export const publish = async ({ novelId, serial, novelSlug }:{ novelId: number, 
   }
 };
 
-export const revalidate = async (slug: string) => {
-  "use server";
+export async function revalidate(slug: string) {
   return revalidateTag(`chapter:update:${slug}`);
-};
+}
