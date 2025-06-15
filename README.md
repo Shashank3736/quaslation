@@ -28,24 +28,6 @@ The website I use to share the novels I translate. If you want to read my fan tr
 *   **Analytics-Driven Improvement:** Integration of Vercel Analytics demonstrates a proactive approach to monitoring and improving the application based on real user data and performance metrics.
 *   **Attention to Detail in UI/UX:** Features like light/dark mode, responsive design across all devices, and infinite scroll highlight a commitment to providing an excellent user experience.
 
-## Project Structure Overview
-This project follows a standard Next.js application structure, with key directories organized as follows:
-
-*   `src/app/`: Contains the core application logic, routing (using Next.js App Router), and page components.
-    *   `(main)/`: Likely holds the main user-facing routes and layouts.
-    *   `admin/`: Contains routes and components for the admin panel.
-    *   `api/`: If present, would contain API route handlers (though server actions might be used more).
-*   `src/components/`: Houses reusable UI components used throughout the application.
-    *   `ui/`: Likely contains primitive UI components, potentially from a library like Shadcn/UI or similar.
-    *   `shared/`: Components shared across different parts of the application.
-    *   `system/`: Components related to system-level functionality (e.g., theme providers, analytics).
-*   `src/lib/`: Includes utility functions, database configurations (Drizzle ORM setup, schema), and other shared logic.
-    *   `db/`: Specific to database schema, queries, and ORM configuration.
-*   `public/`: Stores static assets like images, fonts, and robots.txt.
-*   `pages/`: (If it exists alongside `app/`) For Next.js Pages Router, but this project seems to primarily use the App Router. MDX files might also be processed here if not directly in `app/`.
-
-This organization helps in maintaining a separation of concerns and makes the codebase easier to navigate and manage.
-
 ## Project Purpose
 **Project Status & Usage**
 
