@@ -22,7 +22,7 @@ The project follows a standard Next.js directory structure:
 - **`src/app`**: Contains the application's routes and pages.
   - **`(main)`**: The main application layout and pages.
   - **`admin`**: The admin dashboard.
-  - **`api`**: API routes.
+  - **`auth`**: The clerk auth endpoint.
 - **`src/components`**: Reusable React components.
 - **`src/lib`**: Contains utility functions, database configuration, and other shared code.
   - **`db`**: Contains the Drizzle ORM schema, queries, and configuration.
