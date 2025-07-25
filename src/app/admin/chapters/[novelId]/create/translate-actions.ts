@@ -40,19 +40,16 @@ export async function translateHtmlContent(
     
     const { html: validatedHtml, targetLanguage: validatedTargetLanguage } = validation.data
     
-    // Extract metadata from HTML
-    const { title, chapterNumber } = parseHtmlMetadata(validatedHtml)
-    
     // Translate HTML to Markdown using our pipeline
-    const translatedContent = await translateChapter(validatedHtml, validatedTargetLanguage, 'html')
+    const { translatedContent, metadata } = await translateChapter(validatedHtml, validatedTargetLanguage, 'html')
     
     // Prepare response with metadata
     return {
       success: true,
       translatedContent,
       metadata: {
-        title: title || null,
-        number: chapterNumber || null
+        title: metadata.title,
+        number: metadata.chapterNumber ? parseInt(metadata.chapterNumber) : null
       }
     }
   } catch (error) {

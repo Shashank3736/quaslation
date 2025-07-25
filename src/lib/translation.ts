@@ -3,6 +3,7 @@ import { remark } from 'remark';
 import { visit } from 'unist-util-visit';
 import type { Node } from 'unist';
 import { htmlToMarkdown, sanitizeHtml, truncateContent } from './utils/html-to-markdown';
+import { parseHtmlMetadata } from '@/lib/utils/html-parser';
 
 // Environment configuration
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
@@ -62,6 +63,79 @@ export function extractMetadata(markdown: string): {
     characters: Array.from(characterSet),
     terms // Placeholder for actual term extraction
   };
+}
+
+/**
+ * Extracts metadata from HTML content using AI
+ * @param html HTML content string
+ * @returns Object containing title and chapter number
+ */
+export async function extractMetadataWithAI(html: string): Promise<{
+  title: string | null;
+  chapterNumber: string | null;
+}> {
+  try {
+    // Create a prompt for the AI to extract metadata
+    const prompt = `Extract the title and chapter number from the following HTML content. 
+Respond ONLY with a JSON object in this exact format:
+{
+  "title": "string or null",
+  "chapterNumber": "string or null"
+}
+
+HTML content:
+${html.substring(0, 2000)}`; // Limit content to prevent token overflow
+
+    const response = await axios.post(
+      API_ENDPOINT,
+      {
+        model: OPENROUTER_MODEL,
+        messages: [
+          { 
+            role: 'system', 
+            content: 'You are a metadata extraction assistant. Extract title and chapter number from HTML content.' 
+          },
+          { role: 'user', content: prompt }
+        ],
+        temperature: 0.3 // Lower temperature for more consistent extraction
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        timeout: 30000
+      }
+    );
+
+    if (!response.data.choices?.[0]?.message?.content) {
+      throw new Error('Invalid response from AI API');
+    }
+
+    // Extract JSON from the response
+    const content = response.data.choices[0].message.content;
+    const jsonMatch = content.match(/\{[^}]*\}/);
+    
+    if (!jsonMatch) {
+      throw new Error('No valid JSON found in AI response');
+    }
+
+    const metadata = JSON.parse(jsonMatch[0]);
+    
+    // Validate the response structure
+    if (typeof metadata !== 'object' || metadata === null) {
+      throw new Error('Invalid metadata structure');
+    }
+
+    return {
+      title: typeof metadata.title === 'string' ? metadata.title : null,
+      chapterNumber: typeof metadata.chapterNumber === 'string' ? metadata.chapterNumber : 
+                    typeof metadata.chapterNumber === 'number' ? String(metadata.chapterNumber) : null
+    };
+  } catch (error) {
+    console.error('AI metadata extraction error:', error);
+    throw new Error(`AI metadata extraction failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
 }
 
 /**
@@ -209,21 +283,51 @@ export async function translateChapter(
   content: string,
   targetLang: string,
   sourceFormat: 'html' | 'markdown' = 'html'
-): Promise<string> {
+): Promise<{
+  translatedContent: string;
+  metadata: {
+    title: string | null;
+    chapterNumber: string | null
+  }
+}> {
   try {
     // Convert HTML to Markdown if needed
     let markdownContent = content;
+    let metadata: { title: string | null; chapterNumber: string | null } = {
+      title: null,
+      chapterNumber: null
+    };
+
     if (sourceFormat === 'html') {
-      // Sanitize HTML before conversion
-      const sanitizedHtml = sanitizeHtml(content);
-      markdownContent = await htmlToMarkdown(sanitizedHtml);
+      // Try AI extraction first
+      try {
+        metadata = await extractMetadataWithAI(content);
+      } catch (aiError) {
+        console.warn('AI metadata extraction failed, using fallback parser:', aiError);
+        // Fallback: Use HTML parser
+        const parsed = parseHtmlMetadata(content);
+        metadata = {
+          title: parsed.title || null,
+          chapterNumber: parsed.chapterNumber !== null ? String(parsed.chapterNumber) : null
+        };
+      }
+    } else {
+      // For markdown, extract from content
+      const extracted = extractMetadata(content);
+      metadata = {
+        title: extracted.title || null,
+        chapterNumber: null // Placeholder for markdown chapter number extraction
+      };
     }
     
+    // Sanitize HTML before conversion if needed
+    const sanitizedHtml = sourceFormat === 'html' ? sanitizeHtml(content) : content;
+    markdownContent = await htmlToMarkdown(sanitizedHtml);
+    
     // Truncate content if too long (prevent API errors)
-    const maxLength = 50000; // Adjust based on API limits
+    const maxLength = 50000;
     const truncatedContent = truncateContent(markdownContent, maxLength);
     
-    const metadata = extractMetadata(truncatedContent);
     const segments = segmentContent(truncatedContent);
     let translatedContent = '';
     let totalTokens = 0;
@@ -235,9 +339,21 @@ export async function translateChapter(
     }
 
     console.log(`Translation completed. Tokens used: ${totalTokens}`);
-    return translatedContent;
+    return {
+      translatedContent,
+      metadata
+    };
   } catch (error) {
     console.error('Translation pipeline error:', error);
+    
+    // Maintain existing error handling
+    if (error instanceof Error) {
+      const message = error.message.toLowerCase();
+      if (message.includes('rate limit') || message.includes('too many')) {
+        throw new Error('OpenRouter API rate limit exceeded. Please try again later.');
+      }
+    }
+    
     throw new Error(`Failed to translate content: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
