@@ -87,7 +87,7 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
         if (result.metadata?.title) {
           form.setValue('title', result.metadata.title);
         }
-        if (result.metadata?.number) {
+        if (result.metadata?.number != null) {
           form.setValue('number', result.metadata.number);
         }
         

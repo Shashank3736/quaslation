@@ -44,12 +44,20 @@ export async function translateHtmlContent(
     const { translatedContent, metadata } = await translateChapter(validatedHtml, validatedTargetLanguage, 'html')
     
     // Prepare response with metadata
+    let numberValue: number | null = null;
+    if (metadata.chapterNumber) {
+      const num = parseInt(metadata.chapterNumber);
+      if (!isNaN(num)) {
+        numberValue = num;
+      }
+    }
+
     return {
       success: true,
       translatedContent,
       metadata: {
         title: metadata.title,
-        number: metadata.chapterNumber ? parseInt(metadata.chapterNumber) : null
+        number: numberValue
       }
     }
   } catch (error) {
