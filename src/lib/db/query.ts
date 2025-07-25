@@ -40,6 +40,12 @@ export async function getChapterSlugMany() {
   .innerJoin(novel, eq(novel.id, chapter.novelId))
 }
 
+export async function getNovel(id: number) {
+  return db.query.novel.findFirst({
+    where: eq(novel.id, id)
+  });
+}
+
 export async function getNovelList() {
   // console.log("Requesting for novels list.");
   return db.select({
