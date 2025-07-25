@@ -1,24 +1,25 @@
+import * as cheerio from 'cheerio';
+
 /**
  * Extracts metadata from HTML content
  * @param html HTML content string
  * @returns Object containing title and chapter number
  */
-export function parseHtmlMetadata(html: string): { 
-  title: string | null; 
-  chapterNumber: number | null 
+export function parseHtmlMetadata(html: string): {
+  title: string | null;
+  chapterNumber: number | null
 } {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
+  const $ = cheerio.load(html);
   
   // Extract title from H1 or H2 tags
   let title: string | null = null;
-  const h1 = doc.querySelector('h1');
-  const h2 = doc.querySelector('h2');
+  const h1 = $('h1').first();
+  const h2 = $('h2').first();
   
-  if (h1) {
-    title = sanitizeText(h1.textContent);
-  } else if (h2) {
-    title = sanitizeText(h2.textContent);
+  if (h1.length > 0) {
+    title = sanitizeText(h1.text());
+  } else if (h2.length > 0) {
+    title = sanitizeText(h2.text());
   }
   
   // Extract chapter number using regex

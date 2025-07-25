@@ -6,6 +6,7 @@ import { htmlToMarkdown, sanitizeHtml, truncateContent } from './utils/html-to-m
 
 // Environment configuration
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'openai/gpt-4-turbo';
 const API_ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
 const MAX_RETRIES = parseInt(process.env.TRANSLATION_MAX_RETRIES || '3');
 const SEGMENT_SIZE = 2000;
@@ -134,7 +135,7 @@ export async function translateSegment(
     const response = await axios.post(
       API_ENDPOINT,
       {
-        model: 'openai/gpt-4',
+        model: OPENROUTER_MODEL,
         messages: [
           { role: 'system', content: systemMessage },
           { role: 'user', content: text }
