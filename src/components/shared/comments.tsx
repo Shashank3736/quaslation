@@ -11,14 +11,15 @@ const Comments = ({ id, title }:{ id: string, title: string }) => {
     setMounted(true)
   }, [])
 
-  if(!mounted) return null;
+  if(!mounted || !theme) return null;
   return (
-    <div key={theme}>
+    <div>
       <DisqusComponent
         shortname='quaslation'
         identifier={id}
         title={title}
         url={window.location.href}
+        theme={theme}
       />
     </div>
   )
