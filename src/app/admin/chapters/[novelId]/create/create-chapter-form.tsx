@@ -44,14 +44,7 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
   const [submiting, setSubmiting] = useState(false);
   const [preview, setPreview] = useState("");
   const [htmlContent, setHtmlContent] = useState("");
-  
-  // Translation state and action
-  const [translationState, translationAction, isTranslating] = useActionState<TranslationActionResult, FormData>(
-    translateHtmlContent,
-    {
-      success: false
-    }
-  );
+  const [isTranslating, setIsTranslating] = useState(false);
 
   const onSubmit = async (values: z.infer<typeof createChapterFormSchema>) => {
     setSubmiting(true);
@@ -75,34 +68,54 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
     setSubmiting(false);
   }
 
-  // Handle translation result effects
-  useEffect(() => {
-    if (translationState?.success) {
-      // Autopopulate fields from metadata
-      if (translationState.metadata?.title) {
-        form.setValue('title', translationState.metadata.title);
-      }
-      if (translationState.metadata?.number) {
-        form.setValue('number', translationState.metadata.number);
-      }
+  const handleTranslate = async () => {
+    if (!htmlContent.trim()) return;
+    
+    setIsTranslating(true);
+    try {
+      const formData = new FormData();
+      formData.append('html', htmlContent);
+      formData.append('targetLanguage', 'en');
       
-      // Populate markdown editor
-      if (translationState.translatedContent) {
-        form.setValue('content', translationState.translatedContent);
-      }
+      const result = await translateHtmlContent(
+        { success: false }, // prevState
+        formData
+      );
       
+      if (result.success) {
+        // Autopopulate fields from metadata
+        if (result.metadata?.title) {
+          form.setValue('title', result.metadata.title);
+        }
+        if (result.metadata?.number) {
+          form.setValue('number', result.metadata.number);
+        }
+        
+        // Populate markdown editor
+        if (result.translatedContent) {
+          form.setValue('content', result.translatedContent);
+        }
+        
+        toast({
+          description: "Translation completed successfully!",
+        });
+      } else if (result.error) {
+        toast({
+          description: typeof result.error === 'string'
+            ? result.error
+            : "Translation failed. Please try again.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
       toast({
-        description: "Translation completed successfully!",
-      });
-    } else if (translationState?.error) {
-      toast({
-        description: typeof translationState.error === 'string'
-          ? translationState.error
-          : "Translation failed. Please try again.",
+        description: "Translation failed. Please try again.",
         variant: "destructive"
       });
+    } finally {
+      setIsTranslating(false);
     }
-  }, [translationState, form]);
+  };
   
   return (
     <Form {...form}>
@@ -213,25 +226,22 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
               />
             </div>
             
-            <form action={translationAction}>
-              <input type="hidden" name="html" value={htmlContent} />
-              <input type="hidden" name="targetLanguage" value="en" />
-              <Button
-                type="submit"
-                disabled={isTranslating || !htmlContent.trim()}
-                className="w-full sm:w-auto"
-              >
-                {isTranslating ? (
-                  <span className="flex items-center justify-center">
-                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Translating...
-                  </span>
-                ) : "Translate"}
-              </Button>
-            </form>
+            <Button
+              type="button"
+              onClick={handleTranslate}
+              disabled={isTranslating || !htmlContent.trim()}
+              className="w-full sm:w-auto"
+            >
+              {isTranslating ? (
+                <span className="flex items-center justify-center">
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Translating...
+                </span>
+              ) : "Translate"}
+            </Button>
           </div>
         </div>
         
