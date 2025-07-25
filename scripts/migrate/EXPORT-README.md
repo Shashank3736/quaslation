@@ -29,7 +29,7 @@ npm install pg --legacy-peer-deps
 ## Export Scripts
 
 ### 1. Export Script (`export-database.js`)
-Exports all database tables to JSON files in the `database-export/` directory.
+Exports all database tables to JSON files in the `coverage/database-export/` directory.
 
 **Usage:**
 ```bash
@@ -39,7 +39,7 @@ node scripts/migrate/export-database.js
 ```
 
 **Output:**
-- `database-export/` directory with JSON files for each table
+- `coverage/database-export/` directory with JSON files for each table
 - `export-manifest.json` with row counts and metadata
 - Console logs with progress information
 
@@ -95,7 +95,7 @@ npm run db:verify
 
 ## Exported Files
 
-The export process creates the following files in the `database-export/` directory:
+The export process creates the following files in the `coverage/database-export/` directory:
 
 - `01-richtext.json` - RichText table data
 - `02-user.json` - User table data
@@ -124,8 +124,8 @@ Error: permission denied for table
 
 ### Log Files
 All export activities are logged to:
-- `database-export/export-manifest.json` - Export metadata
-- `database-export/verification-report.json` - Verification results (after running verification)
+- `coverage/database-export/export-manifest.json` - Export metadata
+- `coverage/database-export/verification-report.json` - Verification results (after running verification)
 
 ## Performance Considerations
 

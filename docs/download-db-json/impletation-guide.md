@@ -26,7 +26,7 @@ I have successfully created a comprehensive database migration solution for movi
 - **Dependency-aware export/import** - Handles foreign key constraints correctly
 - **Batch processing** - Optimized for large datasets (1000 rows per batch)
 - **Data integrity verification** - Row count validation and manifest generation
-- **Comprehensive logging** - All operations logged to `database-export/migration.log`
+- **Comprehensive logging** - All operations logged to `coverage/database-export/migration.log`
 - **Error handling** - Graceful failure recovery and rollback capabilities
 - **Environment validation** - Checks for required configuration before execution
 

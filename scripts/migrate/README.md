@@ -33,7 +33,7 @@ npm install pg --legacy-peer-deps
 ## Migration Scripts
 
 ### 1. Export Script (`export-database.js`)
-Exports all database tables to JSON files in the `database-export/` directory.
+Exports all database tables to JSON files in the `coverage/database-export/` directory.
 
 **Usage:**
 ```bash
@@ -43,7 +43,7 @@ node scripts/migrate/export-database.js
 ```
 
 **Output:**
-- `database-export/` directory with JSON files for each table
+- `coverage/database-export/` directory with JSON files for each table
 - `export-manifest.json` with row counts and metadata
 - Console logs with progress information
 
@@ -174,9 +174,9 @@ If migration fails, you can:
 
 ### Log Files
 All migration activities are logged to:
-- `database-export/migration.log` - Main migration log
-- `database-export/export-manifest.json` - Export metadata
-- `database-export/import-manifest.json` - Import metadata
+- `coverage/database-export/migration.log` - Main migration log
+- `coverage/database-export/export-manifest.json` - Export metadata
+- `coverage/database-export/import-manifest.json` - Import metadata
 
 ## Performance Considerations
 

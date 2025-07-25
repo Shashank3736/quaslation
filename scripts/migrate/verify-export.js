@@ -13,7 +13,7 @@ const fs = require('fs').promises;
 const path = require('path');
 
 // Configuration
-const EXPORT_DIR = path.join(process.cwd(), 'database-export');
+const EXPORT_DIR = path.join(process.cwd(), 'coverage', 'database-export');
 const EXPECTED_TABLES = [
   '_prisma_migrations',
   'User',

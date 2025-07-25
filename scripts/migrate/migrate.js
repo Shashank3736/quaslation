@@ -19,7 +19,7 @@ const path = require('path');
 require('dotenv').config({ path: '.env.local' });
 
 // Configuration
-const EXPORT_DIR = path.join(process.cwd(), 'database-export');
+const EXPORT_DIR = path.join(process.cwd(), 'coverage', 'database-export');
 const LOG_FILE = path.join(EXPORT_DIR, 'migration.log');
 
 // Colors for console output

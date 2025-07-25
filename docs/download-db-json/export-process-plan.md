@@ -80,7 +80,7 @@ Create a Node.js script using Drizzle ORM to query and export data.
 Each table will be exported to a separate JSON file:
 
 ```
-database-export/
+coverage/database-export/
 ├── 01-richtext.json
 ├── 02-user.json
 ├── 03-prisma-migrations.json
@@ -102,7 +102,7 @@ Before proceeding with the export, verify:
 
 1. **Create backup directory**
    ```bash
-   mkdir -p database-export
+   mkdir -p coverage/database-export
    ```
 
 2. **Verify database connectivity**

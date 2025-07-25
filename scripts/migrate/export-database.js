@@ -13,7 +13,7 @@ const path = require('path');
 require('dotenv').config({ path: '.env.local' });
 
 // Configuration
-const EXPORT_DIR = path.join(process.cwd(), 'database-export');
+const EXPORT_DIR = path.join(process.cwd(), 'coverage', 'database-export');
 const TABLES = [
   { name: 'RichText', file: '01-richtext.json' },
   { name: 'User', file: '02-user.json' },

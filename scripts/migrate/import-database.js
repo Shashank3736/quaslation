@@ -14,7 +14,7 @@ const fs = require('fs').promises;
 const path = require('path');
 
 // Configuration
-const IMPORT_DIR = path.join(process.cwd(), 'database-export');
+const IMPORT_DIR = path.join(process.cwd(), 'coverage', 'database-export');
 const TABLES = [
   { name: '_prisma_migrations', file: '03-prisma-migrations.json', sequence: null },
   { name: 'User', file: '02-user.json', sequence: 'User_id_seq' },
