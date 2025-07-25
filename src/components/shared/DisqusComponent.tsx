@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Button } from '../ui/button';
+import Muted from '../typography/muted';
 
 interface DisqusProps {
   shortname: string;
@@ -10,8 +12,14 @@ interface DisqusProps {
   theme: string;
 }
 
+type LoadingStatus = 'idle' | 'loading' | 'success' | 'error';
+
 const DisqusComponent: React.FC<DisqusProps> = ({ shortname, identifier, title, url, theme }) => {
-  useEffect(() => {
+  const [loadingStatus, setLoadingStatus] = useState<LoadingStatus>('idle');
+
+  const loadDisqus = useCallback(() => {
+    setLoadingStatus('loading');
+
     const disqus_config = function (this: any) {
       this.page.url = url;
       this.page.identifier = identifier;
@@ -23,21 +31,24 @@ const DisqusComponent: React.FC<DisqusProps> = ({ shortname, identifier, title, 
     if ((window as any).DISQUS) {
       (window as any).DISQUS.reset({
         reload: true,
-        config: function (this: any) {
-          this.page.url = url;
-          this.page.identifier = identifier;
-          this.page.title = title;
-        }
+        config: disqus_config
       });
+      setLoadingStatus('success');
     } else {
-      const d = document, s = d.createElement('script');
-      s.src = `https://${shortname}.disqus.com/embed.js`;
-      s.setAttribute('data-timestamp', String(+new Date()));
-      (d.head || d.body).appendChild(s);
+      const script = document.createElement('script');
+      script.src = `https://${shortname}.disqus.com/embed.js`;
+      script.setAttribute('data-timestamp', String(+new Date()));
+      script.async = true;
+      script.onload = () => setLoadingStatus('success');
+      script.onerror = () => setLoadingStatus('error');
+      (document.head || document.body).appendChild(script);
     }
+  }, [shortname, identifier, title, url]);
+
+  useEffect(() => {
+    loadDisqus();
 
     return () => {
-      // Cleanup the script and reset Disqus
       const disqusThread = document.getElementById('disqus_thread');
       if (disqusThread) {
         disqusThread.innerHTML = '';
@@ -46,11 +57,26 @@ const DisqusComponent: React.FC<DisqusProps> = ({ shortname, identifier, title, 
       if (disqusScript) {
         disqusScript.remove();
       }
-      delete (window as any).DISQUS;
+      if ((window as any).DISQUS) {
+        delete (window as any).DISQUS;
+      }
     };
-  }, [shortname, identifier, title, url, theme]);
+  }, [loadDisqus, shortname]);
 
-  return <div id="disqus_thread"></div>;
+  return (
+    <div>
+      {loadingStatus === 'loading' && <Muted>Loading comments...</Muted>}
+      {loadingStatus === 'error' && (
+        <div className="text-center">
+          <Muted>Failed to load comments. This might be due to an ad blocker.</Muted>
+          <Button onClick={loadDisqus} className="mt-2">
+            Retry
+          </Button>
+        </div>
+      )}
+      <div id="disqus_thread" style={{ display: loadingStatus === 'success' ? 'block' : 'none' }}></div>
+    </div>
+  );
 };
 
 export default DisqusComponent;
