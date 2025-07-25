@@ -1,8 +1,8 @@
 "use client"
 
 import React, { useEffect, useState } from 'react'
-import { DiscussionEmbed } from 'disqus-react';
 import { useTheme } from 'next-themes';
+import DisqusComponent from './DisqusComponent';
 
 const Comments = ({ id, title }:{ id: string, title: string }) => {
   const { theme } = useTheme()
@@ -13,17 +13,14 @@ const Comments = ({ id, title }:{ id: string, title: string }) => {
 
   if(!mounted) return null;
   return (
-    <DiscussionEmbed
-      shortname='quaslation'
-      key={theme}
-      config={
-        {
-          url: window.location.href,
-          identifier: id,
-          title,
-        }
-      }
-    />
+    <div key={theme}>
+      <DisqusComponent
+        shortname='quaslation'
+        identifier={id}
+        title={title}
+        url={window.location.href}
+      />
+    </div>
   )
 }
 
