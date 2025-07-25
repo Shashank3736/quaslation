@@ -3,7 +3,6 @@
 import { TranslationRequestSchema } from "@/lib/types/translation"
 import { parseHtmlMetadata } from "@/lib/utils/html-parser"
 import { translateChapter } from "@/lib/translation"
-import { z } from "zod"
 
 // Define the return type for our translation action
 export type TranslationActionResult = {
