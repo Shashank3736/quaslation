@@ -40,7 +40,7 @@ export default function RootLayout({
           },
       }}
     >
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ""} />
         <Analytics />
         <head>

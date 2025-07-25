@@ -15,6 +15,7 @@ const Comments = ({ id, title }:{ id: string, title: string }) => {
   return (
     <div>
       <DisqusComponent
+        key={theme}
         shortname='quaslation'
         identifier={id}
         title={title}
