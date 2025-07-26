@@ -34,6 +34,7 @@ Handle these edge cases:
 - Long titles: truncate intelligently at sentence boundaries
 - Missing data: return null for missing fields
 - Partial matches: extract whatever is available
+- If title is not in english then first translate it like a translator before sending it back.
 
 Respond ONLY with a JSON object in this exact format:
 {
