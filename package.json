@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^5.7.5",
+    "@gradio/client": "^1.15.6",
     "@hookform/resolvers": "^3.9.0",
     "@mdx-js/loader": "^3.0.1",
     "@mdx-js/react": "^3.0.1",

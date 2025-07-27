@@ -1,7 +1,7 @@
 "use client";
 
 import { getLatestChapter } from '@/lib/db/query';
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -18,10 +18,9 @@ import {
 import { Input } from "@/components/ui/input"
 import { toast } from '@/components/ui/use-toast';
 import { createChapter } from './actions';
-import { translateHtmlContent, type TranslationActionResult } from './translate-actions';
+import { translateText } from './translate-actions';
 import AutoResizeTextarea from '@/components/auto-resize-textarea';
 import { markdownToHtml } from '@/lib/utils';
-import { useActionState } from 'react';
 
 export const createChapterFormSchema = z.object({
   title: z.string(),
@@ -43,8 +42,8 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
   
   const [submiting, setSubmiting] = useState(false);
   const [preview, setPreview] = useState("");
-  const [htmlContent, setHtmlContent] = useState("");
-  const [isTranslating, setIsTranslating] = useState(false);
+  const [isTranslatingTitle, setIsTranslatingTitle] = useState(false);
+  const [isTranslatingContent, setIsTranslatingContent] = useState(false);
 
   const onSubmit = async (values: z.infer<typeof createChapterFormSchema>) => {
     setSubmiting(true);
@@ -68,53 +67,26 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
     setSubmiting(false);
   }
 
-  const handleTranslate = async () => {
-    if (!htmlContent.trim()) return;
-    
-    setIsTranslating(true);
-    try {
-      const formData = new FormData();
-      formData.append('html', htmlContent);
-      formData.append('targetLanguage', 'en');
-      
-      const result = await translateHtmlContent(
-        { success: false }, // prevState
-        formData
-      );
-      
-      if (result.success) {
-        // Autopopulate fields from metadata
-        if (result.metadata?.title) {
-          form.setValue('title', result.metadata.title);
-        }
-        if (result.metadata?.number != null) {
-          form.setValue('number', result.metadata.number);
-        }
-        
-        // Populate markdown editor
-        if (result.translatedContent) {
-          form.setValue('content', result.translatedContent);
-        }
-        
-        toast({
-          description: "Translation completed successfully!",
-        });
-      } else if (result.error) {
-        toast({
-          description: typeof result.error === 'string'
-            ? result.error
-            : "Translation failed. Please try again.",
-          variant: "destructive"
-        });
-      }
-    } catch (error) {
-      toast({
-        description: "Translation failed. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsTranslating(false);
+  const handleTranslateTitle = async () => {
+    const title = form.getValues("title");
+    if (!title.trim()) return;
+    setIsTranslatingTitle(true);
+    const translated = await translateText(title);
+    if (translated) {
+      form.setValue("title", translated);
     }
+    setIsTranslatingTitle(false);
+  };
+
+  const handleTranslateContent = async () => {
+    const content = form.getValues("content");
+    if (!content.trim()) return;
+    setIsTranslatingContent(true);
+    const translated = await translateText(content);
+    if (translated) {
+      form.setValue("content", translated);
+    }
+    setIsTranslatingContent(false);
   };
   
   return (
@@ -125,14 +97,25 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Title</FormLabel>
+              <div className="flex justify-between items-center">
+                <FormLabel>Title</FormLabel>
+                <Button
+                  type="button"
+                  onClick={handleTranslateTitle}
+                  disabled={isTranslatingTitle || !field.value}
+                  size="sm"
+                  variant="secondary"
+                >
+                  {isTranslatingTitle ? "Translating..." : "Translate to English"}
+                </Button>
+              </div>
               <FormControl>
                 <Input placeholder='Title of Chapter' {...field} />
               </FormControl>
               <FormDescription>This is the title of chapter.</FormDescription>
               <FormMessage />
             </FormItem>
-          )} 
+          )}
         />
         <div className="grid grid-cols-2 space-x-2">
           <FormField
@@ -140,11 +123,22 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
             name="content"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Content</FormLabel>
+                <div className="flex justify-between items-center">
+                  <FormLabel>Content</FormLabel>
+                  <Button
+                    type="button"
+                    onClick={handleTranslateContent}
+                    disabled={isTranslatingContent || !field.value}
+                    size="sm"
+                    variant="secondary"
+                  >
+                    {isTranslatingContent ? "Translating..." : "Translate to English"}
+                  </Button>
+                </div>
                 <FormControl>
-                  <AutoResizeTextarea 
-                    placeholder='Write markdown here...' 
-                    {...field} 
+                  <AutoResizeTextarea
+                    placeholder='Write markdown here...'
+                    {...field}
                     onChange={(e) => {
                       field.onChange(e)
                       markdownToHtml(e.target.value)
@@ -155,7 +149,7 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
                 <FormDescription>Write markdown.</FormDescription>
                 <FormMessage />
               </FormItem>
-            )} 
+            )}
           />
           <div className="overflow-y-auto">
             <h3 className="font-semibold mb-2">Preview</h3>
@@ -207,43 +201,6 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
             </FormItem>
           )} 
         />
-        {/* Import HTML section */}
-        <div className="space-y-4 mt-6 pt-6 border-t">
-          <h3 className="font-semibold text-lg">Import HTML</h3>
-          
-          <div className="grid grid-cols-1 gap-4">
-            <div>
-              <label htmlFor="htmlInput" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Paste Source HTML
-              </label>
-              <textarea
-                id="htmlInput"
-                value={htmlContent}
-                onChange={(e) => setHtmlContent(e.target.value)}
-                rows={5}
-                className="w-full rounded-md border border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                placeholder="Paste HTML content here..."
-              />
-            </div>
-            
-            <Button
-              type="button"
-              onClick={handleTranslate}
-              disabled={isTranslating || !htmlContent.trim()}
-              className="w-full sm:w-auto"
-            >
-              {isTranslating ? (
-                <span className="flex items-center justify-center">
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Translating...
-                </span>
-              ) : "Translate"}
-            </Button>
-          </div>
-        </div>
         
         <Button type="submit" disabled={submiting}>Submit</Button>
       </form>
