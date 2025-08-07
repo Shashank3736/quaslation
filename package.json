@@ -12,7 +12,8 @@
     "db:studio": "drizzle-kit studio",
     "db:push": "drizzle-kit push",
     "db:export": "node scripts/migrate/export-database.js",
-    "db:verify": "node scripts/migrate/verify-export.js"
+    "db:verify": "node scripts/migrate/verify-export.js",
+    "fetch:kakuyomu": "tsx scripts/translation/kakuyomu-fetch.ts --url https://kakuyomu.jp/works/16818093090655323692 --pretty"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.7.5",
@@ -50,6 +51,7 @@
     "next": "15.4.3",
     "next-themes": "^0.4.6",
     "nextjs-toploader": "^3.6.15",
+    "node-fetch": "^3.3.2",
     "node-html-parser": "^7.0.1",
     "openai": "^5.10.2",
     "postgres": "^3.4.4",
@@ -68,14 +70,17 @@
     "strip-markdown": "^6.0.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
+    "turndown": "^7.2.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@tailwindcss/typography": "^0.5.13",
-    "@types/node": "^20",
+    "@types/node": "^20.19.9",
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
     "@types/rss": "^0.0.32",
+    "@types/turndown": "^5.0.5",
     "dotenv": "^16.4.5",
     "drizzle-kit": "^0.31.1",
     "eslint": "^8",
@@ -83,6 +88,7 @@
     "pg": "^8.16.3",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.20.3",
     "typescript": "^5"
   },
   "overrides": {
