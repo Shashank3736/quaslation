@@ -16,5 +16,6 @@
         "**/env/**/*.ts": "${filename} - Environment"
     },
     "editor.tabSize": 2,
-    "editor.detectIndentation": true
+    "editor.detectIndentation": true,
+    "markdown.validate.enabled": false
 }
