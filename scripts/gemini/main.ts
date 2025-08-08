@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
 import * as path from 'path';
-import { novel16 } from './data';
+import { novel16, ChapterConfig, VolumeConfig } from './data';
 import { ProgressTracker, ProgressData } from './progress';
 
 
@@ -28,7 +28,6 @@ interface CLIArgs {
   cleanup: boolean;
   outputDir: string;
   maxRetries: number;
-  startSerial: number;
 }
 
 function parseArgs(argv: string[]): CLIArgs {
@@ -40,8 +39,7 @@ function parseArgs(argv: string[]): CLIArgs {
     resume: false,
     cleanup: false,
     outputDir: './scripts/output/gemini',
-    maxRetries: 3,
-    startSerial: 1 // Start serial number from 1
+    maxRetries: 3
   };
 
   for (let i = 2; i < argv.length; i++) {
@@ -57,7 +55,6 @@ function parseArgs(argv: string[]): CLIArgs {
     else if (a === '--cleanup') args.cleanup = true;
     else if (a === '--output-dir') args.outputDir = argv[++i];
     else if (a === '--max-retries') args.maxRetries = parseInt(argv[++i], 10);
-    else if (a === '--start-serial') args.startSerial = parseInt(argv[++i], 10);
   }
 
   return args as CLIArgs;
@@ -341,7 +338,7 @@ ${result.chapterContent}
 }
 
 async function processVolume(
-  volumeConfig: any,
+  volumeConfig: VolumeConfig,
   args: CLIArgs,
   progressTracker: ProgressTracker
 ): Promise<void> {
@@ -355,7 +352,7 @@ async function processVolume(
     const result = await progressTracker.resumeFromProgress(
       args.novelId,
       volumeConfig.volumeNumber,
-      volumeConfig.chapters
+      volumeConfig.chapters.map((ch: ChapterConfig) => ch.link)
     );
     progress = result.progress;
     urlsToProcess = result.urlsToProcess;
@@ -364,7 +361,7 @@ async function processVolume(
     progress = await progressTracker.initialize();
     progress.novelId = args.novelId;
     progress.volumeNumber = volumeConfig.volumeNumber;
-    urlsToProcess = volumeConfig.chapters;
+    urlsToProcess = volumeConfig.chapters.map((ch: ChapterConfig) => ch.link);
     await progressTracker.save(progress);
   }
 
@@ -375,33 +372,27 @@ async function processVolume(
 
   console.log(`🔄 Processing ${urlsToProcess.length} chapters...`);
 
-  // Calculate the starting serial number
-  let startSerial = args.startSerial;
-  if (args.resume) {
-    // When resuming, start from the next available serial after completed chapters
-    const summary = progressTracker.getProgressSummary(progress);
-    startSerial = args.startSerial + summary.completed;
-    console.log(`🔢 Resuming from serial number: ${startSerial} (completed ${summary.completed} chapters)`);
-  } else {
-    console.log(`🔢 Starting serial number: ${startSerial}`);
-  }
-
   // Process with concurrency control
   const processWithConcurrency = async () => {
     const results = new Array(urlsToProcess.length);
     let i = 0;
-    let currentSerial = startSerial; // Use calculated start serial
-    
+
     const workers = new Array(Math.min(args.concurrency, urlsToProcess.length)).fill(0).map(async () => {
       while (i < urlsToProcess.length) {
         const myIndex = i++;
-        const url = urlsToProcess[myIndex];
-        const chapterNumber = volumeConfig.chapters.indexOf(url) + 1;
-        const serial = currentSerial++; // Use and increment serial number
+        const chapterConfig = volumeConfig.chapters.find(ch => ch.link === urlsToProcess[myIndex]);
+        if (!chapterConfig) {
+          console.error(`❌ Chapter not found in data: ${urlsToProcess[myIndex]}`);
+          results[myIndex] = 'failed';
+          continue;
+        }
+
+        const chapterNumber = volumeConfig.chapters.indexOf(chapterConfig) + 1;
+        const serial = chapterConfig.serial_number; // Use serial number from data
 
         try {
           await fetchAndTranslate(
-            url,
+            chapterConfig.link,
             args.maxRetries,
             serial,
             chapterNumber,
@@ -434,7 +425,6 @@ async function processVolume(
   console.log(`   ❌ Failed: ${summary.failed}`);
   console.log(`   ⏳ Pending: ${summary.pending}`);
   console.log(`   📝 Total: ${summary.total}`);
-  console.log(`   🔢 Next available serial: ${startSerial + urlsToProcess.length}`);
 }
 
 async function main() {
@@ -448,7 +438,6 @@ async function main() {
   console.log(`📁 Output: ${args.outputDir}`);
   console.log(`🔄 Resume: ${args.resume ? 'yes' : 'no'}`);
   console.log(`🧹 Cleanup: ${args.cleanup ? 'yes' : 'no'}`);
-  console.log(`🔢 Start Serial: ${args.startSerial}`);
 
   try {
     // Get volumes to process
