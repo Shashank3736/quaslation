@@ -82,7 +82,7 @@ npx tsx main.ts --max-retries 5
 
 | Argument | Description | Default |
 |----------|-------------|---------|
-| `--novel-id` | Novel ID to process | 16 |
+| `--novel-id` | Novel ID to process (defaults to data.ts value) | 17 |
 | `--volume` | Volume number to process (use 'all' for all volumes) | all |
 | `--concurrency` | Number of concurrent chapter translations | 1 |
 | `--delayMs` | Delay between requests in milliseconds | 1000 |
@@ -134,13 +134,13 @@ The system creates organized output directories:
 
 ```
 scripts/output/gemini/
-├── novel-16/
-│   ├── volume-7/
+├── novel-17/
+│   ├── volume-1/
 │   │   ├── chapter_1_20240101_120000.md
 │   │   ├── chapter_2_20240101_120500.md
 │   │   └── .progress.json
-│   ├── volume-8/
-│   │   ├── chapter_19_20240101_121000.md
+│   ├── volume-2/
+│   │   ├── chapter_8_20240101_121000.md
 │   │   └── .progress.json
 │   └── ...
 ```
@@ -151,17 +151,17 @@ Each volume has a `.progress.json` file that tracks:
 
 ```json
 {
-  "novelId": 16,
-  "volumeNumber": 7,
+  "novelId": 17,
+  "volumeNumber": 1,
   "lastUpdated": "2024-01-01T12:00:00.000Z",
   "chapters": {
-    "https://ncode.syosetu.com/n1976ey/104/": {
+    "https://ncode.syosetu.com/n1218ft/1/": {
       "status": "completed",
       "chapterNumber": 1,
       "translatedAt": "2024-01-01T12:00:00.000Z",
-      "filePath": "scripts/output/gemini/novel-16/volume-7/chapter_1_20240101_120000.md"
+      "filePath": "scripts/output/gemini/novel-17/volume-1/chapter_1_20240101_120000.md"
     },
-    "https://ncode.syosetu.com/n1976ey/105/": {
+    "https://ncode.syosetu.com/n1218ft/2/": {
       "status": "failed",
       "error": "Translation timeout",
       "translatedAt": "2024-01-01T12:05:00.000Z"
@@ -178,9 +178,9 @@ Each translated chapter is saved with comprehensive frontmatter:
 ---
 chapter: 1
 serial: 1
-title: The Beginning of the Adventure
-novel: 16
-volume: 7
+title: 序章
+novel: 17
+volume: 1
 originalLanguage: Japanese
 translatedAt: 2024-01-01T12:00:00.000Z
 ---
@@ -202,31 +202,31 @@ The upload tool works with the following database schema:
 ### 1. First-time Translation and Upload
 
 ```bash
-# 1. Start fresh translation of all volumes
-npx tsx main.ts --novel-id 16 --volume all --concurrency 2
+# 1. Start fresh translation of all volumes (defaults to novel 17)
+npx tsx main.ts --volume all --concurrency 2
 
 # 2. Upload all chapters (skips already uploaded by default)
-npx tsx upload.ts --novel-id 16 --verbose
+npx tsx upload.ts --novel-id 17 --verbose
 ```
 
 ### 2. Resume Failed Translations
 
 ```bash
 # Continue translation from where you left off
-npx tsx main.ts --resume --volume 7
+npx tsx main.ts --resume --volume 1
 
 # Continue upload from where you left off (automatic)
-npx tsx upload.ts --novel-id 16 --volume 8
+npx tsx upload.ts --novel-id 17 --volume 2
 ```
 
 ### 3. Retry Failed Chapters
 
 ```bash
 # Reset failed chapters and retry them
-npx tsx main.ts --cleanup --volume 7 --max-retries 5
+npx tsx main.ts --cleanup --volume 1 --max-retries 5
 
 # Process all chapters including already uploaded ones
-npx tsx upload.ts --no-resume --novel-id 16 --volume 7
+npx tsx upload.ts --no-resume --novel-id 17 --volume 1
 ```
 
 ### 4. High-Performance Processing
@@ -236,7 +236,7 @@ npx tsx upload.ts --no-resume --novel-id 16 --volume 7
 npx tsx main.ts --concurrency 3 --delayMs 300 --volume all
 
 # Upload with verbose logging
-npx tsx upload.ts --novel-id 16 --volume all --verbose
+npx tsx upload.ts --novel-id 17 --volume all --verbose
 ```
 
 ## Progress Tracking
@@ -386,21 +386,21 @@ console.log('Debug: Already uploaded chapters:', Array.from(uploadedChapters));
 ```
 🚀 Starting chapter upload process...
 📁 Base directory: ./scripts/output/gemini
-📖 Filter by Novel ID: 16
-📚 Filter by Volume: 8
+📖 Filter by Novel ID: 17
+📚 Filter by Volume: 1
 📝 Verbose logging: true
 🔄 Resume: yes
 🔍 Checking database for already uploaded chapters...
-📊 Found 15 already uploaded chapters
-📄 Found 18 chapter files to process
-📄 Processing file: ./scripts/output/gemini/novel-16/volume-8/chapter_16_20240101_120000.md
-✅ Successfully uploaded chapter: "The Final Chapter" (Novel: 16, Volume: 8, Chapter: 16)
+📊 Found 7 already uploaded chapters
+📄 Found 8 chapter files to process
+📄 Processing file: ./scripts/output/gemini/novel-17/volume-1/chapter_1_20240101_120000.md
+✅ Successfully uploaded chapter: "序章" (Novel: 17, Volume: 1, Chapter: 1)
 
 📊 Upload Summary:
-   ✅ Successfully uploaded: 3 chapters
-   ⏭️  Skipped (already uploaded): 15 chapters
+   ✅ Successfully uploaded: 1 chapters
+   ⏭️  Skipped (already uploaded): 7 chapters
    ❌ Failed to upload: 0 chapters
-   📄 Total processed: 18 chapters
+   📄 Total processed: 8 chapters
 
 🎉 All chapters uploaded successfully!
 ```
@@ -410,20 +410,20 @@ console.log('Debug: Already uploaded chapters:', Array.from(uploadedChapters));
 Here's a complete workflow from translation to upload:
 
 ```bash
-# 1. Translate all volumes for novel 16
-npx tsx main.ts --novel-id 16 --volume all --concurrency 2
+# 1. Translate all volumes for novel 17 (default from data.ts)
+npx tsx main.ts --volume all --concurrency 2
 
 # 2. Check progress
-ls -la scripts/output/gemini/novel-16/volume-7/.progress.json
+ls -la scripts/output/gemini/novel-17/volume-1/.progress.json
 
-# 3. Upload all chapters for novel 16 (skips already uploaded by default)
-npx tsx upload.ts --novel-id 16 --verbose
+# 3. Upload all chapters for novel 17 (skips already uploaded by default)
+npx tsx upload.ts --novel-id 17 --verbose
 
-# 4. Upload only volume 8 chapters (process all including already uploaded)
-npx tsx upload.ts --novel-id 16 --volume 8 --no-resume
+# 4. Upload only volume 2 chapters (process all including already uploaded)
+npx tsx upload.ts --novel-id 17 --volume 2 --no-resume
 
 # 5. Upload with custom directory
-npx tsx upload.ts --base-dir ./my-translations --novel-id 16 --verbose
+npx tsx upload.ts --base-dir ./my-translations --novel-id 17 --verbose
 ```
 
 ## License

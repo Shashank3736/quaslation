@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
 import * as path from 'path';
-import { novel16, ChapterConfig, VolumeConfig } from './data';
+import { novel17 as novel, ChapterConfig, VolumeConfig } from './data';
 import { ProgressTracker, ProgressData } from './progress';
 
 
@@ -31,8 +31,11 @@ interface CLIArgs {
 }
 
 function parseArgs(argv: string[]): CLIArgs {
+  // Get default novelId from data.ts
+  const defaultNovelId = novel[0]?.novelId || 16;
+  
   const args: any = {
-    novelId: 16, // Default novel ID
+    novelId: defaultNovelId, // Default from data.ts
     volume: undefined,
     concurrency: 1,
     delayMs: 1000,
@@ -206,7 +209,7 @@ EXAMPLE TRANSLATIONS:
 Return your response in this EXACT JSON format - ensure ALL content is in English:
 {
   "chapterNumber": "number or 'unknown'",
-  "chapterTitle": "English translation of title",
+  "chapterTitle": "English translation of title. ",
   "chapterContent": "Complete English translation of all chapter content - NO UNTRANSLATED TEXT - NO HTML TAGS - NO AUTHOR's NOTE ONLY CHAPTER CONTENT",
   "originalLanguage": "detected language (e.g., Japanese, Chinese, Korean)"
 }
@@ -302,10 +305,16 @@ function isContentNotTranslated(content: string, originalLanguage?: string): boo
 }
 
 async function createMarkdownFile(result: TranslationResult, serial: number, progress: ProgressData, args: CLIArgs): Promise<string> {
+  const yamlString = (value: string | undefined | null): string => {
+    if (!value) return '""';
+    // Escape quotes and wrap in quotes
+    return `"${value.replace(/"/g, '\\"')}"`;
+  };
+
   const markdownContent = `---
 chapter: ${result.chapterNumber}
 serial: ${serial}
-title: ${result.chapterTitle}
+title: ${yamlString(result.chapterTitle)}
 novel: ${progress.novelId}
 volume: ${progress.volumeNumber}
 originalLanguage: ${result.originalLanguage || 'unknown'}
@@ -441,7 +450,7 @@ async function main() {
 
   try {
     // Get volumes to process
-    const volumesToProcess = novel16.filter(vol => {
+    const volumesToProcess = novel.filter(vol => {
       if (args.volume === 'all') return true;
       if (typeof args.volume === 'number') return vol.volumeNumber === args.volume;
       return true;
