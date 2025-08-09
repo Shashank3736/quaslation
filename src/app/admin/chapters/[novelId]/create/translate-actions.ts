@@ -10,7 +10,6 @@ export async function translateText(text: string):Promise<string> {
       target_lang: "English", 
   });
 
-  console.log(result.data)
   if(!result?.data || (result.data as string[]).length === 0) {
     throw new Error("Translation Failed.")
   }

@@ -11,7 +11,6 @@ export const createVolume = async ({ novelId, number, title }:{ novelId: number,
       title,
     })
   } catch (error) {
-    console.error(error);
     throw new Error("Something went wrong while creating the volume.")
   }
 }

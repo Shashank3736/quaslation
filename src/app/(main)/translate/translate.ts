@@ -33,7 +33,6 @@ export async function translateText(text: string, sourceLanguageName: string, ta
       targetLanguage: targetLanguageName,
     }
   } catch (error) {
-    console.error("Translation error:", error)
     throw new Error("Translation failed")
   }
 }

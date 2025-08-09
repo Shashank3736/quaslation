@@ -58,7 +58,6 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
       form.setValue("serial", values.serial+1)
       setPreview("");
     } catch (error) {
-      console.error(error);
       toast({
         description: `${error}` || "Something went wrong.",
         variant: "destructive"

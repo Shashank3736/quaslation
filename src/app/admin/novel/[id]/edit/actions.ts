@@ -33,7 +33,6 @@ export const updateNovel = async (values: z.infer<typeof editNovelSchema>, oldDa
       message: "ok"
     };
   } catch (error) {
-    console.error(error);
     return {
       message: `Error: ${error}`
     }

@@ -19,7 +19,6 @@ const DisqusComponent: React.FC<DisqusProps> = ({ shortname, identifier, title, 
 
   const loadDisqus = useCallback(() => {
     setLoadingStatus('loading');
-    console.log('Disqus: Loading script for theme:', theme);
 
     const disqus_config = function (this: any) {
       this.page.url = url;
@@ -41,16 +40,14 @@ const DisqusComponent: React.FC<DisqusProps> = ({ shortname, identifier, title, 
       script.setAttribute('data-timestamp', String(+new Date()));
       script.async = true;
       script.onload = () => {
-        console.log('Disqus: Script loaded successfully.');
         setLoadingStatus('success');
       }
       script.onerror = () => {
-        console.error('Disqus: Failed to load script. Ad blocker might be active.');
         setLoadingStatus('error');
       }
       (document.head || document.body).appendChild(script);
     }
-  }, [shortname, identifier, title, url, theme]);
+  }, [shortname, identifier, title, url]);
 
   useEffect(() => {
     loadDisqus();
