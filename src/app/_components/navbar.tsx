@@ -42,7 +42,7 @@ export default function Navbar() {
                   <Button variant={"outline"} asChild><Link href={data.href}>{data.title}</Link></Button>
                 </SheetClose>
               ))}
-              <SheetClose className='flex justify-center'>
+              <SheetClose key={"dark-mode"} asChild className='flex justify-center' data-inside-interaction="true">
                 <ModeToggle showTheme />
               </SheetClose>
             </SheetHeader>
@@ -61,7 +61,11 @@ export default function Navbar() {
           <UserButton userProfileMode='navigation' userProfileUrl='/user-profile' />
         </SignedIn>
         <SignedOut>
-          <SignInButton><Button>Sign In</Button></SignInButton>
+          <SignInButton>
+            <Button asChild>
+              <span>Sign In</span>
+            </Button>
+          </SignInButton>
         </SignedOut>
       </div>
     </div>
