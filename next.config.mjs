@@ -3,6 +3,13 @@ import createMDX from '@next/mdx'
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+  // Enable client-side router cache reuse for a limited time on navigation
+  experimental: {
+    staleTimes: {
+      dynamic: 30, // seconds for dynamic segments
+      static: 180, // seconds for static segments
+    },
+  },
   images: {
     remotePatterns: [
       {
