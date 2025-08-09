@@ -22,7 +22,7 @@ const navLinks = [
 
 export default function Navbar() {
   return (
-    <div className='flex justify-between p-4'>
+    <div className='flex justify-between p-4 sticky top-0 z-50 glass border-b border-white/15 ring-1 ring-white/10'>
       <div className='flex justify-center items-center'>
         <Image alt='logo' src={"/icon.jpg"} width={256} height={256} className='rounded-full w-12 h-12 hidden md:block' />
         <Sheet>
@@ -31,7 +31,7 @@ export default function Navbar() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M12 17.25h8.25" />
             </svg>
           </SheetTrigger>
-          <SheetContent className='flex flex-col' side={"left"}>
+          <SheetContent className='flex flex-col glass border-r border-white/15' side={"left"}>
             <SheetHeader>
               <SheetTitle className='text-center'>
                 Index

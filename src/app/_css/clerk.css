@@ -1,5 +1,5 @@
 .cl-formButtonPrimary {
-  @apply inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md bg-primary px-3  font-medium text-primary-foreground !shadow-none ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  @apply inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md bg-gradient-to-r-indigo-violet text-white px-3  font-medium !shadow-none ring-offset-background transition-all hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/10 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
 }
 
 .cl-card,
@@ -8,7 +8,7 @@
 .cl-phoneInputBox,
 .cl-userButtonPopoverCard,
 .cl-organizationSwitcherPopoverCard {
-  @apply rounded-lg border border-input bg-background;
+  @apply rounded-lg border border-white/15 bg-background/70 backdrop-blur-md;
 }
 
 .cl-headerTitle,
@@ -67,7 +67,7 @@ p[data-localization-key='userProfile.profilePage.successMessage'] {
 .cl-formFieldInput[type='text'],
 .cl-formFieldInput[type='email'],
 .cl-formFieldInput[type='password'] {
-  @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-foreground ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  @apply flex h-10 w-full rounded-md border border-white/15 bg-background/70 backdrop-blur-md px-3 py-2 text-foreground ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/10 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 .cl-footerActionLink {
@@ -83,11 +83,11 @@ p[data-localization-key='userProfile.profilePage.successMessage'] {
 }
 
 .cl-selectSearchInput__countryCode {
-  @apply flex h-10 w-full rounded-md border border-b border-input bg-background text-foreground ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  @apply flex h-10 w-full rounded-md border border-white/15 bg-background/70 backdrop-blur-md text-foreground ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/10 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 .cl-selectOptionsContainer__countryCode {
-  @apply border border-input bg-background;
+  @apply border border-white/15 bg-background/70 backdrop-blur-md;
 }
 
 .cl-internal-icon,
@@ -120,11 +120,11 @@ button[data-localization-key='userProfile.start.dangerSection.deleteAccountButto
 .cl-profileSectionPrimaryButton,
 .cl-accordionTriggerButton,
 .cl-navbarButton {
-  @apply text-indigo-500 hover:bg-accent hover:text-accent-foreground;
+  @apply text-gradient-indigo-violet hover:bg-accent/50 hover:text-accent-foreground;
 }
 
 .cl-card {
-  @apply rounded-lg shadow-md;
+  @apply rounded-lg shadow-lg glass;
 }
 
 .cl-userButtonPopoverCard {
@@ -136,7 +136,7 @@ button[data-localization-key='userProfile.start.dangerSection.deleteAccountButto
 }
 
 .cl-badge {
-  @apply rounded-full border border-input bg-background px-2.5 py-0.5 text-xs text-foreground !shadow-none;
+  @apply rounded-full border border-white/15 bg-background/70 backdrop-blur-md px-2.5 py-0.5 text-xs text-foreground !shadow-none;
 }
 
 .cl-badge[data-localization-key='badge__unverified'] {
@@ -168,11 +168,11 @@ button[data-localization-key='userProfile.start.dangerSection.deleteAccountButto
 }
 
 .cl-socialButtonsBlockButton {
-  @apply h-10 !border;
+  @apply h-10 !border border-white/15 bg-background/70 backdrop-blur-md;
 }
 
 .cl-alternativeMethods .cl-alternativeMethodsBlockButton {
-  @apply h-10 !border border-input text-muted-foreground;
+  @apply h-10 !border border-white/15 bg-background/70 backdrop-blur-md text-muted-foreground;
 }
 
 .cl-alternativeMethodsBlockButton {
@@ -205,11 +205,11 @@ h1[data-localization-key='userProfile.navbar.title'] {
 }
 
 .cl-menuList {
-  @apply border border-input bg-background;
+  @apply border border-white/15 bg-background/70 backdrop-blur-md;
 }
 
 .cl-actionCard {
-  @apply border border-input bg-background;
+  @apply border border-white/15 bg-background/70 backdrop-blur-md;
 }
 
 .cl-menuItem[data-color='neutral'] {
@@ -222,7 +222,7 @@ h1[data-localization-key='userProfile.navbar.title'] {
 
 .cl-userButtonPopoverMain,
 .cl-organizationSwitcherPopoverMain {
-  @apply rounded-lg border-input bg-background;
+  @apply rounded-lg border-white/15 bg-background/70 backdrop-blur-md;
 }
 
 .cl-internal-pp7u0o {

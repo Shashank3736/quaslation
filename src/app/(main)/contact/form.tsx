@@ -35,50 +35,52 @@ export default function ContactForm() {
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
+            <FormItem className="space-y-2">
+              <FormLabel className="text-foreground">Name</FormLabel>
               <FormControl>
-                <Input placeholder='Your name' {...field} />
+                <Input placeholder='Your name' className="glass border border-white/15 bg-background/70 backdrop-blur-md" {...field} />
               </FormControl>
-              <FormDescription>Write your name here</FormDescription>
+              <FormDescription className="text-muted-foreground">Write your name here</FormDescription>
               <FormMessage />
             </FormItem>
-          )} 
+          )}
         />
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
+            <FormItem className="space-y-2">
+              <FormLabel className="text-foreground">Email</FormLabel>
               <FormControl>
-                <Input placeholder='example@xyz.com' {...field} />
+                <Input placeholder='example@xyz.com' className="glass border border-white/15 bg-background/70 backdrop-blur-md" {...field} />
               </FormControl>
-              <FormDescription>Write your email here</FormDescription>
+              <FormDescription className="text-muted-foreground">Write your email here</FormDescription>
               <FormMessage />
             </FormItem>
-          )} 
+          )}
         />
         <FormField
           control={form.control}
           name="message"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Message</FormLabel>
+            <FormItem className="space-y-2">
+              <FormLabel className="text-foreground">Message</FormLabel>
               <FormControl>
-                <Textarea placeholder='Your message' {...field} />
+                <Textarea placeholder='Your message' className="glass border border-white/15 bg-background/70 backdrop-blur-md min-h-[120px]" {...field} />
               </FormControl>
-              <FormDescription>Write your message here</FormDescription>
+              <FormDescription className="text-muted-foreground">Write your message here</FormDescription>
               <FormMessage />
             </FormItem>
-          )} 
+          )}
         />
-        <Button type="submit" disabled={submiting}>Submit</Button>
+        <Button type="submit" disabled={submiting} className="bg-gradient-to-r-indigo-violet text-white hover:opacity-90 transition-opacity w-full">
+          Submit
+        </Button>
       </form>
     </Form>
   );

@@ -23,21 +23,20 @@ export const DiscordSVG = ({ className }: { className?: string }) => {
 
 const JoinDiscord = () => {
   return (
-    <Alert
+    <div
       className={cn(
-        "group relative overflow-hidden border border-blue-500/20 bg-gradient-to-r from-blue-500/10 via-blue-500/5 to-transparent",
-        "dark:from-blue-500/20 dark:via-blue-500/10",
-        "rounded-xl p-6 flex flex-col sm:flex-row sm:items-center gap-4 shadow-lg"
+        "group relative overflow-hidden glass border border-white/15",
+        "rounded-xl p-6 flex flex-col sm:flex-row sm:items-center gap-6"
       )}
     >
       {/* Icon container */}
-      <div className="flex-shrink-0 flex items-center justify-center w-14 h-14 rounded-full bg-blue-500/10 text-blue-500 dark:text-blue-400">
+      <div className="flex-shrink-0 flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br-indigo-violet text-white">
         <DiscordSVG className="w-8 h-8" />
       </div>
 
       {/* Content */}
       <div className="flex-1">
-        <AlertTitle className="text-2xl font-bold tracking-tight text-blue-600 dark:text-blue-400">
+        <AlertTitle className="text-2xl font-bold tracking-tight text-gradient-indigo-violet">
           Join our Discord Community
         </AlertTitle>
         <AlertDescription className="mt-2 text-muted-foreground leading-relaxed">
@@ -50,7 +49,7 @@ const JoinDiscord = () => {
       <div className="flex-shrink-0">
         <Button
           size="lg"
-          className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white shadow-md"
+          className="bg-gradient-to-r-indigo-violet text-white hover:opacity-90 transition-opacity shadow-lg"
           asChild
         >
           <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer">
@@ -58,7 +57,7 @@ const JoinDiscord = () => {
           </a>
         </Button>
       </div>
-    </Alert>
+    </div>
   );
 };
 
