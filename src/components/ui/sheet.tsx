@@ -51,27 +51,65 @@ const sheetVariants = cva(
 
 interface SheetContentProps
   extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
-    VariantProps<typeof sheetVariants> {}
+    VariantProps<typeof sheetVariants> {
+  /** Any element with this attribute will be treated as "inside" even if Radix thinks otherwise */
+  ignoreInsideAttribute?: string; // defaults to "data-inside-interaction"
+}
+
+function isInsideByAttribute(target: EventTarget | null, attr: string) {
+  if (!target || !(target as any).ownerDocument) return false;
+  const doc = (target as any).ownerDocument as Document;
+  if (typeof (target as any).closest === "function" && (target as Element).closest(`[${attr}]`)) return true;
+  // composedPath for shadow DOM / portals
+  const ev = target as any;
+  const path = typeof ev?.composedPath === "function" ? ev.composedPath() : [];
+  return path.some((n: any) => (n as Element)?.hasAttribute?.(attr));
+}
 
 const SheetContent = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Content>,
   SheetContentProps
->(({ side = "right", className, children, ...props }, ref) => (
-  <SheetPortal>
-    <SheetOverlay />
-    <SheetPrimitive.Content
-      ref={ref}
-      className={cn(sheetVariants({ side }), className)}
-      {...props}
-    >
-      {children}
-      <SheetPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
-        <X className="h-4 w-4" />
-        <span className="sr-only">Close</span>
-      </SheetPrimitive.Close>
-    </SheetPrimitive.Content>
-  </SheetPortal>
-))
+>(({ side = "right", className, children, ignoreInsideAttribute = "data-inside-interaction", onInteractOutside, ...props }, ref) => {
+  const handleInteractOutside = React.useCallback(
+    (e: Event) => {
+      // Radix provides detail.originalEvent with composedPath
+      const orig = (e as any).detail?.originalEvent ?? (e as any);
+      const target = orig?.target ?? null;
+      if (isInsideByAttribute(target, ignoreInsideAttribute)) {
+        e.preventDefault(); // keep sheet open
+        return;
+      }
+      // else, allow default behavior
+      onInteractOutside?.(e as any);
+    },
+    [ignoreInsideAttribute, onInteractOutside]
+  );
+
+  return (
+    <SheetPortal>
+      <SheetOverlay />
+      <SheetPrimitive.Content
+        ref={ref}
+        className={cn(sheetVariants({ side }), className)}
+        // Preempt outside-logic on mobile by capturing PointerDowns at the content edge
+        onPointerDownCapture={(e) => {
+          // If the event starts from a marked "inside" element, stop before Radix sees it
+          if (isInsideByAttribute(e.target as any, ignoreInsideAttribute)) {
+            e.stopPropagation();
+          }
+        }}
+        onInteractOutside={handleInteractOutside}
+        {...props}
+      >
+        {children}
+        <SheetPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+          <X className="h-4 w-4" />
+          <span className="sr-only">Close</span>
+        </SheetPrimitive.Close>
+      </SheetPrimitive.Content>
+    </SheetPortal>
+  );
+})
 SheetContent.displayName = SheetPrimitive.Content.displayName
 
 const SheetHeader = ({

@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { toast } from '@/components/ui/use-toast';
 import { createChapter } from './actions';
+import { translateText } from './translate-actions';
 import AutoResizeTextarea from '@/components/auto-resize-textarea';
 import { markdownToHtml } from '@/lib/utils';
 
@@ -40,7 +41,9 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
   })
   
   const [submiting, setSubmiting] = useState(false);
-  const [preview, setPreview] = useState("")
+  const [preview, setPreview] = useState("");
+  const [isTranslatingTitle, setIsTranslatingTitle] = useState(false);
+  const [isTranslatingContent, setIsTranslatingContent] = useState(false);
 
   const onSubmit = async (values: z.infer<typeof createChapterFormSchema>) => {
     setSubmiting(true);
@@ -55,7 +58,6 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
       form.setValue("serial", values.serial+1)
       setPreview("");
     } catch (error) {
-      console.error(error);
       toast({
         description: `${error}` || "Something went wrong.",
         variant: "destructive"
@@ -63,6 +65,29 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
     }
     setSubmiting(false);
   }
+
+  const handleTranslateTitle = async () => {
+    const title = form.getValues("title");
+    if (!title.trim()) return;
+    setIsTranslatingTitle(true);
+    const translated = await translateText(title);
+    if (translated) {
+      form.setValue("title", translated);
+    }
+    setIsTranslatingTitle(false);
+  };
+
+  const handleTranslateContent = async () => {
+    const content = form.getValues("content");
+    if (!content.trim()) return;
+    setIsTranslatingContent(true);
+    const translated = await translateText(content);
+    if (translated) {
+      form.setValue("content", translated);
+    }
+    setIsTranslatingContent(false);
+  };
+  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
@@ -71,14 +96,25 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Title</FormLabel>
+              <div className="flex justify-between items-center">
+                <FormLabel>Title</FormLabel>
+                <Button
+                  type="button"
+                  onClick={handleTranslateTitle}
+                  disabled={isTranslatingTitle || !field.value}
+                  size="sm"
+                  variant="secondary"
+                >
+                  {isTranslatingTitle ? "Translating..." : "Translate to English"}
+                </Button>
+              </div>
               <FormControl>
                 <Input placeholder='Title of Chapter' {...field} />
               </FormControl>
               <FormDescription>This is the title of chapter.</FormDescription>
               <FormMessage />
             </FormItem>
-          )} 
+          )}
         />
         <div className="grid grid-cols-2 space-x-2">
           <FormField
@@ -86,11 +122,22 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
             name="content"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Content</FormLabel>
+                <div className="flex justify-between items-center">
+                  <FormLabel>Content</FormLabel>
+                  <Button
+                    type="button"
+                    onClick={handleTranslateContent}
+                    disabled={isTranslatingContent || !field.value}
+                    size="sm"
+                    variant="secondary"
+                  >
+                    {isTranslatingContent ? "Translating..." : "Translate to English"}
+                  </Button>
+                </div>
                 <FormControl>
-                  <AutoResizeTextarea 
-                    placeholder='Write markdown here...' 
-                    {...field} 
+                  <AutoResizeTextarea
+                    placeholder='Write markdown here...'
+                    {...field}
                     onChange={(e) => {
                       field.onChange(e)
                       markdownToHtml(e.target.value)
@@ -101,7 +148,7 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
                 <FormDescription>Write markdown.</FormDescription>
                 <FormMessage />
               </FormItem>
-            )} 
+            )}
           />
           <div className="overflow-y-auto">
             <h3 className="font-semibold mb-2">Preview</h3>
@@ -153,6 +200,7 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
             </FormItem>
           )} 
         />
+        
         <Button type="submit" disabled={submiting}>Submit</Button>
       </form>
     </Form>

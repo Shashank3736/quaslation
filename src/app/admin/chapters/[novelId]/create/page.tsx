@@ -5,8 +5,9 @@ import { notFound } from 'next/navigation'
 import React from 'react'
 import { CreateChapterForm } from './create-chapter-form'
 
-const CreateChapter = async({ params }:{ params: { novelId: string }}) => {
-  const novelId = parseInt(params.novelId);
+const CreateChapter = async({ params }:{ params: Promise<{ novelId: string }>}) => {
+  const paramsResolved = await params;
+  const novelId = parseInt(paramsResolved.novelId);
   if(isNaN(novelId)) notFound()
   const previousChapter = await getLatestChapter(novelId);
   return (

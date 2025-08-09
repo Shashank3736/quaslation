@@ -6,10 +6,10 @@ import React from 'react'
 
 const AdminLayout = ({ children }:{ children: React.ReactNode }) => {
   return (
-    <div className='flex h-screen w-screen p-4'>
-      <aside className='border p-8 mr-4 rounded-lg min-w-60 hidden md:flex flex-col justify-between'>
+    <div className='flex h-screen w-screen p-4 bg-background bg-pattern bg-vignette'>
+      <aside className='glass border border-white/15 p-8 mr-4 rounded-lg min-w-60 hidden md:flex flex-col justify-between'>
         <div className='flex flex-col'>
-          <H2 className='text-center mb-8'>Actions</H2>
+          <H2 className='text-center mb-8 text-gradient-indigo-violet'>Actions</H2>
           <Button className='mb-4' variant={"outline"} asChild>
             <Link href={"/"} className='flex items-center'>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4 mr-2">
@@ -24,7 +24,7 @@ const AdminLayout = ({ children }:{ children: React.ReactNode }) => {
           <Button className='mb-4' asChild><Link href={"/admin/novel/create"}>+ Create Novel</Link></Button>
           <ModeToggle showTheme />
         </div>
-        <H2>Quaslation</H2>
+        <H2 className="text-gradient-indigo-violet">Quaslation</H2>
       </aside>
       <section className='overflow-auto w-full'>
         {children}

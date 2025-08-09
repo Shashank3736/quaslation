@@ -5,7 +5,6 @@ import { MetadataRoute } from "next";
 import { unstable_cache } from "next/cache";
 
 const getCache = unstable_cache(async () => {
-  // console.log("Here");
   return await db.select({
     novel: novelTable.slug,
     chapter: chapterTable.slug,
@@ -31,4 +30,4 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ));
 }
 
-export const revalidate = 24*60*60
+export const revalidate = 86400;

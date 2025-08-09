@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { MoveRightIcon } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
@@ -17,31 +18,100 @@ const SVGText = ({ text }: { text: string }) => {
 const MainPage = () => {
   return (
     <main className="flex-1">
-      <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center space-y-4 text-center">
-            <div className="space-y-4 flex flex-col items-center">
-              <h1 className="flex text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-                Welcome to <SVGText text='Quaslation' />
+      
+      {/* Hero Section */}
+      <section className="relative w-full py-16 md:py-24 lg:py-32 overflow-hidden">
+        {/* Decorative gradient blobs */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-40 -right-32 w-80 h-80 bg-gradient-to-br-indigo-violet opacity-20 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-gradient-to-tr-indigo-violet opacity-20 rounded-full blur-3xl"></div>
+        </div>
+        
+        <div className="relative container px-4 md:px-6">
+          <div className="flex flex-col items-center space-y-6 text-center">
+            <div className="space-y-6 flex flex-col items-center max-w-4xl">
+              <h1 className="flex text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-center">
+                Welcome to <span className="text-gradient-indigo-violet ml-2">Quaslation</span>
               </h1>
-              <p className="mx-auto max-w-[700px] md:text-xl">
+              <p className="mx-auto max-w-[700px] text-lg md:text-xl text-muted-foreground">
                 Discover the <del>best</del> fan translations of <strong>Asian</strong> web novels. Immerse yourself in captivating stories from
                 across Asia.
               </p>
+              <Button size="lg" className="bg-gradient-to-r-indigo-violet text-white px-8 py-3" asChild>
+                <Link href="/novels">
+                  Browse Novels <MoveRightIcon className="w-5 h-5 ml-2" />
+                </Link>
+              </Button>
             </div>
           </div>
         </div>
       </section>
-      <section className="w-full py-12 md:py-24 lg:py-32 bg-primary-foreground">
+
+      {/* Features Section */}
+      <section className="py-16">
+        <div className="container px-4 md:px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gradient-indigo-violet mb-4">Why Choose Quaslation?</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Experience the difference with our carefully curated translations and active community.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="glass hover:shadow-lg transition-shadow duration-300">
+              <CardHeader>
+                <CardTitle className="text-gradient-indigo-violet">High Quality Translations</CardTitle>
+                <CardDescription>
+                  Meticulously translated and edited by passionate fans who love the source material.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  Every chapter goes through multiple rounds of editing to ensure accuracy and readability.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="glass hover:shadow-lg transition-shadow duration-300">
+              <CardHeader>
+                <CardTitle className="text-gradient-indigo-violet">Regular Updates</CardTitle>
+                <CardDescription>
+                  New chapters released frequently to keep you up to date with your favorite stories.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  Our dedicated translators work consistently to bring you the latest content as soon as possible.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="glass hover:shadow-lg transition-shadow duration-300">
+              <CardHeader>
+                <CardTitle className="text-gradient-indigo-violet">Active Community</CardTitle>
+                <CardDescription>
+                  Join fellow fans in discussions, theories, and sharing your love for these stories.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  Engage with other readers through comments and our Discord community.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+      <section className="w-full py-12 md:py-24 lg:py-32">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2 flex flex-col items-center">
-              <h2 className="text-2xl font-bold tracking-tighter sm:text-5xl flex">Latest <SVGText text='Releases' /></h2>
+              <h2 className="text-2xl font-bold tracking-tighter sm:text-5xl flex">Latest <span className="text-gradient-indigo-violet ml-2">Releases</span></h2>
               <p className="max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                 Stay up to date with our most recent translations. New chapters added regularly!
               </p>
             </div>
-            <Button asChild><Link href={"/home"}>View Latest Releases <MoveRightIcon className='w-4 h-4 ml-2' /></Link></Button>
+            <Button variant="gradient" asChild><Link href={"/home"}>View Latest Releases <MoveRightIcon className='w-4 h-4 ml-2' /></Link></Button>
           </div>
         </div>
       </section>

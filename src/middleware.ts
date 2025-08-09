@@ -1,16 +1,19 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { clerkClient, clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { getUserRole } from "./lib/db/query";
 import { chapterIdRedirect } from "./lib/config";
 
 const isProtectedRoute = createRouteMatcher([
-  "/admin(.*)"
+  "/admin(.*)",
+  "/translate"
 ])
 
 export default clerkMiddleware(async (auth, req) => {
   if(isProtectedRoute(req)) {
-    if(auth().userId) {
-      const data = await getUserRole(auth().userId || "");
+    const userId = auth().userId;
+    if(userId !== null) {
+      const user = await clerkClient.users.getUser(userId);
+      const data = await getUserRole(user.emailAddresses[0] ? user.emailAddresses[0].emailAddress : '');
       if(data !== "ADMIN") return NextResponse.redirect(new URL("/", req.url));
     } else {
       auth().redirectToSignIn();

@@ -5,10 +5,11 @@ import RestrictedContent from './restricted-content'
 import LimitedContent from './limited-content'
 import { Button } from '../ui/button'
 import Link from 'next/link'
-import { ChapterNavigation, ScrollToTop } from './chapter-navigation'
+import { ChapterNavigation } from './chapter-navigation'
 import { getChapterBySlug } from '@/lib/db/query'
 import Comments from './comments'
 import JoinDiscord from './join-discord'
+import { Card, CardContent } from '@/components/ui/card'
 
 export const ChapterPage = async ({ chapter, novelSlug }: { chapter: Awaited<ReturnType<typeof getChapterBySlug>>, novelSlug: string }) => {
   const previous = chapter.previous

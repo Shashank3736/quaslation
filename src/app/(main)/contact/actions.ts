@@ -13,7 +13,6 @@ async function sendDiscordEmbed(options: DiscordEmbedOptions) {
       },
       body: JSON.stringify({ embeds: [embed] }),
     });
-    // console.log(response);
     return await response.text()
   } catch (error) {
     throw new Error("Network Error")

@@ -5,8 +5,10 @@ import H1 from '@/components/typography/h1';
 import EditNovelForm from './edit-novel-form';
 import { markdownToHtml } from '@/lib/utils';
 
-const AdminNovelEdit = async ({ params }: { params: { id: string }}) => {
-  const id = parseInt(params.id);
+const AdminNovelEdit = async ({ params }: { params: Promise<{ id: string }>}) => {
+  const paramsResolved = await params;
+  const id = parseInt(paramsResolved.id);
+
   if(isNaN(id)) notFound();
   try {
     const novel = await getNovel(id);

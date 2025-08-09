@@ -40,7 +40,7 @@ export default function RootLayout({
           },
       }}
     >
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ""} />
         <Analytics />
         <head>
@@ -52,8 +52,10 @@ export default function RootLayout({
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
+            enableColorScheme
+            storageKey="quaslation-theme"
           >
-            <NextTopLoader />
+            <NextTopLoader color="#7C3AED" />
             {children}
             <Toaster />
           </ThemeProvider>
