@@ -78,7 +78,7 @@ const getNovel = async (slug: string) => {
         },
         where: (chapter, { isNotNull }) => isNotNull(chapter.publishedAt),
         orderBy: (chapter) => chapter.serial,
-        limit: 50,
+        limit: 5000,
         with: {
           volume: {
             columns: {

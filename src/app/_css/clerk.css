@@ -1,5 +1,5 @@
 .cl-formButtonPrimary {
-  @apply inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md bg-gradient-to-r-indigo-violet text-white px-3  font-medium !shadow-none ring-offset-background transition-all hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/10 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  @apply inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md bg-gradient-to-r from-indigo-500 to-violet-500 text-white px-3  font-medium !shadow-none ring-offset-background transition-all hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/10 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
 }
 
 .cl-card,
@@ -120,11 +120,11 @@ button[data-localization-key='userProfile.start.dangerSection.deleteAccountButto
 .cl-profileSectionPrimaryButton,
 .cl-accordionTriggerButton,
 .cl-navbarButton {
-  @apply text-gradient-indigo-violet hover:bg-accent/50 hover:text-accent-foreground;
+  @apply bg-gradient-to-r from-indigo-500 to-violet-500 bg-clip-text text-transparent hover:bg-accent/50 hover:text-accent-foreground;
 }
 
 .cl-card {
-  @apply rounded-lg shadow-lg glass;
+  @apply rounded-lg shadow-lg;
 }
 
 .cl-userButtonPopoverCard {

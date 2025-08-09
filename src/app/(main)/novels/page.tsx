@@ -74,11 +74,6 @@ export default async function NovelList() {
                   width={400}
                   height={600}
                 />
-                <div className="absolute top-2 right-2">
-                  <Badge className="bg-gradient-to-r-indigo-violet text-white">
-                    {novel.chapters.length} Chapters
-                  </Badge>
-                </div>
               </div>
               <CardTitle className="text-xl text-center text-gradient-indigo-violet">
                 <Link href={`/novels/${novel.slug}`} title={novel.title} className="hover:underline">

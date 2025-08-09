@@ -28,11 +28,6 @@ const AdminNovelChapters = async({ params, searchParams }:{ params: Promise<{ no
             Create Volume +
           </Link>
         </Button>
-        <Button variant="secondary" asChild>
-          <Link href={`/admin/chapters/${novelId}/translate`}>
-            Translate Chapters
-          </Link>
-        </Button>
       </div>
       <ChaptersTable data={chapters} />
       <div className='flex space-x-4 mt-4'>
