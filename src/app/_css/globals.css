@@ -24,7 +24,7 @@
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
+    --radius: 14px;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
@@ -51,12 +51,94 @@
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9;
+    --ring: 212.7 26.8% 83.9%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+  }
+}
+
+/* Gradient & Glass Utilities */
+@layer utilities {
+  /* Gradient backgrounds */
+  .bg-gradient-to-br-indigo-violet {
+    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+  }
+  
+  .bg-gradient-to-tr-indigo-violet {
+    background: linear-gradient(45deg, #6366F1 0%, #8B5CF6 100%);
+  }
+  
+  .bg-gradient-to-b-indigo-violet {
+    background: linear-gradient(180deg, #6366F1 0%, #8B5CF6 100%);
+  }
+  
+  .bg-gradient-to-r-indigo-violet {
+    background: linear-gradient(90deg, #6366F1 0%, #8B5CF6 100%);
+  }
+  
+  /* Text gradient */
+  .text-gradient-indigo-violet {
+    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Glass panels - light mode */
+  .glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  }
+  
+  /* Glass panels - dark mode */
+  .dark .glass {
+    background: rgba(17, 24, 39, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
+  }
+  
+  /* Glass with ring for focus */
+  .glass-ring {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  }
+  
+  .glass-ring:focus,
+  .glass-ring:focus-within {
+    outline: 2px solid rgba(255, 255, 255, 0.1);
+    outline-offset: 2px;
+  }
+  
+  .dark .glass-ring {
+    background: rgba(17, 24, 39, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
+  }
+  
+  /* Subtle background pattern */
+  .bg-pattern {
+    background-image:
+      radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 50%);
+  }
+  
+  /* Vignette effect */
+  .bg-vignette {
+    background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.2) 100%);
+  }
+  
+  .dark .bg-vignette {
+    background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
   }
 }
 

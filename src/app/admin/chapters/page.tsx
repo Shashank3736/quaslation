@@ -4,11 +4,15 @@ import Link from "next/link"
 const AdminChapters = async () => {
   const novels = await getNovelList()
   return (
-    <div className='m-4 flex flex-col'>
+    <div className='m-4 flex flex-col space-y-2'>
       {novels.map(novel => (
-        <Link key={novel.id} href={`/admin/chapters/${novel.id}`} className="hover:underline p-2">{novel.title}</Link>
+        <Link key={novel.id} href={`/admin/chapters/${novel.id}`} className="glass p-4 rounded-lg border border-white/15 hover:bg-accent/50 transition-colors block">
+          <span className="font-medium">{novel.title}</span>
+        </Link>
       ))}
-      <Link href={"/admin/chapters/all"} className="p-2 hover:underline">All Chapters</Link>
+      <Link href={"/admin/chapters/all"} className="glass p-4 rounded-lg border border-white/15 hover:bg-accent/50 transition-colors block">
+        <span className="font-medium">All Chapters</span>
+      </Link>
     </div>
   )
 }

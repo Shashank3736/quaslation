@@ -9,6 +9,7 @@ import { ChapterNavigation } from './chapter-navigation'
 import { getChapterBySlug } from '@/lib/db/query'
 import Comments from './comments'
 import JoinDiscord from './join-discord'
+import { Card, CardContent } from '@/components/ui/card'
 
 export const ChapterPage = async ({ chapter, novelSlug }: { chapter: Awaited<ReturnType<typeof getChapterBySlug>>, novelSlug: string }) => {
   const previous = chapter.previous

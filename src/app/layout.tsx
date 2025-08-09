@@ -52,8 +52,10 @@ export default function RootLayout({
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
+            enableColorScheme
+            storageKey="quaslation-theme"
           >
-            <NextTopLoader />
+            <NextTopLoader color="#7C3AED" />
             {children}
             <Toaster />
           </ThemeProvider>
