@@ -124,6 +124,76 @@ erDiagram
   RICH_TEXT ||--|| CHAPTER : content
 ```
 
+## Database structure and connections
+```mermaid
+erDiagram
+    USER {
+        text clerkId PK
+        Role role
+    }
+    
+    RICH_TEXT {
+        integer id PK
+        text text
+        text html
+        text markdown
+    }
+    
+    NOVEL {
+        integer id PK
+        text slug
+        text title
+        text thumbnail
+        timestamp createdAt
+        timestamp publishedAt
+        timestamp updatedAt
+        integer richTextId FK
+    }
+    
+    VOLUME {
+        integer id PK
+        doublePrecision number
+        text title
+        timestamp createdAt
+        timestamp publishedAt
+        timestamp updatedAt
+        integer novelId FK
+    }
+    
+    CHAPTER {
+        integer id PK
+        boolean premium
+        text slug
+        integer novelId FK
+        integer volumeId FK
+        integer serial
+        doublePrecision number
+        text title
+        timestamp createdAt
+        timestamp publishedAt
+        timestamp updatedAt
+        integer richTextId FK
+    }
+    
+    USER ||--o{ NOVEL : "can create/manage"
+    NOVEL ||--o{ VOLUME : "contains"
+    NOVEL ||--o{ CHAPTER : "contains"
+    VOLUME ||--o{ CHAPTER : "groups"
+    RICH_TEXT ||--|| NOVEL : "describes"
+    RICH_TEXT ||--|| CHAPTER : "contains"
+    
+    %% Constraints and indexes
+    %% Unique constraints
+    Novel "1" ||--|| "1" RichText : "unique richTextId"
+    Volume "1" ||--|| "1" Novel : "unique novelId+number"
+    Chapter "1" ||--|| "1" Novel : "unique novelId+serial"
+    Chapter "1" ||--|| "1" Volume : "unique volumeId+number"
+    Chapter "1" ||--|| "1" RichText : "unique richTextId"
+    
+    %% Indexes for performance
+    Chapter "1" }o--|| "0..1" Premium : "premium index"
+```
+
 ## Setup and local development
 Prerequisites
 - Node.js 20.x (CI uses Node 20 in [.github/workflows/nextjs-build.yml](.github/workflows/nextjs-build.yml))
