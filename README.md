@@ -127,71 +127,59 @@ erDiagram
 ## Database structure and connections
 ```mermaid
 erDiagram
-    USER {
-        text clerkId PK
-        Role role
-    }
-    
-    RICH_TEXT {
-        integer id PK
-        text text
-        text html
-        text markdown
-    }
-    
-    NOVEL {
-        integer id PK
-        text slug
-        text title
-        text thumbnail
-        timestamp createdAt
-        timestamp publishedAt
-        timestamp updatedAt
-        integer richTextId FK
-    }
-    
-    VOLUME {
-        integer id PK
-        doublePrecision number
-        text title
-        timestamp createdAt
-        timestamp publishedAt
-        timestamp updatedAt
-        integer novelId FK
-    }
-    
-    CHAPTER {
-        integer id PK
-        boolean premium
-        text slug
-        integer novelId FK
-        integer volumeId FK
-        integer serial
-        doublePrecision number
-        text title
-        timestamp createdAt
-        timestamp publishedAt
-        timestamp updatedAt
-        integer richTextId FK
-    }
-    
-    USER ||--o{ NOVEL : "can create/manage"
-    NOVEL ||--o{ VOLUME : "contains"
-    NOVEL ||--o{ CHAPTER : "contains"
-    VOLUME ||--o{ CHAPTER : "groups"
-    RICH_TEXT ||--|| NOVEL : "describes"
-    RICH_TEXT ||--|| CHAPTER : "contains"
-    
-    %% Constraints and indexes
-    %% Unique constraints
-    Novel "1" ||--|| "1" RichText : "unique richTextId"
-    Volume "1" ||--|| "1" Novel : "unique novelId+number"
-    Chapter "1" ||--|| "1" Novel : "unique novelId+serial"
-    Chapter "1" ||--|| "1" Volume : "unique volumeId+number"
-    Chapter "1" ||--|| "1" RichText : "unique richTextId"
-    
-    %% Indexes for performance
-    Chapter "1" }o--|| "0..1" Premium : "premium index"
+  USER {
+    TEXT clerkId PK
+    ENUM role
+  }
+
+  RICH_TEXT {
+    INT id PK
+    TEXT text
+    TEXT html
+    TEXT markdown
+  }
+
+  NOVEL {
+    INT id PK
+    TEXT slug
+    TEXT title
+    TEXT thumbnail
+    TIMESTAMP createdAt
+    TIMESTAMP publishedAt
+    TIMESTAMP updatedAt
+    INT richTextId FK
+  }
+
+  VOLUME {
+    INT id PK
+    DOUBLE number
+    TEXT title
+    TIMESTAMP createdAt
+    TIMESTAMP publishedAt
+    TIMESTAMP updatedAt
+    INT novelId FK
+  }
+
+  CHAPTER {
+    INT id PK
+    BOOLEAN premium
+    TEXT slug
+    INT novelId FK
+    INT volumeId FK
+    INT serial
+    DOUBLE number
+    TEXT title
+    TIMESTAMP createdAt
+    TIMESTAMP publishedAt
+    TIMESTAMP updatedAt
+    INT richTextId FK
+  }
+
+  NOVEL ||--o{ VOLUME : contains
+  NOVEL ||--o{ CHAPTER : contains
+  VOLUME ||--o{ CHAPTER : groups
+  RICH_TEXT ||--|| NOVEL : describes
+  RICH_TEXT ||--|| CHAPTER : content
 ```
 
 ## Setup and local development
