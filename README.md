@@ -1,37 +1,131 @@
-# Quaslation
-The website I use to share the novels I translate. If you want to read my fan translations check my website [here](https://quaslation.vercel.app/).
+# quaslation
 
-## Core Technologies
-*   **Next.js (App Router):** Leveraged for its powerful server-side rendering capabilities, efficient routing system with the App Router, and integrated tooling that streamlines development and optimizes for performance. This project utilizes features like server components, server actions, and edge runtime for a fast and modern web experience.
-*   **TypeScript:** Ensures code quality, maintainability, and developer productivity by adding static typing to JavaScript. This helps in catching errors early and improving the overall robustness of the application.
-*   **Tailwind CSS:** A utility-first CSS framework used to build custom designs rapidly. It enables a consistent styling approach and helps in creating responsive and visually appealing user interfaces with ease.
-*   **PostgreSQL & Drizzle ORM:** A powerful open-source object-relational database system combined with a modern TypeScript ORM. Drizzle ORM provides a type-safe and intuitive way to interact with the database, ensuring efficient query generation and data management.
-*   **Clerk:** Used for robust user authentication and management, providing secure sign-in, sign-up, and user session handling capabilities out-of-the-box.
+![Version](https://img.shields.io/badge/version-2.14.1-blue)
 
-## Key Features
-*   **Admin Panel:** Secure admin panel for managing site content, including novels, chapters, and potentially user data. Access is restricted to authorized users.
-*   **Database & ORM Efficiency:** Efficient database interactions using PostgreSQL and Drizzle ORM. Drizzle ORM facilitates type-safe queries and helps optimize data retrieval, with a focus on minimizing query complexity (e.g., aiming for single, efficient SQL queries where possible).
-*   **Performance & Caching:** High-performance delivery leveraging Next.js edge runtime for global low-latency access. Strategic caching of database queries using Next.js `cache` significantly boosts response times and reduces database load, contributing to a 100 Google PageSpeed Insights score.
-*   **Content Management & Display:** Rich content creation and display using MDX, allowing for a combination of Markdown and React components. This is ideal for formatting novels, chapters, and other textual content with dynamic elements.
-*   **User Interface & Experience:** Modern and visually appealing UI with support for light and dark modes, ensuring comfortable reading in all lighting conditions. The interface is fully responsive across all screen sizes (mobile, tablet, desktop). Features like infinite scroll provide a seamless content browsing experience. Utilizes Radix UI components for accessible and robust UI elements, and `react-hook-form` with `zod` for efficient and validated user inputs.
-*   **Community & SEO:** Community engagement fostered through Disqus comments. SEO-friendly design with automatic sitemap generation for optimal search engine indexing and an RSS feed for content syndication.
-*   **Security & Data Integrity:** Secure interactions and data integrity ensured through Next.js Server Actions for protected operations and robust server-side validation via middleware, safeguarding against invalid data submissions.
-*   **Essential Informational Pages:** Comprehensive set of informational pages including About, Terms of Service, Privacy Policy, Contact Us, and Comment Policy, establishing trust and clarity for users.
-*   **Analytics:** Integrated Vercel Analytics for monitoring website traffic, user behavior, and application performance, providing valuable insights for continuous improvement.
+A website for sharing translated novels. This project is intended as a "source available" portfolio piece for educational and demonstration purposes.
 
-## Development Highlights
-*   **Optimized Database Interactions:** Emphasis on efficient data handling, including the design of SQL queries (often aiming for single, effective queries) to ensure fast data retrieval and minimal database load, powered by Drizzle ORM's capabilities.
-*   **Modern Frontend Practices:** Utilization of Next.js server components, server actions, and middleware to create a responsive, secure, and performant frontend. TypeScript is used throughout the project for enhanced code quality and type safety.
-*   **Robust Form Handling:** Implementation of client and server-side validation (using `react-hook-form` and `zod`) for forms, ensuring data integrity and a smooth user experience.
-*   **SEO and Accessibility Focus:** Built with SEO best practices in mind, including sitemap generation and semantic HTML. While not explicitly detailed, the use of modern frameworks and libraries like Radix UI contributes to better accessibility.
-*   **Scalable Architecture:** The use of Next.js, a robust backend with PostgreSQL, and deployment on Vercel (implied by edge runtime and analytics) suggests an architecture designed for scalability and maintainability.
-*   **Analytics-Driven Improvement:** Integration of Vercel Analytics demonstrates a proactive approach to monitoring and improving the application based on real user data and performance metrics.
-*   **Attention to Detail in UI/UX:** Features like light/dark mode, responsive design across all devices, and infinite scroll highlight a commitment to providing an excellent user experience.
+## ⚠️ License & Usage
 
-## Project Purpose
-**Project Status & Usage**
+This project is **source available**, but it is **not open-source**. You may view the code for educational purposes. However, you must obtain explicit permission before you can reuse, modify, or distribute any part of this codebase.
 
-This project is shared as a 'source available' portfolio piece for educational and demonstration purposes. While the code is visible, it is not distributed under an open-source license. Therefore, direct re-deployment or use of this codebase for other projects requires explicit prior permission.
+For inquiries, please contact me.
 
-If you are interested in developing a similar website or require custom development services, please feel free to reach out: shreyashr267@gmail.com
+## Table of Contents
 
+- [Project Overview](#project-overview)
+- [Architecture](#architecture)
+- [Technology Stack](#technology-stack)
+- [Features](#features)
+- [Setup and Deployment](#setup-and-deployment)
+- [API and CLI](#api-and-cli)
+- [Testing](#testing)
+- [Contributing](#contributing)
+
+## Project Overview
+
+`quaslation` is a monolithic web application for sharing translated novels. It is built with a focus on performance and scalability, leveraging modern web technologies. The primary goal of this project is to serve as a portfolio piece demonstrating a comprehensive understanding of full-stack development with Next.js.
+
+## Architecture
+
+The application is a **monolithic application** built with the **Next.js App Router**. It emphasizes a scalable design and leverages modern Next.js features for performance and maintainability.
+
+-   **Key Design Patterns**:
+    -   **Server-Side Rendering (SSR)**, **Server Components**, and the **Edge Runtime** are used extensively to optimize performance.
+    -   Backend operations are handled via **Next.js Server Actions**, which are co-located with their corresponding components. This approach avoids the need for a traditional REST or GraphQL API for internal operations.
+    -   The UI is built with **React** and styled using the utility-first **Tailwind CSS** framework.
+-   **Data Flow**: Data is fetched on the server side using the **Drizzle ORM** and passed down to components as props. Server Actions are used to manage data mutations securely and efficiently.
+-   **Architectural Documents**: A detailed architectural plan for the translation CLI feature can be found in [`scripts/translation/plan.md`](scripts/translation/plan.md).
+
+## Technology Stack
+
+### Languages
+
+-   TypeScript
+
+### Frameworks & Libraries
+
+| Library | Version | Purpose |
+| :--- | :--- | :--- |
+| Next.js | `15.4.3` | Full-stack web framework |
+| React | `19.1.0` | UI library |
+| Tailwind CSS | `3.4.1` | CSS framework |
+| Drizzle ORM | `0.44.3` | TypeScript ORM |
+| Clerk | `6.30.0` | Authentication |
+| MDX | `3.0.1` | Content as components |
+| Radix UI | | UI Components |
+| `react-hook-form` | `7.53.0` | Form management |
+| `zod` | `3.23.8` | Schema validation |
+
+### Databases
+
+-   PostgreSQL
+-   Vercel KV
+-   Vercel Postgres
+
+### Development Tools
+
+-   ESLint
+-   `tsx`
+
+## Features
+
+-   **Admin Panel**: A secure panel for content management, located at [`src/app/admin/`](src/app/admin/).
+-   **Content Management**: Novels, chapters, and volumes are managed via the admin panel. MDX is used for rich content pages, located at [`src/app/(main)/(mdx)/`](src/app/(main)/(mdx)/).
+-   **User Authentication**: Handled by Clerk, with UI components in [`src/app/auth/`](src/app/auth/).
+-   **Translation CLI**: A set of scripts for fetching, translating, and managing novel content. These can be found in [`scripts/translation/`](scripts/translation/) and [`scripts/gemini/`](scripts/gemini/).
+-   **SEO & Syndication**: Includes automatic sitemap generation ([`src/app/sitemap.ts`](src/app/sitemap.ts)) and RSS feeds ([`src/app/rss.xml/route.ts`](src/app/rss.xml/route.ts)).
+-   **UI/UX**: Supports dark mode ([`src/components/system/dark-mode-button.tsx`](src/components/system/dark-mode-button.tsx)) and uses a theme provider for consistent styling.
+
+## Setup and Deployment
+
+### Local Setup
+
+1.  **Install Dependencies**:
+    ```bash
+    npm install
+    ```
+2.  **Environment Variables**:
+    Create a `.env.local` file by copying the example file:
+    ```bash
+    cp env.example .env.local
+    ```
+    Populate the `.env.local` file with the necessary environment variables.
+
+3.  **Run the Development Server**:
+    ```bash
+    npm run dev
+    ```
+    This command starts the development server with Turbopack.
+
+### Database
+
+The project uses Drizzle ORM for database schema management. The following scripts are available:
+
+-   `npm run db:migrate`: Run database migrations.
+-   `npm run db:push`: Push schema changes to the database.
+
+### Deployment
+
+The project is configured for deployment on Vercel. There is no CI/CD pipeline defined in the `.github` directory.
+
+## API and CLI
+
+### API
+
+The application does not expose a traditional web API. Instead, it uses **Next.js Server Actions** for client-server communication. A public-facing RSS feed is available for syndication.
+
+### CLI
+
+Several scripts are provided for development and content management:
+
+-   `db:*`: A set of scripts for managing database migrations.
+-   `fetch:kakuyomu`: A script for fetching novel data.
+-   The `scripts` directory contains complex CLI tools for content processing.
+
+## Testing
+
+There is **no formal testing strategy** for this project. The project does not include any testing frameworks, test files, or `test` scripts in [`package.json`](package.json). Quality is maintained through manual testing and the static type checking provided by TypeScript.
+
+## Contributing
+
+This project is "source available," and contributions are not accepted at this time. The code style is enforced by ESLint, with the configuration located in [`.eslintrc.json`](.eslintrc.json).
