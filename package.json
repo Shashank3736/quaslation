@@ -1,6 +1,6 @@
 {
   "name": "quaslation",
-  "version": "2.14.0",
+  "version": "2.14.1",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -16,7 +16,7 @@
     "fetch:kakuyomu": "tsx scripts/translation/kakuyomu-fetch.ts --url https://kakuyomu.jp/works/16818093090655323692 --pretty"
   },
   "dependencies": {
-    "@clerk/nextjs": "^5.7.5",
+    "@clerk/nextjs": "^6.30.0",
     "@gradio/client": "^1.15.6",
     "@hookform/resolvers": "^3.9.0",
     "@mdx-js/loader": "^3.0.1",

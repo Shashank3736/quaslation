@@ -10,13 +10,13 @@ const isProtectedRoute = createRouteMatcher([
 
 export default clerkMiddleware(async (auth, req) => {
   if(isProtectedRoute(req)) {
-    const userId = auth().userId;
+    const userId = (await auth()).userId;
     if(userId !== null) {
-      const user = await clerkClient.users.getUser(userId);
+      const user = await (await clerkClient()).users.getUser(userId);
       const data = await getUserRole(user.emailAddresses[0] ? user.emailAddresses[0].emailAddress : '');
       if(data !== "ADMIN") return NextResponse.redirect(new URL("/", req.url));
     } else {
-      auth().redirectToSignIn();
+      (await auth()).redirectToSignIn();
     }
   }
   
