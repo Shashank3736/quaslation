@@ -39,12 +39,12 @@ Quaslation is a Next.js App Router application for publishing high-quality fan t
   - Novel details: [page.tsx](src/app/(main)/novels/[slug]/page.tsx)
   - Chapter reading: [page.tsx](src/app/(main)/novels/[slug]/[chapter]/page.tsx)
   - MDX content pages: [about/page.mdx](src/app/(main)/(mdx)/about/page.mdx), [privacy/page.mdx](src/app/(main)/(mdx)/privacy/page.mdx), [terms-of-service/page.mdx](src/app/(main)/(mdx)/terms-of-service/page.mdx)
-  - Navigation and layout: [RootLayout()](src/app/layout.tsx:31), [Navbar()](src/app/_components/navbar.tsx:23)
+  - Navigation and layout: [RootLayout()](src/app/layout.tsx#L31), [Navbar()](src/app/_components/navbar.tsx#L23)
 - Feeds and SEO
-  - Static sitemap: [sitemap()](src/app/sitemap.ts:3)
-  - RSS feed with ISR and tag-based revalidation: [GET()](src/app/rss.xml/route.ts:47)
+  - Static sitemap: [sitemap()](src/app/sitemap.ts#L3)
+  - RSS feed with ISR and tag-based revalidation: [GET()](src/app/rss.xml/route.ts#L47)
 - Authentication and session
-  - Clerk integration: [ClerkProvider](src/app/layout.tsx) within [RootLayout()](src/app/layout.tsx:31)
+  - Clerk integration: [ClerkProvider](src/app/layout.tsx) within [RootLayout()](src/app/layout.tsx#L31)
   - Sign in/up routes provided under [src/app/auth](src/app/auth)
 - Admin application
   - Admin index: [page.tsx](src/app/admin/page.tsx)
@@ -55,7 +55,7 @@ Quaslation is a Next.js App Router application for publishing high-quality fan t
   - Disqus component: [DisqusComponent.tsx](src/components/shared/DisqusComponent.tsx)
   - Discord join/support UI: [join-discord.tsx](src/components/shared/join-discord.tsx)
 - Analytics and ads
-  - Vercel Analytics and Google Analytics: [RootLayout()](src/app/layout.tsx:31)
+  - Vercel Analytics and Google Analytics: [RootLayout()](src/app/layout.tsx#L31)
   - Google AdSense injection: [google-adsense.tsx](src/components/system/google-adsense.tsx) and [layout.tsx](src/app/(main)/layout.tsx)
 - Translation tooling
   - Gemini-based translation and uploader: [scripts/gemini/README.md](scripts/gemini/README.md), [main.ts](scripts/gemini/main.ts), [upload.ts](scripts/gemini/upload.ts)
@@ -63,7 +63,7 @@ Quaslation is a Next.js App Router application for publishing high-quality fan t
 - Database access layer (Drizzle ORM)
   - Schema and relations: [schema.ts](src/lib/db/schema.ts), [relations.ts](src/lib/db/relations.ts)
   - Runtime db instance: [index.ts](src/lib/db/index.ts)
-  - Composable queries: [query.ts](src/lib/db/query.ts) including [getReleases()](src/lib/db/query.ts:6), [getNovelBySlug()](src/lib/db/query.ts:56), [getChapterBySlug()](src/lib/db/query.ts:90), [getUserRole()](src/lib/db/query.ts:268)
+  - Composable queries: [query.ts](src/lib/db/query.ts) including [getReleases()](src/lib/db/query.ts#L6), [getNovelBySlug()](src/lib/db/query.ts#L56), [getChapterBySlug()](src/lib/db/query.ts#L90), [getUserRole()](src/lib/db/query.ts#L268)
 
 ## Architecture overview
 - Platform and frameworks
@@ -74,17 +74,17 @@ Quaslation is a Next.js App Router application for publishing high-quality fan t
   - PostgreSQL with Drizzle ORM; schema in [schema.ts](src/lib/db/schema.ts) and relations in [relations.ts](src/lib/db/relations.ts)
   - Runtime driver uses @vercel/postgres via [index.ts](src/lib/db/index.ts); migration tooling via drizzle-kit configured in [drizzle.config.ts](drizzle.config.ts)
 - Authentication and authorization
-  - Clerk for auth with server/client components initialized in [RootLayout()](src/app/layout.tsx:31)
+  - Clerk for auth with server/client components initialized in [RootLayout()](src/app/layout.tsx#L31)
   - Role model via enum Role ADMIN/SUBSCRIBER/MEMBER in [schema.ts](src/lib/db/schema.ts)
-  - Helper for role retrieval [getUserRole()](src/lib/db/query.ts:268)
+  - Helper for role retrieval [getUserRole()](src/lib/db/query.ts#L268)
 - Caching and content delivery
-  - Next ISR and tag-based invalidation on RSS route via unstable_cache in [GET()](src/app/rss.xml/route.ts:47)
+  - Next ISR and tag-based invalidation on RSS route via unstable_cache in [GET()](src/app/rss.xml/route.ts#L47)
   - Client router cache reuse tuned via experimental.staleTimes in [next.config.mjs](next.config.mjs)
 - Messaging and integrations
   - Discord webhooks for contact/support: [actions.ts](src/app/(main)/contact/actions.ts)
   - Comments via Disqus component: [DisqusComponent.tsx](src/components/shared/DisqusComponent.tsx)
 - Analytics and monetization
-  - Vercel Analytics and Google Analytics in [RootLayout()](src/app/layout.tsx:31)
+  - Vercel Analytics and Google Analytics in [RootLayout()](src/app/layout.tsx#L31)
   - Google AdSense in [layout.tsx](src/app/(main)/layout.tsx)
 
 ## Architecture diagram
@@ -220,7 +220,7 @@ Defined in [.env.example](.env.example) and referenced in code
   - NEXT_PUBLIC_CLERK_SIGN_IN_URL (default /auth/sign-in)
   - NEXT_PUBLIC_CLERK_SIGN_UP_URL (default /auth/sign-up)
 - Analytics and ads
-  - NEXT_PUBLIC_GOOGLE_ANALYTICS_ID used in [RootLayout()](src/app/layout.tsx:31)
+  - NEXT_PUBLIC_GOOGLE_ANALYTICS_ID used in [RootLayout()](src/app/layout.tsx#L31)
   - NEXT_PUBLIC_GOOGLE_ADSENSE_ID used in [layout.tsx](src/app/(main)/layout.tsx)
 - Community and support
   - DISCORD_WEBHOOK_URL used in [utils.ts](src/lib/utils.ts)
@@ -228,8 +228,8 @@ Defined in [.env.example](.env.example) and referenced in code
 - Database and tooling
   - DIRECT_URL used by drizzle-kit in [drizzle.config.ts](drizzle.config.ts)
 - AI integrations
-  - GEMINI_API_KEY used in [main.ts](scripts/gemini/main.ts:13)
-  - GRADIO_API_URL used in [translate.ts](scripts/translation/translate.ts:117) and admin [translate-actions.ts](src/app/admin/chapters/[novelId]/create/translate-actions.ts)
+  - GEMINI_API_KEY used in [main.ts](scripts/gemini/main.ts#L13)
+  - GRADIO_API_URL used in [translate.ts](scripts/translation/translate.ts#L117) and admin [translate-actions.ts](src/app/admin/chapters/[novelId]/create/translate-actions.ts)
 
 ## Testing, linting, and type checking
 - Tests: No test suites detected in [package.json](package.json). TODO: add unit/integration tests and coverage.
@@ -247,21 +247,21 @@ Defined in [.env.example](.env.example) and referenced in code
 - No coverage or deploy workflows present in repo; badges intentionally omitted.
 
 ## Observability and analytics
-- Vercel Analytics initialized in [RootLayout()](src/app/layout.tsx:31)
+- Vercel Analytics initialized in [RootLayout()](src/app/layout.tsx#L31)
 - Optional Google Analytics via NEXT_PUBLIC_GOOGLE_ANALYTICS_ID
 
 ## Security
 - Authentication via Clerk; app shell wraps with [ClerkProvider](src/app/layout.tsx)
 - Role model for users via enum Role in [schema.ts](src/lib/db/schema.ts)
-- Premium content gating via Chapter.premium and indexed access patterns in [schema.ts](src/lib/db/schema.ts) and queries like [getReleases()](src/lib/db/query.ts:6)
+- Premium content gating via Chapter.premium and indexed access patterns in [schema.ts](src/lib/db/schema.ts) and queries like [getReleases()](src/lib/db/query.ts#L6)
 - Webhooks to Discord for support requests [actions.ts](src/app/(main)/contact/actions.ts)
 - Secrets via environment variables; ensure .env.local is not committed
 
 ## Performance and scalability
 - Query design leverages indices and joins in [query.ts](src/lib/db/query.ts)
-- Cached feed generation via ISR and unstable_cache [GET()](src/app/rss.xml/route.ts:47)
+- Cached feed generation via ISR and unstable_cache [GET()](src/app/rss.xml/route.ts#L47)
 - Client router cache reuse via staleTimes in [next.config.mjs](next.config.mjs)
-- Pagination and limits applied in [getReleases()](src/lib/db/query.ts:6), [getChapters()](src/lib/db/query.ts:188)
+- Pagination and limits applied in [getReleases()](src/lib/db/query.ts#L6), [getChapters()](src/lib/db/query.ts#L188)
 
 ## Roadmap and known limitations
 - Add automated tests and coverage reporting. TODO
@@ -282,4 +282,4 @@ Defined in [.env.example](.env.example) and referenced in code
 ## Differentiators at a glance
 - End-to-end pipeline for novel translation: fetch, translate (Gemini or Gradio), and upload to DB, documented under [scripts](scripts)
 - Clean, type-safe data access with Drizzle and explicit schema [schema.ts](src/lib/db/schema.ts)
-- Production-aware caching and SEO with RSS + sitemap [GET()](src/app/rss.xml/route.ts:47), [sitemap()](src/app/sitemap.ts:3)
+- Production-aware caching and SEO with RSS + sitemap [GET()](src/app/rss.xml/route.ts#L47), [sitemap()](src/app/sitemap.ts#L3)
