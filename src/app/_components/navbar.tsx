@@ -62,7 +62,7 @@ export default function Navbar() {
         </SignedIn>
         <SignedOut>
           <SignInButton>
-            <Button asChild>
+            <Button className='hover:cursor-pointer' asChild>
               <span>Sign In</span>
             </Button>
           </SignInButton>
