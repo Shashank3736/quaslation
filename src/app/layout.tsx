@@ -44,7 +44,7 @@ export default function RootLayout({
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ""} />
         <Analytics />
         <head>
-          <meta name="google-site-verification" content="WGuYF9ls3LP9w_YEzcHyJjm6fJW89UuqIbzkFreANR4" />
+          <meta name="google-site-verification" content="svaU0xF5ivT3-P7QtnP9EpUKJ1rz5kXJeP0n3QwrlXk" />
         </head>
         <body className={inter.className}>
           <ThemeProvider
