@@ -7,6 +7,7 @@ import { and, eq } from "drizzle-orm";
 import fs from "fs/promises";
 import matter from "gray-matter";
 import { z } from "zod";
+import { randomBytes } from "crypto";
 const path = require("path");
 
 config({ path: '.env.local' });
@@ -90,9 +91,9 @@ export const uploadChapter = async (filePath: string, options: UploadOptions = {
       if (volumeData.length < 1) {
         throw new Error(`Volume ${frontmatter.volume} for novel ${frontmatter.novel} does not exist. Please create the volume first.`);
       }
-
+      const randomChar = randomBytes(6).toString('hex').toLowerCase().substring(0, 6);
       await db.insert(chapterTable).values({
-        slug: `${slugify(frontmatter.title)}-${frontmatter.volume}-${frontmatter.chapter}`,
+        slug: `${slugify(frontmatter.title)}-${randomChar}-${frontmatter.volume}-${frontmatter.chapter}`,
         title: frontmatter.title,
         serial: frontmatter.serial,
         richTextId: richTextId,

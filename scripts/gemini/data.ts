@@ -10,6 +10,68 @@ export interface VolumeConfig {
   chapters: ChapterConfig[];
 }
 
+/**
+ * novel1 configuration using generator for maintainability.
+ * Volume 1 with chapters 1-13 from Syosetu n0833hi.
+ */
+export const novel1: VolumeConfig[] = [
+  generateVolumeConfig(1, 1, '', 'https://ncode.syosetu.com/n0833hi/', 1, 13),
+] as const;
+
+/**
+ * Generates chapter configurations for a novel volume dynamically.
+ * Improves maintainability by avoiding manual repetition for sequential chapters.
+ * Includes validation for ranges and URL formats.
+ *
+ * @param novelId - Unique novel ID.
+ * @param volumeNumber - Volume number.
+ * @param volumeTitle - Volume title (defaults to empty).
+ * @param baseLink - Base URL for chapters (must end with /).
+ * @param startChapter - Starting chapter number (default 1).
+ * @param endChapter - Ending chapter number.
+ * @returns VolumeConfig with validated chapters.
+ * @throws Error for invalid inputs or ranges.
+ */
+function generateVolumeConfig(
+  novelId: number,
+  volumeNumber: number,
+  volumeTitle: string = '',
+  baseLink: string,
+  startChapter: number = 1,
+  endChapter: number
+): VolumeConfig {
+  if (startChapter > endChapter) {
+    throw new Error(`startChapter (${startChapter}) must be <= endChapter (${endChapter})`);
+  }
+  if (!baseLink.match(/^https?:\/\/.*\/$/)) {
+    throw new Error(`Invalid baseLink format: ${baseLink}. Must be HTTP/HTTPS URL ending with /`);
+  }
+
+  const chapters: ChapterConfig[] = [];
+  for (let i = startChapter; i <= endChapter; i++) {
+    const link = `${baseLink}${i}/`; // Note: added trailing / for consistency with other novels
+    try {
+      new URL(link); // Strict URL validation
+    } catch {
+      throw new Error(`Invalid generated URL: ${link}`);
+    }
+    chapters.push({ link, serial_number: i });
+  }
+
+  // Ensure consecutive serial_numbers
+  const expectedSerials = Array.from({ length: chapters.length }, (_, idx) => idx + startChapter);
+  if (!chapters.every((ch, idx) => ch.serial_number === expectedSerials[idx])) {
+    throw new Error('Generated chapters must have consecutive serial_numbers');
+  }
+
+  return {
+    novelId,
+    volumeNumber,
+    volumeTitle,
+    chapters,
+  };
+}
+
 export const novel16: VolumeConfig[] = [
   {
     novelId: 16,

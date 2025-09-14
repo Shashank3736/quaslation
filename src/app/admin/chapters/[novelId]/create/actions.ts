@@ -7,6 +7,7 @@ import { chapter as chapterTable, richText as richTextTable, volume as volumeTab
 import { markdownToHtml, markdownToText, slugify } from "@/lib/utils"
 import { and, eq } from "drizzle-orm"
 import { revalidatePath } from "next/cache"
+import { randomBytes } from "crypto"
 
 export const createChapter = async (novelId:number, values: z.infer<typeof createChapterFormSchema>) => {
   try {
@@ -33,9 +34,10 @@ export const createChapter = async (novelId:number, values: z.infer<typeof creat
       if (volumeData.length < 1) {
         throw new Error("Volume does not exist. Please create the volume first.");
       }
-    
+      const randomChar = randomBytes(6).toString('hex').toLowerCase().substring(0, 6);
+      
       await db.insert(chapterTable).values({
-        slug: `${slugify(values.title)}-${values.volume}-${values.number}`,
+        slug: `${slugify(values.title)}-${randomChar}-${values.volume}-${values.number}`,
         title: values.title,
         serial: values.serial,
         richTextId: content[0].id,

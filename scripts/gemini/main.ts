@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
 import * as path from 'path';
-import { novel17 as novel, ChapterConfig, VolumeConfig } from './data';
+import { novel1 as novel, ChapterConfig, VolumeConfig } from './data';
 import { ProgressTracker, ProgressData } from './progress';
 
 
