@@ -214,13 +214,6 @@ export const ChapterEditor = dynamic(
   }
 )
 
-export const CommentSection = dynamic(
-  () => import('@/components/shared/comments'),
-  {
-    loading: () => <Skeleton className="h-64 w-full" />,
-    ssr: false,
-  }
-)
 ```
 
 #### Route-Based Code Splitting

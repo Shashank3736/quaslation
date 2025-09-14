@@ -7,9 +7,7 @@ import { Button } from '../ui/button'
 import Link from 'next/link'
 import { ChapterNavigation } from './chapter-navigation'
 import { getChapterBySlug } from '@/lib/db/query'
-import Comments from './comments'
 import JoinDiscord from './join-discord'
-import { Card, CardContent } from '@/components/ui/card'
 
 export const ChapterPage = async ({ chapter, novelSlug }: { chapter: Awaited<ReturnType<typeof getChapterBySlug>>, novelSlug: string }) => {
   const previous = chapter.previous
@@ -50,7 +48,6 @@ export const ChapterPage = async ({ chapter, novelSlug }: { chapter: Awaited<Ret
         <ChapterNavigation previousLink={previous ? `/novels/${novelSlug}/${previous.slug}` : undefined} nextLink={next ? `/novels/${novelSlug}/${next.slug}` : undefined} />
       </div>
       <JoinDiscord />
-      <Comments id={chapter.slug} title={chapter.title} />
       {/* <ScrollToTop /> */}
     </div>
   )

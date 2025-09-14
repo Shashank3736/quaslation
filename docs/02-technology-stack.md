@@ -173,10 +173,6 @@ export enum UserRole {
 - **Features**: Webhook notifications for new content and user actions
 - **Implementation**: Server-side integration for security
 
-### Disqus Comments
-- **Why Chosen**: Mature commenting system with moderation tools
-- **Benefits**: Spam protection, user management, and mobile optimization
-
 ## Development Tools
 
 ### ESLint

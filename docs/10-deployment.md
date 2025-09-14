@@ -144,7 +144,6 @@ NEXT_PUBLIC_ADSENSE_CLIENT_ID="ca-pub-xxxxxxxxxx"
 
 # External Services
 DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/..."
-DISQUS_SHORTNAME="your_disqus_shortname"
 
 # Application
 NEXT_PUBLIC_APP_URL="https://quaslation.com"
@@ -190,9 +189,6 @@ const config = {
   external: {
     discord: {
       webhookUrl: process.env.DISCORD_WEBHOOK_URL,
-    },
-    disqus: {
-      shortname: process.env.DISQUS_SHORTNAME,
     },
   },
 }

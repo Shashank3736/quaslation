@@ -51,8 +51,7 @@ Quaslation is a Next.js App Router application for publishing high-quality fan t
   - Chapters admin: [page.tsx](src/app/admin/chapters/page.tsx)
   - Novel admin: [page.tsx](src/app/admin/novel/page.tsx)
   - Create/edit flows under [src/app/admin](src/app/admin)
-- Comments and community
-  - Disqus component: [DisqusComponent.tsx](src/components/shared/DisqusComponent.tsx)
+- Community
   - Discord join/support UI: [join-discord.tsx](src/components/shared/join-discord.tsx)
 - Analytics and ads
   - Vercel Analytics and Google Analytics: [RootLayout()](src/app/layout.tsx#L31)
@@ -82,7 +81,6 @@ Quaslation is a Next.js App Router application for publishing high-quality fan t
   - Client router cache reuse tuned via experimental.staleTimes in [next.config.mjs](next.config.mjs)
 - Messaging and integrations
   - Discord webhooks for contact/support: [actions.ts](src/app/(main)/contact/actions.ts)
-  - Comments via Disqus component: [DisqusComponent.tsx](src/components/shared/DisqusComponent.tsx)
 - Analytics and monetization
   - Vercel Analytics and Google Analytics in [RootLayout()](src/app/layout.tsx#L31)
   - Google AdSense in [layout.tsx](src/app/(main)/layout.tsx)
