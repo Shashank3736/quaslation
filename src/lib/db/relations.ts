@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { novel, volume, richText, chapter } from "./schema";
+import { novel, volume, richText, chapter, comment, user } from "./schema";
 
 export const volumeRelations = relations(volume, ({one, many}) => ({
 	novel: one(novel, {
@@ -16,6 +16,7 @@ export const novelRelations = relations(novel, ({one, many}) => ({
 		references: [richText.id]
 	}),
 	chapters: many(chapter),
+	comments: many(comment),
 }));
 
 export const richTextRelations = relations(richText, ({many}) => ({
@@ -35,5 +36,19 @@ export const chapterRelations = relations(chapter, ({one}) => ({
 	volume: one(volume, {
 		fields: [chapter.volumeId],
 		references: [volume.id]
+	}),
+}));
+export const userRelations = relations(user, ({many}) => ({
+	comments: many(comment),
+}));
+
+export const commentRelations = relations(comment, ({one}) => ({
+	novel: one(novel, {
+		fields: [comment.novelId],
+		references: [novel.id]
+	}),
+	user: one(user, {
+		fields: [comment.userId],
+		references: [user.clerkId]
 	}),
 }));

@@ -1,5 +1,4 @@
 import H2 from '@/components/typography/h2';
-import { Separator } from '@/components/ui/separator';
 import { cn, shortifyString } from '@/lib/utils';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
