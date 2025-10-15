@@ -5,6 +5,8 @@ import { Metadata } from 'next';
 import { unstable_cache } from 'next/cache';
 import React from 'react'
 
+export const revalidate = 86400; // 24 hours
+
 export async function generateStaticParams() {
   return await getChapterSlugMany();
 }

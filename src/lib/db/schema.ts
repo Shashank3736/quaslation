@@ -1,5 +1,5 @@
 import { pgTable, varchar, timestamp, text, integer, uniqueIndex, foreignKey, serial, doublePrecision, index, boolean, pgEnum } from "drizzle-orm/pg-core"
-  import { sql } from "drizzle-orm"
+import { sql } from "drizzle-orm"
 
 export const role = pgEnum("Role", ['ADMIN', 'SUBSCRIBER', 'MEMBER'])
 
@@ -87,6 +87,8 @@ export const chapter = pgTable("Chapter", {
 	return {
 		novelIdSerialKey: uniqueIndex("Chapter_novelId_serial_key").using("btree", table.novelId.asc().nullsLast(), table.serial.asc().nullsLast()),
 		premiumIdx: index("Chapter_premium_idx").using("btree", table.premium.asc().nullsLast()),
+		serialIdx: index("Chapter_serial_idx").using("btree", table.serial.asc().nullsLast()),
+		publishedAtIdx: index("Chapter_publishedAt_idx").using("btree", table.publishedAt.asc().nullsLast()),
 		richTextIdKey: uniqueIndex("Chapter_richTextId_key").using("btree", table.richTextId.asc().nullsLast()),
 		slugKey: uniqueIndex("Chapter_slug_key").using("btree", table.slug.asc().nullsLast()),
 		volumeIdNumberKey: uniqueIndex("Chapter_volumeId_number_key").using("btree", table.volumeId.asc().nullsLast(), table.number.asc().nullsLast()),
@@ -105,5 +107,33 @@ export const chapter = pgTable("Chapter", {
 			foreignColumns: [volume.id],
 			name: "Chapter_volumeId_fkey"
 		}).onUpdate("cascade").onDelete("restrict"),
+	}
+});
+
+export const comment = pgTable("Comment", {
+	id: serial("id").primaryKey().notNull(),
+	content: text("content").notNull(),
+	createdAt: timestamp("createdAt", { precision: 3 }).default(sql`CURRENT_TIMESTAMP`).notNull(),
+	updatedAt: timestamp("updatedAt", { precision: 3 }).notNull().defaultNow(),
+	isHidden: boolean("isHidden").default(false).notNull(),
+	isEdited: boolean("isEdited").default(false).notNull(),
+	novelId: integer("novelId").notNull(),
+	userId: text("userId").notNull(),
+},
+(table) => {
+	return {
+		novelIdIdx: index("Comment_novelId_idx").using("btree", table.novelId.asc().nullsLast()),
+		userIdIdx: index("Comment_userId_idx").using("btree", table.userId.asc().nullsLast()),
+		createdAtIdx: index("Comment_createdAt_idx").using("btree", table.createdAt.desc().nullsLast()),
+		commentNovelIdFkey: foreignKey({
+			columns: [table.novelId],
+			foreignColumns: [novel.id],
+			name: "Comment_novelId_fkey"
+		}).onUpdate("cascade").onDelete("cascade"),
+		commentUserIdFkey: foreignKey({
+			columns: [table.userId],
+			foreignColumns: [user.clerkId],
+			name: "Comment_userId_fkey"
+		}).onUpdate("cascade").onDelete("cascade"),
 	}
 });

@@ -16,6 +16,8 @@ export const metadata: Metadata = {
   description: "A list of asian web novels fan translated by the translators of Quaslation."
 }
 
+export const revalidate = 43200; // 12 hours
+
 const getNovelList = async () => {
   return await db.query.novel.findMany({
     columns: {

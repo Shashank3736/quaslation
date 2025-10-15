@@ -1,6 +1,5 @@
 -- Current sql file was generated after introspecting the database
 -- If you want to run this migration please uncomment this code before executing migrations
-/*
 DO $$ BEGIN
  CREATE TYPE "public"."Role" AS ENUM('ADMIN', 'SUBSCRIBER', 'MEMBER');
 EXCEPTION
@@ -105,4 +104,3 @@ CREATE INDEX IF NOT EXISTS "Chapter_premium_idx" ON "Chapter" USING btree ("prem
 CREATE UNIQUE INDEX IF NOT EXISTS "Chapter_richTextId_key" ON "Chapter" USING btree ("richTextId");--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "Chapter_slug_key" ON "Chapter" USING btree ("slug");--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "Chapter_volumeId_number_key" ON "Chapter" USING btree ("volumeId","number");
-*/

@@ -29,6 +29,20 @@
       "when": 1726775062309,
       "tag": "0003_nifty_magik",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1757853287839,
+      "tag": "0004_happy_colonel_america",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1760509689518,
+      "tag": "0005_marvelous_black_cat",
+      "breakpoints": true
     }
   ]
 }

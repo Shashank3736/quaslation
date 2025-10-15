@@ -34,6 +34,61 @@ const getVolumes = (data: Chapters, volumes: Volumes) => {
   return volumes;
 }
 
+// Memoized chapter link component
+const ChapterLink = React.memo<{
+  novelSlug: string;
+  chapter: {
+    number: number;
+    title: string;
+    slug: string;
+    premium: boolean;
+  };
+}>(({ novelSlug, chapter }) => (
+  <Link
+    key={chapter.slug}
+    href={`${novelSlug}/${chapter.slug}`}
+    className="group flex items-center justify-between p-3 rounded-lg border border-border bg-card hover:bg-accent/50 hover:border-primary/50 transition-all duration-200"
+  >
+    <div className="flex-1 min-w-0">
+      <div className="font-medium truncate">
+        {chapter.number}. {chapter.title}
+      </div>
+    </div>
+    {chapter.premium && (
+      <Badge className="ml-2 bg-gradient-to-r-indigo-violet text-white">
+        Premium
+      </Badge>
+    )}
+  </Link>
+))
+
+ChapterLink.displayName = 'ChapterLink'
+
+// Memoized volume card component
+const VolumeCard = React.memo<{
+  volume: Volumes[number];
+  novelSlug: string;
+}>(({ volume, novelSlug }) => (
+  <Card className="glass">
+    <CardHeader>
+      {volume.number >= 0 ? (
+        <CardTitle className="text-xl text-gradient-indigo-violet">
+          {`Volume ${volume.number}`+(volume.title ? `: ${volume.title}`:"")}
+        </CardTitle>
+      ):null}
+    </CardHeader>
+    <CardContent>
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3'>
+        {volume.chapters.map(chap => (
+          <ChapterLink key={chap.slug} novelSlug={novelSlug} chapter={chap} />
+        ))}
+      </div>
+    </CardContent>
+  </Card>
+))
+
+VolumeCard.displayName = 'VolumeCard'
+
 export default function ChapterList({ novelId, novelSlug, data }:{ novelId: number, novelSlug: string, data: Chapters }) {
   const NOVEL_CHAPTERS_LIMIT = 50;
   const [chapters, setChapters] = useState<Chapters>(data)
@@ -89,37 +144,7 @@ export default function ChapterList({ novelId, novelSlug, data }:{ novelId: numb
   return (
     <div className='space-y-6'>
       {volumes.map(volume => (
-        <Card key={volume.number} className="glass">
-          <CardHeader>
-            {volume.number >= 0 ? (
-              <CardTitle className="text-xl text-gradient-indigo-violet">
-                {`Volume ${volume.number}`+(volume.title ? `: ${volume.title}`:"")}
-              </CardTitle>
-            ):null}
-          </CardHeader>
-          <CardContent>
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3'>
-              {volume.chapters.map(chap => (
-                <Link
-                  key={chap.slug}
-                  href={`${novelSlug}/${chap.slug}`}
-                  className="group flex items-center justify-between p-3 rounded-lg border border-border bg-card hover:bg-accent/50 hover:border-primary/50 transition-all duration-200"
-                >
-                  <div className="flex-1 min-w-0">
-                    <div className="font-medium truncate">
-                      {chap.number}. {chap.title}
-                    </div>
-                  </div>
-                  {chap.premium && (
-                    <Badge className="ml-2 bg-gradient-to-r-indigo-violet text-white">
-                      Premium
-                    </Badge>
-                  )}
-                </Link>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        <VolumeCard key={volume.number} volume={volume} novelSlug={novelSlug} />
       ))}
       {more ? (
         <div ref={loader} className="h-12 flex items-center justify-center">
