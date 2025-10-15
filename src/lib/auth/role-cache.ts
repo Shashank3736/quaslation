@@ -1,6 +1,23 @@
 import "server-only";
-import { kv } from "@vercel/kv";
-import { getUserRole as getUserRoleFromDb } from "../db/query";
+import { db } from "../db";
+import { user as userTable } from "../db/schema";
+import { eq } from "drizzle-orm";
+
+// Conditionally import KV only if environment variables are set
+let kv: any = null;
+if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
+  kv = require("@vercel/kv").kv;
+}
+
+/**
+ * Direct database query for user role without caching
+ * This is used as a fallback and in edge runtime contexts where unstable_cache isn't available
+ */
+async function getUserRoleFromDb(id: string): Promise<string> {
+  const data = await db.select().from(userTable).where(eq(userTable.clerkId, id));
+  const userData = data.at(0);
+  return userData ? userData.role : "MEMBER";
+}
 
 /**
  * Role cache interface for managing user role lookups
@@ -48,9 +65,12 @@ function getRoleCacheKey(userId: string): string {
  */
 export const roleCache: RoleCache = {
   async get(userId: string): Promise<string | null> {
+    if (!kv) {
+      return null; // No cache available, will fall back to database
+    }
     try {
       const cacheKey = getRoleCacheKey(userId);
-      const cachedRole = await kv.get<string>(cacheKey);
+      const cachedRole = await kv.get(cacheKey) as string | null;
       return cachedRole;
     } catch (error) {
       console.error("Role cache get error:", error);
@@ -60,6 +80,9 @@ export const roleCache: RoleCache = {
   },
 
   async set(userId: string, role: string, ttl: number = DEFAULT_ROLE_CACHE_TTL): Promise<void> {
+    if (!kv) {
+      return; // No cache available, skip silently
+    }
     try {
       const cacheKey = getRoleCacheKey(userId);
       await kv.set(cacheKey, role, { ex: ttl });
@@ -70,6 +93,9 @@ export const roleCache: RoleCache = {
   },
 
   async invalidate(userId: string): Promise<void> {
+    if (!kv) {
+      return; // No cache available, skip silently
+    }
     try {
       const cacheKey = getRoleCacheKey(userId);
       await kv.del(cacheKey);
