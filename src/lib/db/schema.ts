@@ -87,6 +87,8 @@ export const chapter = pgTable("Chapter", {
 	return {
 		novelIdSerialKey: uniqueIndex("Chapter_novelId_serial_key").using("btree", table.novelId.asc().nullsLast(), table.serial.asc().nullsLast()),
 		premiumIdx: index("Chapter_premium_idx").using("btree", table.premium.asc().nullsLast()),
+		serialIdx: index("Chapter_serial_idx").using("btree", table.serial.asc().nullsLast()),
+		publishedAtIdx: index("Chapter_publishedAt_idx").using("btree", table.publishedAt.asc().nullsLast()),
 		richTextIdKey: uniqueIndex("Chapter_richTextId_key").using("btree", table.richTextId.asc().nullsLast()),
 		slugKey: uniqueIndex("Chapter_slug_key").using("btree", table.slug.asc().nullsLast()),
 		volumeIdNumberKey: uniqueIndex("Chapter_volumeId_number_key").using("btree", table.volumeId.asc().nullsLast(), table.number.asc().nullsLast()),

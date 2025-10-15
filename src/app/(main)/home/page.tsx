@@ -1,10 +1,8 @@
-import PostList from "../../_components/post-list";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PostListServer } from "../../_components/post-list-server";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { MoveRightIcon } from "lucide-react";
-import Link from "next/link";
 import React from "react";
+
+export const revalidate = 3600; // 1 hour
 
 export default function Home() {
   return (
@@ -25,10 +23,10 @@ export default function Home() {
               <TabsTrigger value="premium">Upcoming</TabsTrigger>
             </TabsList>
             <TabsContent value="free">
-              <PostList />
+              <PostListServer />
             </TabsContent>
             <TabsContent value="premium">
-              <PostList premium />
+              <PostListServer premium />
             </TabsContent>
           </Tabs>
         </div>
@@ -36,5 +34,3 @@ export default function Home() {
     </div>
   );
 }
-
-export const fetchCache = "force-no-store"

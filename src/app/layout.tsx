@@ -6,7 +6,7 @@ import { ThemeProvider } from "@/components/system/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/react";
-import { GoogleAnalytics } from '@next/third-parties/google'
+import GoogleAnalyticsWrapper from "@/components/system/google-analytics-wrapper";
 import NextTopLoader from 'nextjs-toploader';
 
 const inter = AR_One_Sans({ subsets: ["latin"] });
@@ -41,8 +41,6 @@ export default function RootLayout({
       }}
     >
       <html lang="en" suppressHydrationWarning>
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ""} />
-        <Analytics />
         <head>
           <meta name="google-site-verification" content="svaU0xF5ivT3-P7QtnP9EpUKJ1rz5kXJeP0n3QwrlXk" />
         </head>
@@ -59,6 +57,8 @@ export default function RootLayout({
             {children}
             <Toaster />
           </ThemeProvider>
+          <GoogleAnalyticsWrapper gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ""} />
+          <Analytics />
         </body>
       </html>
     </ClerkProvider>

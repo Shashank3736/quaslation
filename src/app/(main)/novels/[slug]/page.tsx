@@ -12,6 +12,9 @@ import { notFound } from 'next/navigation';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
+export const revalidate = 86400; // 24 hours
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
   const novels = await getNovelList();
 
@@ -21,31 +24,31 @@ export async function generateStaticParams() {
 }
 
 
-export async function generateMetadata({ params }:{ params: Promise<{ slug: string }>}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const paramsResolved = await params;
   const getNovelMetadata = unstable_cache(async (slug) => {
-      return await db.query.novel.findFirst({
-        columns: {
-          title: true,
-        },
-        where: (novel, { eq }) => eq(novel.slug, slug),
-        with: {
-          richText: {
-            columns: {
-              text: true,
-            }
+    return await db.query.novel.findFirst({
+      columns: {
+        title: true,
+      },
+      where: (novel, { eq }) => eq(novel.slug, slug),
+      with: {
+        richText: {
+          columns: {
+            text: true,
           }
         }
-      })
-    }, 
-    [], 
+      }
+    })
+  },
+    [],
     {
-      revalidate: 24*3600,
+      revalidate: 24 * 3600,
       tags: [`novel:update:${paramsResolved.slug}`]
     }
   );
   const novel = await getNovelMetadata(paramsResolved.slug);
-  if(!novel) return {
+  if (!novel) return {
     title: "Not Found",
   }
   return {
@@ -92,17 +95,17 @@ const getNovel = async (slug: string) => {
 }
 
 
-export default async function NovelPage({ params }:{ params: Promise<{ slug: string }>}) {
+export default async function NovelPage({ params }: { params: Promise<{ slug: string }> }) {
   const paramsResolved = await params;
   const getNovelCache = unstable_cache(getNovel, [], {
     tags: [`novel:update:${paramsResolved.slug}`],
-    revalidate: 12*3600
+    revalidate: 12 * 3600
   });
 
   const novel = await getNovelCache(paramsResolved.slug);
-  
-  if(!novel) notFound();
-  
+
+  if (!novel) notFound();
+
   const chapters = novel.chapters;
   return (
     <div className='p-4'>
