@@ -126,14 +126,14 @@ export function PostListClient({ initialChapters, premium }: PostListClientProps
   }, [fetchLatestPosts, chapters.length])
 
   if (error) {
+    console.error('PostListClient error:', error)
     return (
       <Alert variant="destructive">
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>Error</AlertTitle>
         <AlertDescription>
           <p>
-          Well Something wrong happend. Join our <a href={DISCORD_INVITE_URL} className="underline">Discord Server</a> and report it please.
-          {error}
+            Something went wrong. Join our <a href={DISCORD_INVITE_URL} className="underline">Discord Server</a> and report it, please.
           </p>
           <Button variant="outline" className="mt-2" onClick={() => fetchLatestPosts(0)}>
             Try Again

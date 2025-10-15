@@ -7,6 +7,7 @@ import {
   CACHE_PRESETS,
   CACHE_TAGS
 } from "@/lib/cache";
+import { revalidateTag } from "next/cache";
 
 // Internal query function for releases
 async function _getReleases({ skip = 0, premium = false }) {
@@ -344,7 +345,7 @@ export const getChapters = createCachedQuery(
 );
 
 export const freeChapters = async ({ novelId, first, last }: { novelId: number, first: number, last: number }) => {
-  return db.update(chapter).set({
+  const result = await db.update(chapter).set({
     premium: false,
     publishedAt: new Date()
   })
@@ -358,10 +359,23 @@ export const freeChapters = async ({ novelId, first, last }: { novelId: number, 
     .returning({
       slug: chapter.slug
     });
+
+  // Invalidate caches after successful update
+  try {
+    revalidateTag(CACHE_TAGS.chapter.all);
+    revalidateTag(CACHE_TAGS.releases.all);
+    revalidateTag(CACHE_TAGS.releases.free);
+    revalidateTag(CACHE_TAGS.releases.premium);
+  } catch (error) {
+    console.error('Cache invalidation failed:', error);
+    // Continue execution - cache invalidation failure shouldn't break the mutation
+  }
+
+  return result;
 }
 
 export const publishChapters = async ({ novelId, serial }: { novelId: number, serial: number }) => {
-  return db.update(chapter).set({
+  const result = await db.update(chapter).set({
     publishedAt: new Date()
   })
     .where(
@@ -374,6 +388,19 @@ export const publishChapters = async ({ novelId, serial }: { novelId: number, se
     .returning({
       slug: chapter.slug
     });
+
+  // Invalidate caches after successful update
+  try {
+    revalidateTag(CACHE_TAGS.chapter.all);
+    revalidateTag(CACHE_TAGS.releases.all);
+    revalidateTag(CACHE_TAGS.releases.free);
+    revalidateTag(CACHE_TAGS.releases.premium);
+  } catch (error) {
+    console.error('Cache invalidation failed:', error);
+    // Continue execution - cache invalidation failure shouldn't break the mutation
+  }
+
+  return result;
 }
 
 // Internal query function for latest chapter

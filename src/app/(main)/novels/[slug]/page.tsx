@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       }
     })
   },
-    [],
+    [paramsResolved.slug],
     {
       revalidate: 24 * 3600,
       tags: [`novel:update:${paramsResolved.slug}`]
@@ -97,7 +97,7 @@ const getNovel = async (slug: string) => {
 
 export default async function NovelPage({ params }: { params: Promise<{ slug: string }> }) {
   const paramsResolved = await params;
-  const getNovelCache = unstable_cache(getNovel, [], {
+  const getNovelCache = unstable_cache(getNovel, [paramsResolved.slug], {
     tags: [`novel:update:${paramsResolved.slug}`],
     revalidate: 12 * 3600
   });
