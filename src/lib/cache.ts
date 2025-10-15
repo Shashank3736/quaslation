@@ -6,7 +6,7 @@ import { unstable_cache } from "next/cache";
  */
 export interface CacheConfig {
   revalidate?: number;
-  tags?: string[];
+  tags?: string[] | ((...args: any[]) => string[]);
 }
 
 /**
@@ -75,31 +75,186 @@ export const CACHE_TAGS = {
 } as const;
 
 /**
- * Creates a cached query function with consistent configuration
+ * Creates a cached query function with consistent configuration.
+ * 
+ * This utility wraps Next.js's unstable_cache to provide a standardized caching interface
+ * with support for both static and dynamic cache tag generation. Cache tags enable precise
+ * cache invalidation using Next.js's revalidateTag function.
  * 
  * @param queryFn - The async function to cache
- * @param config - Cache configuration (revalidate time and tags)
- * @param keyParts - Additional key parts for cache key uniqueness
+ * @param configOrFactory - Cache configuration object or factory function
+ * @param keyParts - Additional key parts for cache key uniqueness (optional)
  * @returns Cached version of the query function
  * 
- * @example
+ * @example Static configuration (for queries with static tags)
+ * Use this approach when cache tags don't depend on function arguments.
+ * This is the simplest pattern and works for most queries that invalidate entire categories.
+ * 
  * ```ts
- * const getCachedNovel = createCachedQuery(
- *   async (slug: string) => getNovelBySlug(slug),
+ * // Query that fetches all novels - invalidate with CACHE_TAGS.novel.all
+ * const getNovelList = createCachedQuery(
+ *   async () => db.select().from(novel),
  *   { 
  *     revalidate: CACHE_PRESETS.dynamic.revalidate,
  *     tags: [CACHE_TAGS.novel.all]
  *   },
- *   ['novel-by-slug']
+ *   ['novel-list']
+ * );
+ * 
+ * // Query with multiple static tags
+ * const getReleases = createCachedQuery(
+ *   async (skip: number, premium: boolean) => {
+ *     return db.query.chapter.findMany({ ... });
+ *   },
+ *   {
+ *     revalidate: CACHE_PRESETS.dynamic.revalidate,
+ *     tags: [CACHE_TAGS.releases.all, CACHE_TAGS.chapter.all]
+ *   },
+ *   ['releases']
+ * );
+ * ```
+ * 
+ * @example Dynamic configuration with config factory (recommended for argument-derived tags)
+ * Use this approach when cache tags need to include specific resource identifiers from arguments.
+ * This enables precise cache invalidation for individual resources without affecting others.
+ * 
+ * ```ts
+ * // Query that fetches a specific user's role - invalidate with CACHE_TAGS.role.byUser(userId)
+ * const getUserRole = createCachedQuery(
+ *   async (userId: string) => {
+ *     return db.query.user.findFirst({ where: eq(user.id, userId) });
+ *   },
+ *   (userId: string) => ({
+ *     revalidate: CACHE_PRESETS.frequent.revalidate,
+ *     tags: [CACHE_TAGS.role.byUser(userId)]  // Tag includes actual userId
+ *   }),
+ *   ['user-role']
+ * );
+ * 
+ * // Query with multiple dynamic tags
+ * const getChapterWithNovel = createCachedQuery(
+ *   async (chapterId: number, novelId: number) => {
+ *     return db.query.chapter.findFirst({ ... });
+ *   },
+ *   (chapterId: number, novelId: number) => ({
+ *     revalidate: CACHE_PRESETS.dynamic.revalidate,
+ *     tags: [
+ *       CACHE_TAGS.chapter.byId(chapterId),
+ *       CACHE_TAGS.novel.byId(novelId)
+ *     ]
+ *   }),
+ *   ['chapter-with-novel']
+ * );
+ * ```
+ * 
+ * @example Dynamic tags with tags function (alternative approach)
+ * Use this approach when only the tags need to be dynamic, but revalidate time is static.
+ * This is more concise than a config factory when you don't need to compute other config values.
+ * 
+ * ```ts
+ * // Same functionality as config factory, but more concise
+ * const getUserRole = createCachedQuery(
+ *   async (userId: string) => {
+ *     return db.query.user.findFirst({ where: eq(user.id, userId) });
+ *   },
+ *   {
+ *     revalidate: CACHE_PRESETS.frequent.revalidate,
+ *     tags: (userId: string) => [CACHE_TAGS.role.byUser(userId)]
+ *   },
+ *   ['user-role']
+ * );
+ * 
+ * // Conditional tags based on arguments
+ * const getNovelData = createCachedQuery(
+ *   async (novelId: number, includeChapters: boolean) => {
+ *     return db.query.novel.findFirst({ ... });
+ *   },
+ *   {
+ *     revalidate: CACHE_PRESETS.dynamic.revalidate,
+ *     tags: (novelId: number, includeChapters: boolean) => {
+ *       const tags = [CACHE_TAGS.novel.byId(novelId)];
+ *       if (includeChapters) {
+ *         tags.push(CACHE_TAGS.chapter.byNovel(novelId));
+ *       }
+ *       return tags;
+ *     }
+ *   },
+ *   ['novel-data']
+ * );
+ * ```
+ * 
+ * @remarks
+ * **When to use each approach:**
+ * 
+ * - **Static config**: Use when tags don't depend on arguments (e.g., `CACHE_TAGS.novel.all`)
+ *   - Simplest approach
+ *   - Best for queries that invalidate entire categories
+ *   - Example: List all novels, get all releases
+ * 
+ * - **Config factory**: Use when tags need argument values AND you might compute other config
+ *   - Most flexible approach
+ *   - Best for resource-specific invalidation
+ *   - Example: Get user by ID, get novel by ID
+ *   - Enables precise cache invalidation: `revalidateTag(CACHE_TAGS.role.byUser('user-123'))`
+ * 
+ * - **Tags function**: Use when only tags need to be dynamic
+ *   - More concise than config factory
+ *   - Best when revalidate time is static but tags are dynamic
+ *   - Example: Get user role, get chapter by ID
+ * 
+ * **Cache invalidation:**
+ * Cache tags must match exactly between caching and invalidation:
+ * ```ts
+ * // Caching with dynamic tag
+ * const role = await getUserRole('user-123');  // Creates cache with tag 'role:user-123'
+ * 
+ * // Invalidation must use same tag
+ * revalidateTag(CACHE_TAGS.role.byUser('user-123'));  // ✅ Matches 'role:user-123'
+ * revalidateTag('role:user-123');                      // ✅ Also works
+ * revalidateTag(CACHE_TAGS.role.byUser('{userId}'));  // ❌ Won't match (placeholder string)
+ * ```
+ * 
+ * **Type safety:**
+ * TypeScript ensures config factories and tags functions receive the correct argument types:
+ * ```ts
+ * const getUserRole = createCachedQuery(
+ *   async (userId: string) => { ... },
+ *   (userId: number) => ({ ... })  // ❌ Type error: number vs string
  * );
  * ```
  */
+// Overload 1: Config factory (new - for dynamic tags)
+export function createCachedQuery<TArgs extends unknown[], TResult>(
+  queryFn: (...args: TArgs) => Promise<TResult>,
+  configFactory: (...args: TArgs) => CacheConfig,
+  keyParts?: string[]
+): (...args: TArgs) => Promise<TResult>;
+
+// Overload 2: Static config (existing - for backward compatibility)
 export function createCachedQuery<TArgs extends unknown[], TResult>(
   queryFn: (...args: TArgs) => Promise<TResult>,
   config: CacheConfig,
+  keyParts?: string[]
+): (...args: TArgs) => Promise<TResult>;
+
+// Implementation
+export function createCachedQuery<TArgs extends unknown[], TResult>(
+  queryFn: (...args: TArgs) => Promise<TResult>,
+  configOrFactory: CacheConfig | ((...args: TArgs) => CacheConfig),
   keyParts: string[] = []
 ): (...args: TArgs) => Promise<TResult> {
   return async (...args: TArgs) => {
+    // Determine if config is a factory or static object
+    const isFactory = typeof configOrFactory === 'function';
+    
+    // Get config (either by calling factory or using static config)
+    const config = isFactory ? configOrFactory(...args) : configOrFactory;
+    
+    // Resolve tags (either by calling tags function or using static array)
+    const tags = typeof config.tags === 'function' 
+      ? config.tags(...args) 
+      : config.tags;
+    
     // Create a unique cache key based on function name, key parts, and arguments
     const cacheKey = [
       queryFn.name || "anonymous",
@@ -113,7 +268,7 @@ export function createCachedQuery<TArgs extends unknown[], TResult>(
       cacheKey,
       {
         revalidate: config.revalidate,
-        tags: config.tags,
+        tags: tags,
       }
     );
 

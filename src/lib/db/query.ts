@@ -459,12 +459,12 @@ async function _getUserRole(id: string) {
   return userData ? userData.role : "MEMBER"
 }
 
-// Cached version with frequent preset (1 hour)
+// Cached version with frequent preset (1 hour) using config factory for dynamic tags
 export const getUserRole = createCachedQuery(
   _getUserRole,
-  {
+  (id: string) => ({
     revalidate: CACHE_PRESETS.frequent.revalidate,
-    tags: [CACHE_TAGS.role.byUser('{userId}')],
-  },
+    tags: [CACHE_TAGS.role.byUser(id)],
+  }),
   ['user-role']
 );
