@@ -468,3 +468,39 @@ export const getUserRole = createCachedQuery(
   }),
   ['user-role']
 );
+
+// Internal query function for suggested novels
+async function _getSuggestedNovels({ currentNovelId, count = 3 }: { currentNovelId: number, count?: number }) {
+  return db.select({
+    id: novel.id,
+    slug: novel.slug,
+    title: novel.title,
+    thumbnail: novel.thumbnail,
+    description: richText.text,
+  })
+    .from(novel)
+    .innerJoin(richText, eq(novel.richTextId, richText.id))
+    .where(
+      and(
+        sql`${novel.id} != ${currentNovelId}`,
+        isNotNull(novel.publishedAt),
+        sql`EXISTS (
+          SELECT 1 FROM ${chapter} 
+          WHERE ${chapter.novelId} = ${novel.id} 
+          AND ${chapter.publishedAt} IS NOT NULL
+        )`
+      )
+    )
+    .orderBy(sql`RANDOM()`)
+    .limit(count);
+}
+
+// Cached version with dynamic preset (12 hours)
+export const getSuggestedNovels = createCachedQuery(
+  _getSuggestedNovels,
+  {
+    revalidate: CACHE_PRESETS.dynamic.revalidate,
+    tags: [CACHE_TAGS.novel.all, CACHE_TAGS.chapter.all],
+  },
+  ['suggested-novels']
+);
