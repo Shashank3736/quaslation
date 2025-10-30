@@ -21,6 +21,7 @@ import {
   deleteComment,
   toggleCommentVisibility,
 } from "@/lib/actions/comments";
+import Image from "next/image";
 
 interface Comment {
   id: number;
@@ -177,9 +178,11 @@ export function CommentItem({
         <div className="flex gap-3 sm:gap-4">
           {/* User Avatar */}
           <div className="flex-shrink-0">
-            <img
+            <Image
               src={comment.user.imageUrl}
               alt={getUserDisplayName()}
+              width={40}
+              height={40}
               className="h-10 w-10 rounded-full object-cover"
             />
           </div>

@@ -143,9 +143,9 @@ export async function getComments(novelId: number): Promise<CommentWithUser[]> {
         isAdmin
           ? eq(commentTable.novelId, novelId)
           : and(
-            eq(commentTable.novelId, novelId),
-            eq(commentTable.isHidden, false)
-          )
+              eq(commentTable.novelId, novelId),
+              eq(commentTable.isHidden, false)
+            )
       )
       .orderBy(desc(commentTable.createdAt));
 

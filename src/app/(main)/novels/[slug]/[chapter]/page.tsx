@@ -4,11 +4,6 @@ import { shortifyString } from '@/lib/utils';
 import { Metadata } from 'next';
 import { unstable_cache } from 'next/cache';
 import React from 'react';
-import { auth } from '@clerk/nextjs/server';
-import { getComments } from '@/lib/actions/comments';
-import { db } from '@/lib/db';
-import { user as userTable } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
 import { CommentSection } from '@/components/shared/comments/comment-section';
 
 export const revalidate = 86400; // 24 hours
@@ -39,23 +34,6 @@ export default async function Page({ params }: { params: Promise<{ slug: string,
   });
   const chapter = await getCacheData(paramsResolved.chapter);
   
-  // Fetch comments for this novel
-  const comments = await getComments(chapter.novelId);
-  
-  // Get current user info and check if admin
-  const { userId } = await auth();
-  let isAdmin = false;
-  
-  if (userId) {
-    const currentUser = await db
-      .select()
-      .from(userTable)
-      .where(eq(userTable.clerkId, userId))
-      .limit(1);
-    
-    isAdmin = currentUser.length > 0 && currentUser[0].role === 'ADMIN';
-  }
-  
   return (
     <ChapterPage 
       chapter={chapter} 
@@ -65,8 +43,6 @@ export default async function Page({ params }: { params: Promise<{ slug: string,
           novelId={chapter.novelId}
           novelSlug={paramsResolved.slug}
           chapterSlug={paramsResolved.chapter}
-          initialComments={comments}
-          isAdmin={isAdmin}
         />
       }
     />
