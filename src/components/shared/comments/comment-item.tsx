@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { Pencil, Trash2, Eye, EyeOff, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -32,6 +31,13 @@ interface Comment {
   isEdited: boolean;
   novelId: number;
   userId: string;
+  user: {
+    clerkId: string;
+    username: string | null;
+    firstName: string | null;
+    lastName: string | null;
+    imageUrl: string;
+  };
 }
 
 interface CommentItemProps {
@@ -43,14 +49,6 @@ interface CommentItemProps {
   onUpdate: (action: "edit" | "delete" | "hide", commentId: number, updatedData?: Partial<Comment>) => void;
 }
 
-interface ClerkUser {
-  id: string;
-  username: string | null;
-  firstName: string | null;
-  lastName: string | null;
-  imageUrl: string;
-}
-
 export function CommentItem({
   comment,
   currentUserId,
@@ -59,35 +57,13 @@ export function CommentItem({
   chapterSlug,
   onUpdate,
 }: CommentItemProps) {
-  const { user: clerkUser } = useUser();
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(comment.content);
   const [isLoading, setIsLoading] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [commentUser, setCommentUser] = useState<ClerkUser | null>(null);
-  const [isLoadingUser, setIsLoadingUser] = useState(true);
 
   const isOwner = currentUserId === comment.userId;
-
-  // Fetch user info from Clerk
-  useEffect(() => {
-    async function fetchUserInfo() {
-      try {
-        const response = await fetch(`/api/users/${comment.userId}`);
-        if (response.ok) {
-          const userData = await response.json();
-          setCommentUser(userData);
-        }
-      } catch (error) {
-        console.error("Failed to fetch user info:", error);
-      } finally {
-        setIsLoadingUser(false);
-      }
-    }
-
-    fetchUserInfo();
-  }, [comment.userId]);
 
   const handleEditSubmit = async () => {
     if (!editContent.trim()) {
@@ -188,10 +164,9 @@ export function CommentItem({
   };
 
   const getUserDisplayName = () => {
-    if (!commentUser) return "Loading...";
     return (
-      commentUser.username ||
-      `${commentUser.firstName || ""} ${commentUser.lastName || ""}`.trim() ||
+      comment.user.username ||
+      `${comment.user.firstName || ""} ${comment.user.lastName || ""}`.trim() ||
       "Anonymous"
     );
   };
@@ -202,15 +177,11 @@ export function CommentItem({
         <div className="flex gap-3 sm:gap-4">
           {/* User Avatar */}
           <div className="flex-shrink-0">
-            {isLoadingUser ? (
-              <div className="h-10 w-10 rounded-full bg-muted animate-pulse" />
-            ) : (
-              <img
-                src={commentUser?.imageUrl || "/default-avatar.png"}
-                alt={getUserDisplayName()}
-                className="h-10 w-10 rounded-full object-cover"
-              />
-            )}
+            <img
+              src={comment.user.imageUrl}
+              alt={getUserDisplayName()}
+              className="h-10 w-10 rounded-full object-cover"
+            />
           </div>
 
           {/* Comment Content */}

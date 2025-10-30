@@ -11,6 +11,13 @@ interface Comment {
   isEdited: boolean;
   novelId: number;
   userId: string;
+  user: {
+    clerkId: string;
+    username: string | null;
+    firstName: string | null;
+    lastName: string | null;
+    imageUrl: string;
+  };
 }
 
 interface CommentListProps {

@@ -16,6 +16,13 @@ interface Comment {
   isEdited: boolean;
   novelId: number;
   userId: string;
+  user: {
+    clerkId: string;
+    username: string | null;
+    firstName: string | null;
+    lastName: string | null;
+    imageUrl: string;
+  };
 }
 
 interface CommentSectionProps {
@@ -37,9 +44,23 @@ export function CommentSection({
   const [comments, setComments] = useState<Comment[]>(initialComments);
 
   // Handle successful comment creation by adding to state
-  const handleCommentSuccess = (newComment: Comment) => {
-    // Add the new comment to the top of the list
-    setComments((prev) => [newComment, ...prev]);
+  const handleCommentSuccess = async (newComment: any) => {
+    // For newly created comments, we need to add user data
+    // The user data will be the current logged-in user
+    if (user) {
+      const enrichedComment: Comment = {
+        ...newComment,
+        user: {
+          clerkId: user.id,
+          username: user.username,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          imageUrl: user.imageUrl,
+        },
+      };
+      // Add the new comment to the top of the list
+      setComments((prev) => [enrichedComment, ...prev]);
+    }
   };
 
   // Handle comment updates (edit/delete/hide) by updating state

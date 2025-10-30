@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { comment as commentTable, user as userTable } from "@/lib/db/schema";
@@ -18,7 +18,7 @@ export async function createComment(data: {
   try {
     // Get authenticated user
     const { userId } = await auth();
-    
+
     if (!userId) {
       return {
         success: false,
@@ -93,11 +93,29 @@ export async function createComment(data: {
   }
 }
 
+export interface CommentWithUser {
+  id: number;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
+  isHidden: boolean;
+  isEdited: boolean;
+  novelId: number;
+  userId: string;
+  user: {
+    clerkId: string;
+    username: string | null;
+    firstName: string | null;
+    lastName: string | null;
+    imageUrl: string;
+  };
+}
+
 /**
- * Get comments for a novel
+ * Get comments for a novel with user data joined and Clerk details batch fetched
  * Filters out hidden comments for non-admin users
  */
-export async function getComments(novelId: number) {
+export async function getComments(novelId: number): Promise<CommentWithUser[]> {
   try {
     // Get current user to check if admin
     const { userId } = await auth();
@@ -113,21 +131,67 @@ export async function getComments(novelId: number) {
       isAdmin = currentUser.length > 0 && currentUser[0].role === "ADMIN";
     }
 
-    // Build query based on admin status
-    const comments = await db
-      .select()
+    // Fetch comments with user records joined in a single query
+    const commentsWithUsers = await db
+      .select({
+        comment: commentTable,
+        user: userTable,
+      })
       .from(commentTable)
+      .leftJoin(userTable, eq(commentTable.userId, userTable.clerkId))
       .where(
         isAdmin
           ? eq(commentTable.novelId, novelId)
           : and(
-              eq(commentTable.novelId, novelId),
-              eq(commentTable.isHidden, false)
-            )
+            eq(commentTable.novelId, novelId),
+            eq(commentTable.isHidden, false)
+          )
       )
       .orderBy(desc(commentTable.createdAt));
 
-    return comments;
+    // Extract unique Clerk user IDs
+    const uniqueUserIds = [
+      ...new Set(
+        commentsWithUsers
+          .map((c) => c.user?.clerkId)
+          .filter((id): id is string => Boolean(id))
+      ),
+    ];
+
+    // Batch fetch Clerk user details
+    let clerkUsersMap = new Map<string, any>();
+    if (uniqueUserIds.length > 0) {
+      try {
+        const client = await clerkClient();
+        const clerkUsers = await client.users.getUserList({
+          userId: uniqueUserIds,
+        });
+
+        clerkUsers.data.forEach((user) => {
+          clerkUsersMap.set(user.id, user);
+        });
+      } catch (error) {
+        console.error("Error fetching Clerk user details:", error);
+      }
+    }
+
+    // Map Clerk user data to comments and return enriched objects
+    const enrichedComments: CommentWithUser[] = commentsWithUsers.map((row) => {
+      const clerkUser = clerkUsersMap.get(row.comment.userId);
+
+      return {
+        ...row.comment,
+        user: {
+          clerkId: row.comment.userId,
+          username: clerkUser?.username || null,
+          firstName: clerkUser?.firstName || null,
+          lastName: clerkUser?.lastName || null,
+          imageUrl: clerkUser?.imageUrl || "/default-avatar.png",
+        },
+      };
+    });
+
+    return enrichedComments;
   } catch (error) {
     console.error("Error fetching comments:", error);
     return [];
