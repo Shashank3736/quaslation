@@ -10,7 +10,15 @@ import { getChapterBySlug } from '@/lib/db/query'
 import JoinDiscord from './join-discord'
 import NovelSuggestions from './novel-suggestions'
 
-export const ChapterPage = async ({ chapter, novelSlug }: { chapter: Awaited<ReturnType<typeof getChapterBySlug>>, novelSlug: string }) => {
+export const ChapterPage = async ({ 
+  chapter, 
+  novelSlug,
+  commentSection 
+}: { 
+  chapter: Awaited<ReturnType<typeof getChapterBySlug>>, 
+  novelSlug: string,
+  commentSection?: React.ReactNode
+}) => {
   const previous = chapter.previous
   const next = chapter.next
   return (
@@ -50,6 +58,7 @@ export const ChapterPage = async ({ chapter, novelSlug }: { chapter: Awaited<Ret
       </div>
       <NovelSuggestions currentNovelId={chapter.novelId} count={3} />
       <JoinDiscord />
+      {commentSection}
       {/* <ScrollToTop /> */}
     </div>
   )
