@@ -36,18 +36,29 @@ export function CommentSection({
   const { user, isLoaded } = useUser();
   const [comments, setComments] = useState<Comment[]>(initialComments);
 
-  // Handle successful comment creation with optimistic update
-  const handleCommentSuccess = () => {
-    // Refresh comments by reloading the page data
-    // The server action already revalidates the path, so we can just refresh
-    window.location.reload();
+  // Handle successful comment creation by adding to state
+  const handleCommentSuccess = (newComment: Comment) => {
+    // Add the new comment to the top of the list
+    setComments((prev) => [newComment, ...prev]);
   };
 
-  // Handle comment updates (edit/delete/hide)
-  const handleCommentUpdate = () => {
-    // Refresh comments by reloading the page data
-    // The server action already revalidates the path, so we can just refresh
-    window.location.reload();
+  // Handle comment updates (edit/delete/hide) by updating state
+  const handleCommentUpdate = (
+    action: "edit" | "delete" | "hide",
+    commentId: number,
+    updatedData?: Partial<Comment>
+  ) => {
+    setComments((prev) => {
+      if (action === "delete") {
+        // Remove the comment from the list
+        return prev.filter((c) => c.id !== commentId);
+      } else {
+        // Update the comment in the list
+        return prev.map((c) =>
+          c.id === commentId ? { ...c, ...updatedData } : c
+        );
+      }
+    });
   };
 
   return (

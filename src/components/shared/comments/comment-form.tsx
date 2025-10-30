@@ -8,11 +8,22 @@ import { createComment } from "@/lib/actions/comments";
 import { commentSchema } from "@/lib/validation/comment";
 import { Loader2 } from "lucide-react";
 
+interface Comment {
+  id: number;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
+  isHidden: boolean;
+  isEdited: boolean;
+  novelId: number;
+  userId: string;
+}
+
 interface CommentFormProps {
   novelId: number;
   novelSlug: string;
   chapterSlug: string;
-  onSuccess?: () => void;
+  onSuccess?: (newComment: Comment) => void;
 }
 
 export function CommentForm({
@@ -58,7 +69,7 @@ export function CommentForm({
         chapterSlug,
       });
 
-      if (result.success) {
+      if (result.success && result.comment) {
         // Clear form on success
         setContent("");
         setError(null);
@@ -69,8 +80,8 @@ export function CommentForm({
           description: "Your comment has been successfully posted.",
         });
 
-        // Call success callback if provided
-        onSuccess?.();
+        // Call success callback with the new comment
+        onSuccess?.(result.comment);
       } else {
         setError(result.error || "Failed to post comment");
         toast({

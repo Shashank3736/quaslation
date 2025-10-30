@@ -40,7 +40,7 @@ interface CommentItemProps {
   isAdmin: boolean;
   novelSlug: string;
   chapterSlug: string;
-  onUpdate: () => void;
+  onUpdate: (action: "edit" | "delete" | "hide", commentId: number, updatedData?: Partial<Comment>) => void;
 }
 
 interface ClerkUser {
@@ -124,7 +124,7 @@ export function CommentItem({
         description: "Comment updated successfully",
       });
       setIsEditing(false);
-      onUpdate();
+      onUpdate("edit", comment.id, { content: editContent, isEdited: true, updatedAt: new Date() });
     } else {
       toast({
         title: "Error",
@@ -150,7 +150,7 @@ export function CommentItem({
         description: "Comment deleted successfully",
       });
       setShowDeleteDialog(false);
-      onUpdate();
+      onUpdate("delete", comment.id);
     } else {
       toast({
         title: "Error",
@@ -177,7 +177,7 @@ export function CommentItem({
           ? "Comment hidden successfully"
           : "Comment unhidden successfully",
       });
-      onUpdate();
+      onUpdate("hide", comment.id, { isHidden: result.isHidden, updatedAt: new Date() });
     } else {
       toast({
         title: "Error",

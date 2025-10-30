@@ -19,7 +19,7 @@ interface CommentListProps {
   isAdmin: boolean;
   novelSlug: string;
   chapterSlug: string;
-  onUpdate: () => void;
+  onUpdate: (action: "edit" | "delete" | "hide", commentId: number, updatedData?: Partial<Comment>) => void;
 }
 
 export function CommentList({
