@@ -1,10 +1,10 @@
 # Quaslation
 
-![Version](https://img.shields.io/badge/version-2.14.1-blue)
+![Version](https://img.shields.io/badge/version-2.16.0-blue)
 
 Evidence-based technical overview and setup guide for the Quaslation web application.
 
-- Version: 2.14.1 from [package.json](package.json)
+- Version: 2.16.0 from [package.json](package.json)
 - Maturity: Active development with semantic versioning and detailed changelog entries ([CHANGELOG.md](CHANGELOG.md))
 - CI: GitHub Actions build workflow present ([.github/workflows/nextjs-build.yml](.github/workflows/nextjs-build.yml))
 
@@ -30,7 +30,7 @@ Evidence-based technical overview and setup guide for the Quaslation web applica
 - [Differentiators at a glance](#differentiators-at-a-glance)
 
 ## Project description
-Quaslation is a Next.js App Router application for publishing high-quality fan translations of Asian web novels. It provides a reader UX, RSS feed, SEO utilities, an admin surface for managing novels and chapters, and CLIs to fetch, translate, and import content into PostgreSQL via Drizzle ORM.
+Quaslation is a Next.js App Router application for publishing high-quality fan translations of Asian web novels. It provides a reader UX with native commenting, RSS feed, SEO utilities, an admin surface for managing novels and chapters with moderation tools, and CLIs to fetch, translate, and import content into PostgreSQL via Drizzle ORM.
 
 ## Key features and where they live
 - Reader experience and site pages
@@ -40,9 +40,16 @@ Quaslation is a Next.js App Router application for publishing high-quality fan t
   - Chapter reading: [page.tsx](src/app/(main)/novels/[slug]/[chapter]/page.tsx)
   - MDX content pages: [about/page.mdx](src/app/(main)/(mdx)/about/page.mdx), [privacy/page.mdx](src/app/(main)/(mdx)/privacy/page.mdx), [terms-of-service/page.mdx](src/app/(main)/(mdx)/terms-of-service/page.mdx)
   - Navigation and layout: [RootLayout()](src/app/layout.tsx#L31), [Navbar()](src/app/_components/navbar.tsx#L23)
+- Comments system
+  - Comment API endpoints: [route.ts](src/app/api/comments/route.ts)
+  - Comment components: [comment-section.tsx](src/components/shared/comments/comment-section.tsx), [comment-list.tsx](src/components/shared/comments/comment-list.tsx), [comment-item.tsx](src/components/shared/comments/comment-item.tsx), [comment-form.tsx](src/components/shared/comments/comment-form.tsx)
+  - Comment database schema: Comment table in [schema.ts](src/lib/db/schema.ts) with novelId, userId, content, isHidden, isEdited fields
 - Feeds and SEO
   - Static sitemap: [sitemap()](src/app/sitemap.ts#L3)
   - RSS feed with ISR and tag-based revalidation: [GET()](src/app/rss.xml/route.ts#L47)
+- API routes
+  - Comments API: [route.ts](src/app/api/comments/route.ts) - GET endpoint with role-based filtering and Clerk user enrichment
+  - User management: [src/app/api/users](src/app/api/users)
 - Authentication and session
   - Clerk integration: [ClerkProvider](src/app/layout.tsx) within [RootLayout()](src/app/layout.tsx#L31)
   - Sign in/up routes provided under [src/app/auth](src/app/auth)
@@ -76,10 +83,15 @@ Quaslation is a Next.js App Router application for publishing high-quality fan t
   - Clerk for auth with server/client components initialized in [RootLayout()](src/app/layout.tsx#L31)
   - Role model via enum Role ADMIN/SUBSCRIBER/MEMBER in [schema.ts](src/lib/db/schema.ts)
   - Helper for role retrieval [getUserRole()](src/lib/db/query.ts#L268)
+- API layer
+  - REST API routes under [src/app/api](src/app/api) for comments and user management
+  - Role-based access control with Clerk integration
+  - Batch fetching and enrichment of user data from Clerk
 - Caching and content delivery
   - Next ISR and tag-based invalidation on RSS route via unstable_cache in [GET()](src/app/rss.xml/route.ts#L47)
   - Client router cache reuse tuned via experimental.staleTimes in [next.config.mjs](next.config.mjs)
-- Messaging and integrations
+- Community features
+  - Native comment system with moderation capabilities
   - Discord webhooks for contact/support: [actions.ts](src/app/(main)/contact/actions.ts)
 - Analytics and monetization
   - Vercel Analytics and Google Analytics in [RootLayout()](src/app/layout.tsx#L31)
@@ -102,24 +114,28 @@ flowchart LR
 
 ## Data model
 Primary entities defined in [schema.ts](src/lib/db/schema.ts):
-- User: clerkId (PK), role (enum)
+- User: clerkId (PK), role (enum: ADMIN/SUBSCRIBER/MEMBER)
 - RichText: text, html, markdown
 - Novel: slug, title, thumbnail, timestamps, richTextId (unique)
 - Volume: number, title, novelId, timestamps
 - Chapter: premium, slug, novelId, volumeId, serial, number, title, timestamps, richTextId
+- Comment: id, content, novelId, userId, isHidden, isEdited, timestamps
 Notable constraints:
 - Unique Novel.slug/title; unique Novel.richTextId link
 - Volume unique on novelId+number
 - Chapter unique on novelId+serial and volumeId+number; index on premium
+- Comment indexed on novelId, userId, and createdAt; cascading deletes on novel/user removal
 
 ## Entity relationships
 ```mermaid
 erDiagram
   NOVEL ||--o{ VOLUME : has
   NOVEL ||--o{ CHAPTER : has
+  NOVEL ||--o{ COMMENT : receives
   VOLUME ||--o{ CHAPTER : groups
   RICH_TEXT ||--|| NOVEL : describes
   RICH_TEXT ||--|| CHAPTER : content
+  USER ||--o{ COMMENT : writes
 ```
 
 ## Database structure and connections
@@ -173,11 +189,24 @@ erDiagram
     INT richTextId FK
   }
 
+  COMMENT {
+    INT id PK
+    TEXT content
+    INT novelId FK
+    TEXT userId FK
+    BOOLEAN isHidden
+    BOOLEAN isEdited
+    TIMESTAMP createdAt
+    TIMESTAMP updatedAt
+  }
+
   NOVEL ||--o{ VOLUME : contains
   NOVEL ||--o{ CHAPTER : contains
+  NOVEL ||--o{ COMMENT : receives
   VOLUME ||--o{ CHAPTER : groups
   RICH_TEXT ||--|| NOVEL : describes
   RICH_TEXT ||--|| CHAPTER : content
+  USER ||--o{ COMMENT : writes
 ```
 
 ## Setup and local development
@@ -283,6 +312,9 @@ Defined in [.env.example](.env.example) and referenced in code
   - DISCORD_WEBHOOK_SUPPORT_URL used in [actions.ts](src/app/(main)/contact/actions.ts)
 - Database and tooling
   - DIRECT_URL used by drizzle-kit in [drizzle.config.ts](drizzle.config.ts)
+- Caching (optional)
+  - KV_REST_API_URL - Vercel KV for role caching
+  - KV_REST_API_TOKEN - Vercel KV authentication token
 - AI integrations
   - GEMINI_API_KEY used in [main.ts](scripts/gemini/main.ts#L13)
   - GRADIO_API_URL used in [translate.ts](scripts/translation/translate.ts#L117) and admin [translate-actions.ts](src/app/admin/chapters/[novelId]/create/translate-actions.ts)
@@ -339,3 +371,4 @@ Defined in [.env.example](.env.example) and referenced in code
 - End-to-end pipeline for novel translation: fetch, translate (Gemini or Gradio), and upload to DB, documented under [scripts](scripts)
 - Clean, type-safe data access with Drizzle and explicit schema [schema.ts](src/lib/db/schema.ts)
 - Production-aware caching and SEO with RSS + sitemap [GET()](src/app/rss.xml/route.ts#L47), [sitemap()](src/app/sitemap.ts#L3)
+- Native comment system with admin moderation and Clerk integration

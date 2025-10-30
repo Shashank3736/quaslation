@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### Added in v2.16.0
+- **Native comment system**: Full-featured commenting with API routes, admin moderation (hide/show), edit tracking, and Clerk user integration
+  - REST API at [route.ts](src/app/api/comments/route.ts) with role-based filtering
+  - React components for comment display, forms, and moderation
+  - Database schema with indexed queries for performance
+- **Enhanced dependencies**: Added rate limiting infrastructure (`@upstash/ratelimit`, `@vercel/kv`), AI SDK (`ai@^5.0.72`), and content processing tools (`turndown`, `html-react-parser`, `date-fns`)
+
 ## [2.15.0] - 2025-09-14
 
 ### Removed
