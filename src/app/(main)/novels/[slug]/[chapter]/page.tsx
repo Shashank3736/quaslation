@@ -3,7 +3,8 @@ import { getChapterBySlug, getChapterSlugMany } from '@/lib/db/query';
 import { shortifyString } from '@/lib/utils';
 import { Metadata } from 'next';
 import { unstable_cache } from 'next/cache';
-import React from 'react'
+import React from 'react';
+import { CommentSection } from '@/components/shared/comments/comment-section';
 
 export const revalidate = 86400; // 24 hours
 
@@ -32,7 +33,18 @@ export default async function Page({ params }: { params: Promise<{ slug: string,
     revalidate: 24*3600
   });
   const chapter = await getCacheData(paramsResolved.chapter);
+  
   return (
-    <ChapterPage chapter={chapter} novelSlug={paramsResolved.slug} />
+    <ChapterPage 
+      chapter={chapter} 
+      novelSlug={paramsResolved.slug}
+      commentSection={
+        <CommentSection
+          novelId={chapter.novelId}
+          novelSlug={paramsResolved.slug}
+          chapterSlug={paramsResolved.chapter}
+        />
+      }
+    />
   )
 }

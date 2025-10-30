@@ -16,6 +16,11 @@ const nextConfig = {
         protocol: "https",
         hostname: "ayplstxuxzdnzxgkvlwc.supabase.co",
         port: "",
+      },
+      {
+        protocol: "https",
+        hostname: "img.clerk.com",
+        port: "",
       }
     ]
   }
