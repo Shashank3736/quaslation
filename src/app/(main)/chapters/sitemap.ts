@@ -19,7 +19,7 @@ const getCache = unstable_cache(async () => {
 });
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = "https://quaslation.xyz"
+  const base = "https://quaslation.com"
   const chapters = await getCache();
   
   return chapters.map(chapter => (

@@ -30,28 +30,32 @@ export default clerkMiddleware(async (auth, req) => {
   }
   
   // Protected route handling with cached role lookup
+  const userId = (await auth()).userId;
+  
+  if (userId === null) {
+    // User not authenticated - redirect to sign in
+    return (await auth()).redirectToSignIn();
+  }
+  
   try {
-    const userId = (await auth()).userId;
+    const user = await (await clerkClient()).users.getUser(userId);
+    const userEmail = user.emailAddresses[0]?.emailAddress;
     
-    if (userId !== null) {
-      const user = await (await clerkClient()).users.getUser(userId);
-      const userEmail = user.emailAddresses[0]?.emailAddress;
-      
-      if (!userEmail) {
-        return NextResponse.redirect(new URL("/", req.url));
-      }
-      
-      // Use cached role lookup instead of direct database query
-      const role = await getCachedUserRole(userEmail);
-      
-      if (role !== "ADMIN") {
-        return NextResponse.redirect(new URL("/", req.url));
-      }
-    } else {
-      (await auth()).redirectToSignIn();
+    if (!userEmail) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+    
+    // Use cached role lookup instead of direct database query
+    const role = await getCachedUserRole(userEmail);
+    
+    if (role !== "ADMIN") {
+      return NextResponse.redirect(new URL("/", req.url));
     }
   } catch (error) {
-    console.error("Middleware error:", error);
+    // Only log actual errors, not redirect signals
+    if (error instanceof Error && !error.message.includes('NEXT_REDIRECT')) {
+      console.error("Middleware error:", error);
+    }
     // On error, redirect to home page for safety
     return NextResponse.redirect(new URL("/", req.url));
   }

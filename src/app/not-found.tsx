@@ -4,27 +4,39 @@
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-md text-center">
-        <div className="mx-auto h-32 w-32 text-primary">
-          <PuzzleIcon className="h-full w-full" />
+    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-brutal-yellow/10 px-4 py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Decorative geometric shapes */}
+      <div className="absolute top-10 left-10 w-20 h-20 border-brutal border-black dark:border-white bg-brutal-pink rotate-45 opacity-50" />
+      <div className="absolute bottom-20 right-20 w-32 h-32 border-brutal border-black dark:border-white bg-brutal-cyan rounded-full opacity-40" />
+      <div className="absolute top-1/3 right-10 w-16 h-16 border-brutal border-black dark:border-white bg-brutal-purple opacity-30" />
+      
+      <div className="mx-auto max-w-md text-center relative z-10 bg-background border-brutal border-black dark:border-white shadow-brutal-xl p-8 rounded-lg">
+        <div className="mx-auto h-32 w-32 text-brutal-orange mb-6 relative">
+          <div className="absolute inset-0 border-brutal border-black dark:border-white bg-brutal-orange/20 rounded-lg transform rotate-6" />
+          <PuzzleIcon className="h-full w-full relative z-10" />
         </div>
-        <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Oops, page not found!</h1>
-        <p className="mt-4 text-muted-foreground">
+        <h1 className="text-4xl font-black tracking-tight text-foreground sm:text-5xl mb-4 uppercase">
+          404
+        </h1>
+        <h2 className="text-2xl font-bold text-foreground mb-4">
+          Oops, page not found!
+        </h2>
+        <p className="text-base text-foreground/80 mb-8">
           The page you&apos;re looking for doesn&apos;t exist. Let&apos;s get you back on track.
         </p>
-        <div className="mt-6">
-          <Link
-            href="/"
-            className="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-            prefetch={false}
-          >
+        <Button 
+          size="lg"
+          className="w-full sm:w-auto font-bold uppercase"
+          asChild
+        >
+          <Link href="/" prefetch={false}>
             Return to Home
           </Link>
-        </div>
+        </Button>
       </div>
     </div>
   )

@@ -9,6 +9,10 @@ const config = {
     './src/**/*.{ts,tsx}',
 	],
   prefix: "",
+  // Optimize for production builds
+  future: {
+    hoverOnlyWhenSupported: true, // Only apply hover styles on devices that support hover
+  },
   theme: {
     container: {
       center: true,
@@ -52,11 +56,46 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        brutal: {
+          yellow: '#FFD93D',
+          pink: '#FF6B9D',
+          cyan: '#6BCF7F',
+          purple: '#C996FF',
+          orange: '#FF8C42',
+          blue: '#4D96FF',
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      borderWidth: {
+        'brutal': '3px',
+        'brutal-lg': '4px',
+        'brutal-mobile': '2px', // Mobile-specific thinner borders
+      },
+      boxShadow: {
+        'brutal-sm': '2px 2px 0px 0px #000',
+        'brutal': '4px 4px 0px 0px #000',
+        'brutal-lg': '6px 6px 0px 0px #000',
+        'brutal-xl': '8px 8px 0px 0px #000',
+        'brutal-yellow': '4px 4px 0px 0px #FFD93D',
+        'brutal-pink': '4px 4px 0px 0px #FF6B9D',
+        'brutal-cyan': '4px 4px 0px 0px #6BCF7F',
+        'brutal-purple': '4px 4px 0px 0px #C996FF',
+        // Mobile-specific smaller shadows
+        'brutal-mobile': '2px 2px 0px 0px #000',
+        'brutal-mobile-yellow': '2px 2px 0px 0px #FFD93D',
+        'brutal-mobile-pink': '2px 2px 0px 0px #FF6B9D',
+        'brutal-mobile-cyan': '2px 2px 0px 0px #6BCF7F',
+        'brutal-mobile-purple': '2px 2px 0px 0px #C996FF',
+        // Dark mode white shadows
+        'brutal-sm-dark': '2px 2px 0px 0px #fff',
+        'brutal-dark': '4px 4px 0px 0px #fff',
+        'brutal-lg-dark': '6px 6px 0px 0px #fff',
+        'brutal-xl-dark': '8px 8px 0px 0px #fff',
+        'brutal-mobile-dark': '2px 2px 0px 0px #fff',
       },
       keyframes: {
         "accordion-down": {

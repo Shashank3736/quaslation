@@ -11,7 +11,7 @@ export const sleep = (ms: number) => new Promise(res => setTimeout(res, ms));
 
 export function defaultHeaders(): HeadersInit {
   return {
-    'User-Agent': 'QuaslationFetcher/1.0 (+https://quaslation.xyz) KakuyomuScraper',
+    'User-Agent': 'QuaslationFetcher/1.0 (+https://quaslation.com) KakuyomuScraper',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Accept-Language': 'ja,en;q=0.8',
   };

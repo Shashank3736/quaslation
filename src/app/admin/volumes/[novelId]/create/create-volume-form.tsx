@@ -41,7 +41,8 @@ const CreateVolumeForm = ({ novel }:{ novel: Awaited<ReturnType<typeof getNovelF
     setSubmiting(true);
     await createVolume({ novelId: values.novelId, number: values.number, title: values.title })
     toast({
-      description: "Created new volume."
+      description: "Created new volume.",
+      variant: "success"
     })
     form.reset()
     setSubmiting(false)
@@ -92,7 +93,7 @@ const CreateVolumeForm = ({ novel }:{ novel: Awaited<ReturnType<typeof getNovelF
             </FormItem>
           )} 
         />
-        <Button type='submit' disabled={submiting}>Submit</Button>
+        <Button type='submit' variant="primary" disabled={submiting}>Submit</Button>
       </form>
     </Form>
   )

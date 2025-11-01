@@ -28,20 +28,25 @@ const MESSAGE = {
 export default function RestrictedContent({ children, type="login" }: { children: ReactNode, type?: "login" | "premium" | "upcoming" }) {
   return (
     <div className="flex relative flex-col bg-background">
-      <div className="mx-auto absolute text-center backdrop-blur-sm h-full w-full flex flex-col items-center justify-center">
-        <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Restricted Content</div>
-        <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">{MESSAGE[type].title}</h1>
+      <div className="mx-auto absolute text-center backdrop-blur-sm h-full w-full flex flex-col items-center justify-center z-10">
+        {/* Premium lock indicator with neobrutalism styling */}
+        <div className="bg-brutal-pink border-brutal border-black dark:border-white rounded-lg shadow-brutal-lg px-4 py-2 text-sm font-bold text-white">
+          Restricted Content
+        </div>
+        <h1 className="mt-6 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">{MESSAGE[type].title}</h1>
         <p className="mt-4 text-muted-foreground max-w-md">{MESSAGE[type].message}</p>
         <div className={cn("mt-6")}>
         {type === "login"?(
           <SignInButton>
-            <Button>
-              <LogInIcon className="mr-2 h-4 w-4" />
+            <Button className="shadow-brutal border-brutal border-black dark:border-white">
+              <LogInIcon className="mr-2 h-4 w-4 drop-shadow-[2px_2px_0px_rgba(0,0,0,0.3)]" />
               Login
             </Button>
           </SignInButton>
         ): (
-          <Button asChild><Link href={DISCORD_INVITE_URL}>Join Discord</Link></Button>
+          <Button asChild className="shadow-brutal border-brutal border-black dark:border-white">
+            <Link href={DISCORD_INVITE_URL}>Join Discord</Link>
+          </Button>
         )}
         </div>
       </div>

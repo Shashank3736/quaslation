@@ -108,7 +108,7 @@ export default async function NovelPage({ params }: { params: Promise<{ slug: st
 
   const chapters = novel.chapters;
   return (
-    <div className='p-4'>
+    <div className='p-2 sm:p-4'>
       {/* Hero Section with Cover and Info */}
       <div className='mb-8'>
         <div className='flex flex-col lg:flex-row items-center gap-8'>
@@ -136,7 +136,7 @@ export default async function NovelPage({ params }: { params: Promise<{ slug: st
                       {novel.title}
                     </H2>
                     <div className="flex items-center gap-2">
-                      <Badge className="bg-gradient-to-r-indigo-violet text-white">
+                      <Badge className="bg-gradient-to-r-indigo-violet text-primary">
                         {chapters.length} Chapters
                       </Badge>
                       {chapters.some(c => c.premium) && (
@@ -148,17 +148,12 @@ export default async function NovelPage({ params }: { params: Promise<{ slug: st
                   </div>
                   <div className="flex flex-col gap-3">
                     {chapters.at(0) && (
-                      <Button size="lg" className="bg-gradient-to-r-indigo-violet text-white px-8" asChild>
+                      <Button size="lg" className="bg-gradient-to-r-indigo-violet text-primary px-8" asChild>
                         <Link href={`${paramsResolved.slug}/${chapters[0].slug}`}>
                           Read Now
                         </Link>
                       </Button>
                     )}
-                    <Button variant="outline" size="lg" asChild>
-                      <Link href="/novels">
-                        Browse All Novels
-                      </Link>
-                    </Button>
                   </div>
                 </div>
               </CardHeader>

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import path from 'path';
 import { promises as fs } from 'fs';
 import crypto from 'crypto';

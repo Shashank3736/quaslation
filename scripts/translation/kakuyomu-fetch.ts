@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import path from 'path';
 import { fetchWithRetry, sleep } from './utils/http';
 import { parseWorkPage, parseEpisodePage } from './utils/parse';

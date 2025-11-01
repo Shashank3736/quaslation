@@ -8,7 +8,7 @@ const getCached = unstable_cache(getNovelList, ["sitemapNovels"], {
 });
 
 export default async function sitemap():Promise<MetadataRoute.Sitemap> {
-  const base = "https://quaslation.xyz"
+  const base = "https://quaslation.com"
   
   const novels = await getCached();
   return novels.map(novel => (

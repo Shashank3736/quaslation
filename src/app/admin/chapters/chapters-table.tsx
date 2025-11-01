@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { StatusBadge } from '@/components/ui/status-badge';
 import { getChapters } from '@/lib/db/query';
 import { shortifyString } from '@/lib/utils';
 import React from 'react'
@@ -25,8 +26,12 @@ const ChapterRow = React.memo<{ chap: ChapterData }>(({ chap }) => (
   <TableRow key={chap.id}>
     <TableCell title={chap.novel.title}>{shortifyString(chap.novel.title, 32)}</TableCell>
     <TableCell title={chap.title}>{shortifyString(`[${chap.serial}] ${chap.title}`, 16)}</TableCell>
-    <TableCell>{chap.publishedAt ? "PUBLISHED": "DRAFT"}</TableCell>
-    <TableCell>{chap.premium ? "Yes":"No"}</TableCell>
+    <TableCell>
+      <StatusBadge status={chap.publishedAt ? "published" : "draft"} />
+    </TableCell>
+    <TableCell>
+      <StatusBadge status={chap.premium ? "premium" : "free"} />
+    </TableCell>
     <TableCell>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

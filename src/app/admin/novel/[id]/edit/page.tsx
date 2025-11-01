@@ -10,18 +10,19 @@ const AdminNovelEdit = async ({ params }: { params: Promise<{ id: string }>}) =>
   const id = parseInt(paramsResolved.id);
 
   if(isNaN(id)) notFound();
-  try {
-    const novel = await getNovel(id);
   
-    return (
-      <div className='mx-4'>
-        <H1>Edit Novel ({novel.title})</H1>
-        <EditNovelForm data={novel} html={await markdownToHtml(novel.richText.markdown)} />
-      </div>
-    )
-  } catch (error) {
-    notFound()    
-  }
+  const novel = await getNovel(id).catch(() => {
+    notFound();
+  });
+
+  if (!novel) notFound();
+
+  return (
+    <div className='mx-4'>
+      <H1>Edit Novel ({novel.title})</H1>
+      <EditNovelForm data={novel} html={await markdownToHtml(novel.richText.markdown)} />
+    </div>
+  );
 }
 
 export default AdminNovelEdit

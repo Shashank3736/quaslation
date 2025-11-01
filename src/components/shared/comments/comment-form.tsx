@@ -119,7 +119,10 @@ export function CommentForm({
         <div className="flex items-center justify-between text-sm">
           <div>
             {error && (
-              <p id="comment-error" className="text-destructive">
+              <p 
+                id="comment-error" 
+                className="text-foreground bg-brutal-orange/20 border-2 border-black dark:border-white px-3 py-1.5 rounded shadow-brutal-sm font-bold"
+              >
                 {error}
               </p>
             )}
@@ -128,9 +131,9 @@ export function CommentForm({
             id="character-count"
             className={`${
               isOverLimit
-                ? "text-destructive font-semibold"
+                ? "text-foreground bg-brutal-orange/20 border-2 border-black dark:border-white px-2 py-1 rounded shadow-brutal-sm font-bold"
                 : isNearLimit
-                  ? "text-yellow-600 dark:text-yellow-500"
+                  ? "text-foreground bg-brutal-yellow/20 border-2 border-black dark:border-white px-2 py-1 rounded font-semibold"
                   : "text-muted-foreground"
             }`}
           >

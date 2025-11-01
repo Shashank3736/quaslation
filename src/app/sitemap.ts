@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 
 export default function sitemap():MetadataRoute.Sitemap {
-  const base = "https://quaslation.xyz"
+  const base = "https://quaslation.com"
   
   return [
     {

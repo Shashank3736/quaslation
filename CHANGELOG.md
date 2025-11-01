@@ -5,7 +5,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### Added in v2.16.0
+## [3.0.0] - 2025-11-01
+
+### Breaking Changes
+- **Next.js 16 Upgrade**: Migrated from Next.js 15 to Next.js 16 with breaking API changes
+- **React 19 Upgrade**: Updated to React 19.2.0 and React DOM 19.2.0 with new features and breaking changes
+- **Domain Migration**: Changed primary domain from quaslation.xyz to quaslation.com
+- **Design System Overhaul**: Complete UI redesign with neobrutalism design pattern
+
+### Added
+- **Neobrutalism Design System**: Bold, brutalist-inspired UI with thick borders, shadows, and vibrant colors
+- **Enhanced Performance Utilities**: New performance optimization library for improved loading times
+- **Decorative UI Components**: Added visual design elements for enhanced user experience
+- **Optimized Image Loading**: Improved image compression and loading settings in Next.js config
+
+### Changed
+- **Framework Upgrades**:
+  - Next.js: 15.4.3 → 16.0.1
+  - React: 19.1.0 → 19.2.0
+  - React DOM: 19.1.0 → 19.2.0
+  - @types/react: Updated to 19.2.2
+  - @types/react-dom: Updated to 19.2.2
+- **Global Styles**: Refactored color schemes and styling across all components
+- **Contact Page**: Updated form styling and email contact information
+- **Responsive Design**: Refined responsive behavior and button styling across pages
+- **Next.js Configuration**: Optimized for improved performance and build times
+- **Package Dependencies**: Cleaned up and optimized dependency tree
+
+### Removed
+- Hardcoded gradient classes in favor of more flexible styling system
+- Legacy styling patterns from previous design system
+
+### Fixed
+- HTTP utility improvements in translation scripts
+- Sitemap generation for chapters and novels
+- Responsive layout issues across various screen sizes
+
+### Technical Debt
+- Removed deprecated Next.js 15 patterns
+- Updated to React 19 concurrent features
+- Modernized component patterns for better performance
+
+## [2.16.0] - 2025-XX-XX
+
+### Added
 - **Native comment system**: Full-featured commenting with API routes, admin moderation (hide/show), edit tracking, and Clerk user integration
   - REST API at [route.ts](src/app/api/comments/route.ts) with role-based filtering
   - React components for comment display, forms, and moderation
