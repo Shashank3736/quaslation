@@ -12,8 +12,7 @@
     "db:studio": "drizzle-kit studio",
     "db:push": "drizzle-kit push",
     "db:export": "node scripts/migrate/export-database.js",
-    "db:verify": "node scripts/migrate/verify-export.js",
-    "fetch:kakuyomu": "tsx scripts/translation/kakuyomu-fetch.ts --url https://kakuyomu.jp/works/16818093090655323692 --pretty"
+    "db:verify": "node scripts/migrate/verify-export.js"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.30.0",
