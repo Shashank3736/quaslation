@@ -28,14 +28,15 @@ export default function NotFound() {
         <p className="text-base text-foreground/80 mb-8">
           The page you&apos;re looking for doesn&apos;t exist. Let&apos;s get you back on track.
         </p>
-        <Link href="/" prefetch={false}>
-          <Button 
-            size="lg"
-            className="w-full sm:w-auto font-bold uppercase"
-          >
+        <Button 
+          size="lg"
+          className="w-full sm:w-auto font-bold uppercase"
+          asChild
+        >
+          <Link href="/" prefetch={false}>
             Return to Home
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
     </div>
   )

@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 
 interface PatternBackgroundProps {
   pattern?: "dots" | "grid" | "diagonal"
@@ -35,6 +35,7 @@ export function PatternBackground({
   lazy = false,
 }: PatternBackgroundProps) {
   const [isVisible, setIsVisible] = useState(!lazy)
+  const elementRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!lazy) return
@@ -54,9 +55,8 @@ export function PatternBackground({
       }
     )
 
-    const element = document.getElementById(`pattern-${pattern}-${color}`)
-    if (element) {
-      observer.observe(element)
+    if (elementRef.current) {
+      observer.observe(elementRef.current)
     }
 
     return () => observer.disconnect()
@@ -64,7 +64,7 @@ export function PatternBackground({
 
   return (
     <div
-      id={`pattern-${pattern}-${color}`}
+      ref={elementRef}
       className={cn(
         "relative",
         colorMap[color],

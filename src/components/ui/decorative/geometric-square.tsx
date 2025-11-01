@@ -61,7 +61,18 @@ export function GeometricSquare({
   }, [lazy])
 
   if (!isVisible) {
-    return <div ref={ref} className={cn(sizeMap[size], position)} />
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          sizeMap[size],
+          position,
+          rotate && "rotate-45",
+          className
+        )}
+        style={style}
+      />
+    )
   }
 
   return (
