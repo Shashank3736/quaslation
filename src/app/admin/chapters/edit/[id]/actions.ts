@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { chapter, chapter as chapterTable, novel as novelTable, richText as richTextTable, volume as volumeTable } from "@/lib/db/schema";
 import { markdownToHtml, markdownToText } from "@/lib/utils";
 import { and, eq } from "drizzle-orm";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { z } from "zod";
 import { formSchema } from "./form";
 
@@ -68,7 +68,7 @@ export const updateChapterContent = async(richTextId: number, values: z.infer<ty
     volumeId: volume.id,
   }).where(eq(chapterTable.slug, chapterSlug));
 
-  revalidateTag(`chapter:update:${chapterSlug}`);
-  revalidateTag(`chapter:update:richText:${chapterSlug}`);
-  revalidateTag(`chapter:update:content:${chapterSlug}`);
+  updateTag(`chapter:update:${chapterSlug}`);
+  updateTag(`chapter:update:richText:${chapterSlug}`);
+  updateTag(`chapter:update:content:${chapterSlug}`);
 }

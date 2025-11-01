@@ -7,7 +7,7 @@ import {
   CACHE_PRESETS,
   CACHE_TAGS
 } from "@/lib/cache";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 
 // Internal query function for releases
 async function _getReleases({ skip = 0, premium = false }) {
@@ -362,10 +362,10 @@ export const freeChapters = async ({ novelId, first, last }: { novelId: number, 
 
   // Invalidate caches after successful update
   try {
-    revalidateTag(CACHE_TAGS.chapter.all);
-    revalidateTag(CACHE_TAGS.releases.all);
-    revalidateTag(CACHE_TAGS.releases.free);
-    revalidateTag(CACHE_TAGS.releases.premium);
+    updateTag(CACHE_TAGS.chapter.all);
+    updateTag(CACHE_TAGS.releases.all);
+    updateTag(CACHE_TAGS.releases.free);
+    updateTag(CACHE_TAGS.releases.premium);
   } catch (error) {
     console.error('Cache invalidation failed:', error);
     // Continue execution - cache invalidation failure shouldn't break the mutation
@@ -391,10 +391,10 @@ export const publishChapters = async ({ novelId, serial }: { novelId: number, se
 
   // Invalidate caches after successful update
   try {
-    revalidateTag(CACHE_TAGS.chapter.all);
-    revalidateTag(CACHE_TAGS.releases.all);
-    revalidateTag(CACHE_TAGS.releases.free);
-    revalidateTag(CACHE_TAGS.releases.premium);
+    updateTag(CACHE_TAGS.chapter.all);
+    updateTag(CACHE_TAGS.releases.all);
+    updateTag(CACHE_TAGS.releases.free);
+    updateTag(CACHE_TAGS.releases.premium);
   } catch (error) {
     console.error('Cache invalidation failed:', error);
     // Continue execution - cache invalidation failure shouldn't break the mutation
