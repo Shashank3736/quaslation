@@ -50,7 +50,8 @@ export const EditChapterForm = ({ data }:{ data: Awaited<ReturnType<typeof getCh
     try {
       await updateChapterContent(data.richText.id, values, data.slug);
       toast({
-      description: "Chapter updated successfully!"
+      description: "Chapter updated successfully!",
+      variant: "success"
       });
     } catch (error) {
       toast({
@@ -151,7 +152,7 @@ export const EditChapterForm = ({ data }:{ data: Awaited<ReturnType<typeof getCh
             />
           </div>
         </div>
-        <Button type="submit" disabled={submiting}>Submit</Button>
+        <Button type="submit" variant="primary" disabled={submiting}>Submit</Button>
       </form>
     </Form>
   );

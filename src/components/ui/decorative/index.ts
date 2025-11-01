@@ -1,0 +1,7 @@
+export { GeometricCircle } from "./geometric-circle"
+export { GeometricSquare } from "./geometric-square"
+export { GeometricTriangle } from "./geometric-triangle"
+export { PatternBackground } from "./pattern-background"
+export { DecorativeHero } from "./decorative-hero"
+export { DecorativeEmptyState } from "./decorative-empty-state"
+export { DecorativeShowcase } from "./decorative-showcase"

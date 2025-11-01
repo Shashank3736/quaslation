@@ -14,19 +14,22 @@ interface NovelSuggestionCardProps {
 
 export default function NovelSuggestionCard({ novel }: NovelSuggestionCardProps) {
   return (
-    <Link href={`/novels/${novel.slug}`} className="block">
-      <Card className="glass hover:shadow-lg transition-all duration-300 hover:-translate-y-1 h-full">
+    <Link href={`/novels/${novel.slug}`} className="block group">
+      <Card className="border-brutal border-black shadow-brutal-lg hover:shadow-brutal-xl hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all duration-200 h-full relative overflow-hidden bg-background">
+        {/* Colorful accent corner - top-right triangle */}
+        <div className="absolute top-0 right-0 w-0 h-0 border-l-[60px] border-l-transparent border-t-[60px] border-t-brutal-cyan z-10" />
+        
         <CardHeader className="pb-4">
-          <div className="relative aspect-[2/3] w-full overflow-hidden rounded-lg mb-4">
+          <div className="relative aspect-[2/3] w-full overflow-hidden rounded-lg mb-4 border-brutal border-black shadow-brutal-sm">
             <Image
               src={novel.thumbnail || "/dummy/NoImageFound_light_400x600.png"}
               alt={novel.title}
-              className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
+              className="object-cover w-full h-full"
               width={400}
               height={600}
             />
           </div>
-          <CardTitle className="text-xl text-center text-gradient-indigo-violet">
+          <CardTitle className="text-xl text-center font-bold">
             {novel.title}
           </CardTitle>
         </CardHeader>
