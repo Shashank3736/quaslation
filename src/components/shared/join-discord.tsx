@@ -45,7 +45,7 @@ const JoinDiscord = () => {
         <div className="flex-shrink-0">
           <Button
             size="lg"
-            className="bg-gradient-to-r-indigo-violet hover:opacity-90 transition-opacity shadow-lg w-full sm:w-auto"
+            className="hover:opacity-90 transition-opacity shadow-lg w-full sm:w-auto"
             asChild
           >
             <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer">

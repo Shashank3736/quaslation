@@ -26,13 +26,13 @@ const MainPage = () => {
           <div className="flex flex-col items-center space-y-6 text-center">
             <div className="space-y-6 flex flex-col items-center max-w-4xl">
               <h1 className="flex text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-center">
-                Welcome to <span className="text-gradient-indigo-violet ml-2">Quaslation</span>
+                Welcome to Quaslation
               </h1>
               <p className="mx-auto max-w-[700px] text-lg md:text-xl text-muted-foreground">
                 Discover the <del>best</del> fan translations of <strong>Asian</strong> web novels. Immerse yourself in captivating stories from
                 across Asia.
               </p>
-              <Button size="lg" className="bg-gradient-to-r-indigo-violet px-8 py-3" asChild>
+              <Button size="lg" className="bg-gradient-to-r-indigo-violet text-primary px-8 py-3" asChild>
                 <Link href="/novels">
                   Browse Novels <MoveRightIcon className="w-5 h-5 ml-2" />
                 </Link>

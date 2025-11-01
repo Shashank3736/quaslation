@@ -24,7 +24,7 @@ commentSection
   return (
     <div className='p-4 space-y-6'>
       {/* Reading container with neobrutalism styling */}
-      <div className='max-w-4xl mx-auto bg-background border-brutal border-black dark:border-white rounded-lg shadow-brutal-lg p-6 md:p-12'>
+      <div className='max-w-4xl mx-auto bg-background md:border-brutal md:border-black md:dark:border-white rounded-lg md:shadow-brutal-lg p-2 md:p-6 md:p-12'>
         <H3 className='border-b-4 border-brutal-cyan pb-2 mb-6'>Chapter {chapter.number}: {chapter.title}</H3>
         {(chapter.premium) ? 
         <>
