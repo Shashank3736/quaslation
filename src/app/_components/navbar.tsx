@@ -38,7 +38,7 @@ export default function Navbar() {
   return (
     <div className={cn(
       'flex justify-between items-center sticky top-0 z-50 bg-background border-b-brutal-lg border-black dark:border-white transition-shadow duration-300',
-      scrolled && 'shadow-brutal-lg'
+      scrolled && 'shadow-brutal-lg dark:shadow-white'
     )}>
       {/* Logo/Brand Area with brutal-yellow background */}
       <div className='flex items-center px-4 py-3'>
