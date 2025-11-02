@@ -5,140 +5,342 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 14px;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    /* High-contrast light mode colors */
+    --background: 0 0% 98%;           /* Off-white */
+    --foreground: 0 0% 5%;            /* Near black */
+    --card: 0 0% 100%;                /* Pure white */
+    --card-foreground: 0 0% 5%;       /* Near black */
+    --popover: 0 0% 100%;             /* Pure white */
+    --popover-foreground: 0 0% 5%;    /* Near black */
+    --primary: 0 0% 5%;               /* Near black */
+    --primary-foreground: 0 0% 98%;   /* Off-white */
+    --secondary: 210 40% 96.1%;       /* Light gray */
+    --secondary-foreground: 0 0% 5%;  /* Near black */
+    --muted: 210 40% 96.1%;           /* Light gray */
+    --muted-foreground: 0 0% 40%;     /* Medium gray */
+    --accent: 210 40% 96.1%;          /* Light gray */
+    --accent-foreground: 0 0% 5%;     /* Near black */
+    --destructive: 0 84.2% 60.2%;     /* Red */
+    --destructive-foreground: 0 0% 98%; /* Off-white */
+    --border: 0 0% 0%;                /* Pure black borders */
+    --input: 0 0% 100%;               /* White input background */
+    --ring: 215 100% 65%;             /* Brutal blue for focus */
+    --radius: 8px;                    /* Slightly rounded corners */
+    
+    /* Neobrutalism accent colors */
+    --brutal-yellow: 45 100% 62%;     /* #FFD93D */
+    --brutal-pink: 340 100% 70%;      /* #FF6B9D */
+    --brutal-cyan: 130 60% 60%;       /* #6BCF7F */
+    --brutal-purple: 270 100% 80%;    /* #C996FF */
+    --brutal-orange: 25 100% 63%;     /* #FF8C42 */
+    --brutal-blue: 215 100% 65%;      /* #4D96FF */
+    
+    /* Chart colors using neobrutalism palette */
+    --chart-1: 45 100% 62%;           /* Brutal yellow */
+    --chart-2: 130 60% 60%;           /* Brutal cyan */
+    --chart-3: 340 100% 70%;          /* Brutal pink */
+    --chart-4: 270 100% 80%;          /* Brutal purple */
+    --chart-5: 25 100% 63%;           /* Brutal orange */
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    /* High-contrast dark mode colors */
+    --background: 0 0% 10%;           /* Dark gray */
+    --foreground: 0 0% 98%;           /* Off-white */
+    --card: 0 0% 12%;                 /* Slightly lighter dark gray */
+    --card-foreground: 0 0% 98%;      /* Off-white */
+    --popover: 0 0% 12%;              /* Slightly lighter dark gray */
+    --popover-foreground: 0 0% 98%;   /* Off-white */
+    --primary: 0 0% 98%;              /* Off-white */
+    --primary-foreground: 0 0% 10%;   /* Dark gray */
+    --secondary: 0 0% 20%;            /* Medium dark gray */
+    --secondary-foreground: 0 0% 98%; /* Off-white */
+    --muted: 0 0% 20%;                /* Medium dark gray */
+    --muted-foreground: 0 0% 65%;     /* Light gray */
+    --accent: 0 0% 20%;               /* Medium dark gray */
+    --accent-foreground: 0 0% 98%;    /* Off-white */
+    --destructive: 0 84.2% 60.2%;     /* Red */
+    --destructive-foreground: 0 0% 98%; /* Off-white */
+    --border: 0 0% 100%;              /* White borders in dark mode */
+    --input: 0 0% 12%;                /* Dark input background */
+    --ring: 215 100% 65%;             /* Brutal blue for focus */
+    
+    /* Neobrutalism accent colors (same in dark mode) */
+    --brutal-yellow: 45 100% 62%;     /* #FFD93D */
+    --brutal-pink: 340 100% 70%;      /* #FF6B9D */
+    --brutal-cyan: 130 60% 60%;       /* #6BCF7F */
+    --brutal-purple: 270 100% 80%;    /* #C996FF */
+    --brutal-orange: 25 100% 63%;     /* #FF8C42 */
+    --brutal-blue: 215 100% 65%;      /* #4D96FF */
+    
+    /* Chart colors using neobrutalism palette */
+    --chart-1: 45 100% 62%;           /* Brutal yellow */
+    --chart-2: 130 60% 60%;           /* Brutal cyan */
+    --chart-3: 340 100% 70%;          /* Brutal pink */
+    --chart-4: 270 100% 80%;          /* Brutal purple */
+    --chart-5: 25 100% 63%;           /* Brutal orange */
   }
 }
 
-/* Gradient & Glass Utilities */
+/* Neobrutalism Utilities */
 @layer utilities {
-  /* Gradient backgrounds */
-  .bg-gradient-to-br-indigo-violet {
-    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+  /* Dark mode shadow utilities - automatically switch to white shadows */
+  .shadow-brutal-auto {
+    @apply shadow-brutal dark:shadow-brutal-dark;
   }
   
-  .bg-gradient-to-tr-indigo-violet {
-    background: linear-gradient(45deg, #6366F1 0%, #8B5CF6 100%);
+  .shadow-brutal-sm-auto {
+    @apply shadow-brutal-sm dark:shadow-brutal-sm-dark;
   }
   
-  .bg-gradient-to-b-indigo-violet {
-    background: linear-gradient(180deg, #6366F1 0%, #8B5CF6 100%);
+  .shadow-brutal-lg-auto {
+    @apply shadow-brutal-lg dark:shadow-brutal-lg-dark;
   }
   
-  .bg-gradient-to-r-indigo-violet {
-    background: linear-gradient(90deg, #6366F1 0%, #8B5CF6 100%);
+  .shadow-brutal-xl-auto {
+    @apply shadow-brutal-xl dark:shadow-brutal-xl-dark;
   }
   
-  /* Text gradient */
-  .text-gradient-indigo-violet {
-    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  .shadow-brutal-mobile-auto {
+    @apply shadow-brutal-mobile dark:shadow-brutal-mobile-dark;
   }
   
-  /* Glass panels - light mode */
-  .glass {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  /* Decorative geometric shapes */
+  .brutal-circle {
+    @apply rounded-full border-3 border-black dark:border-white;
   }
   
-  /* Glass panels - dark mode */
-  .dark .glass {
-    background: rgba(17, 24, 39, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
+  .brutal-square {
+    @apply border-3 border-black dark:border-white;
   }
   
-  /* Glass with ring for focus */
-  .glass-ring {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  .brutal-triangle {
+    width: 0;
+    height: 0;
+    border-style: solid;
   }
   
-  .glass-ring:focus,
-  .glass-ring:focus-within {
-    outline: 2px solid rgba(255, 255, 255, 0.1);
-    outline-offset: 2px;
+  /* Triangle variants */
+  .brutal-triangle-up {
+    border-width: 0 50px 86.6px 50px;
+    border-color: transparent transparent currentColor transparent;
   }
   
-  .dark .glass-ring {
-    background: rgba(17, 24, 39, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
+  .brutal-triangle-down {
+    border-width: 86.6px 50px 0 50px;
+    border-color: currentColor transparent transparent transparent;
   }
   
-  /* Subtle background pattern */
-  .bg-pattern {
-    background-image:
-      radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 40% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 50%);
+  .brutal-triangle-right {
+    border-width: 50px 0 50px 86.6px;
+    border-color: transparent transparent transparent currentColor;
   }
   
-  /* Vignette effect */
-  .bg-vignette {
-    background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.2) 100%);
+  .brutal-triangle-left {
+    border-width: 50px 86.6px 50px 0;
+    border-color: transparent currentColor transparent transparent;
   }
   
-  .dark .bg-vignette {
-    background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+  /* Pattern backgrounds */
+  .bg-pattern-dots {
+    background-image: radial-gradient(circle, hsl(var(--foreground)) 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.1;
+  }
+  
+  .bg-pattern-grid {
+    background-image: 
+      linear-gradient(hsl(var(--foreground)) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--foreground)) 1px, transparent 1px);
+    background-size: 30px 30px;
+    opacity: 0.1;
+  }
+  
+  .bg-pattern-diagonal {
+    background-image: repeating-linear-gradient(
+      45deg,
+      hsl(var(--foreground)) 0px,
+      hsl(var(--foreground)) 1px,
+      transparent 1px,
+      transparent 20px
+    );
+    opacity: 0.1;
+  }
+  
+  /* Standalone pattern backgrounds (without opacity) */
+  .bg-pattern-dots-solid {
+    background-image: radial-gradient(circle, hsl(var(--foreground)) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  
+  .bg-pattern-grid-solid {
+    background-image: 
+      linear-gradient(hsl(var(--foreground)) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--foreground)) 1px, transparent 1px);
+    background-size: 30px 30px;
+  }
+  
+  .bg-pattern-diagonal-solid {
+    background-image: repeating-linear-gradient(
+      45deg,
+      hsl(var(--foreground)) 0px,
+      hsl(var(--foreground)) 1px,
+      transparent 1px,
+      transparent 20px
+    );
+  }
+  
+  /* Colorful pattern backgrounds */
+  .bg-pattern-brutal-yellow {
+    background-color: hsl(var(--brutal-yellow) / 0.1);
+  }
+  
+  .bg-pattern-brutal-pink {
+    background-color: hsl(var(--brutal-pink) / 0.1);
+  }
+  
+  .bg-pattern-brutal-cyan {
+    background-color: hsl(var(--brutal-cyan) / 0.1);
+  }
+  
+  .bg-pattern-brutal-purple {
+    background-color: hsl(var(--brutal-purple) / 0.1);
+  }
+  
+  .bg-pattern-brutal-orange {
+    background-color: hsl(var(--brutal-orange) / 0.1);
+  }
+  
+  .bg-pattern-brutal-blue {
+    background-color: hsl(var(--brutal-blue) / 0.1);
+  }
+  
+  /* Decorative corner accents */
+  .brutal-corner-accent {
+    position: relative;
+  }
+  
+  .brutal-corner-accent::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 40px 40px 0;
+    border-color: transparent hsl(var(--brutal-cyan)) transparent transparent;
+  }
+  
+  .brutal-corner-accent-yellow::before {
+    border-color: transparent hsl(var(--brutal-yellow)) transparent transparent;
+  }
+  
+  .brutal-corner-accent-pink::before {
+    border-color: transparent hsl(var(--brutal-pink)) transparent transparent;
+  }
+  
+  .brutal-corner-accent-purple::before {
+    border-color: transparent hsl(var(--brutal-purple)) transparent transparent;
+  }
+  
+  /* Color blocking utilities */
+  .brutal-color-block {
+    @apply relative overflow-hidden;
+  }
+  
+  .brutal-color-block::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    bottom: 0;
+    left: 0;
+    background: hsl(var(--brutal-yellow));
+  }
+  
+  /* Hover effects with translate and shadow shift */
+  .brutal-hover {
+    @apply transition-all duration-200 ease-out;
+  }
+  
+  .brutal-hover:hover {
+    @apply -translate-x-0.5 -translate-y-0.5;
+  }
+  
+  /* Responsive mobile adaptations */
+  /* Mobile: 2px borders, smaller shadows, reduced padding */
+  @media (max-width: 767px) {
+    .brutal-responsive {
+      @apply border-brutal-mobile shadow-brutal-mobile;
+    }
+    
+    .brutal-responsive-lg {
+      @apply border-brutal-mobile shadow-brutal-sm;
+    }
+    
+    /* Reduce padding by 25% on mobile */
+    .brutal-padding-responsive {
+      padding: 0.75rem; /* 25% less than 1rem */
+    }
+    
+    .brutal-padding-responsive-lg {
+      padding: 1.5rem; /* 25% less than 2rem */
+    }
+    
+    .brutal-padding-responsive-xl {
+      padding: 2.25rem; /* 25% less than 3rem */
+    }
+    
+    /* Ensure minimum touch target size */
+    .brutal-touch-target {
+      min-width: 44px;
+      min-height: 44px;
+    }
+    
+    /* Mobile-specific shadow utilities */
+    .brutal-shadow-mobile {
+      @apply shadow-brutal-mobile;
+    }
+    
+    .brutal-shadow-mobile-yellow {
+      @apply shadow-brutal-mobile-yellow;
+    }
+    
+    .brutal-shadow-mobile-pink {
+      @apply shadow-brutal-mobile-pink;
+    }
+    
+    .brutal-shadow-mobile-cyan {
+      @apply shadow-brutal-mobile-cyan;
+    }
+    
+    .brutal-shadow-mobile-purple {
+      @apply shadow-brutal-mobile-purple;
+    }
+  }
+  
+  /* Tablet and desktop: 3px borders, standard shadows */
+  @media (min-width: 768px) {
+    .brutal-responsive {
+      @apply border-brutal shadow-brutal;
+    }
+    
+    .brutal-responsive-lg {
+      @apply border-brutal shadow-brutal-lg;
+    }
+    
+    .brutal-padding-responsive {
+      padding: 1rem;
+    }
+    
+    .brutal-padding-responsive-lg {
+      padding: 2rem;
+    }
+    
+    .brutal-padding-responsive-xl {
+      padding: 3rem;
+    }
   }
 }
 
@@ -148,6 +350,26 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  
+  /* GPU acceleration for elements with shadows and transforms */
+  .brutal-hover,
+  [class*="shadow-brutal"],
+  [class*="brutal-corner-accent"] {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+  
+  /* Optimize animations for performance */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
@@ -166,5 +388,23 @@
 
   #disqus_thread { 
     color-scheme: none; 
+  }
+
+  /* Chapter content neobrutalism styling */
+  .chapter-content h1,
+  .chapter-content h2,
+  .chapter-content h3,
+  .chapter-content h4,
+  .chapter-content h5,
+  .chapter-content h6 {
+    @apply border-b-4 border-brutal-cyan pb-1 mb-4;
+  }
+
+  .chapter-content a {
+    @apply text-brutal-blue font-semibold transition-all duration-200;
+  }
+
+  .chapter-content a:hover {
+    @apply shadow-[2px_2px_0px_0px] shadow-brutal-blue;
   }
 }

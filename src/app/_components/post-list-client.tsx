@@ -5,6 +5,7 @@ import H3 from "@/components/typography/h3"
 import Muted from "@/components/typography/muted"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { ToastAction } from "@/components/ui/toast"
 import { useToast } from "@/components/ui/use-toast"
 import { action as getLatestPosts } from "./actions"
@@ -18,29 +19,31 @@ type LatestPosts = Awaited<ReturnType<typeof getLatestPosts>>
 type ChapterDetail = LatestPosts[number]
 
 const ChapterItem: React.FC<{ chapter: ChapterDetail; premium: boolean }> = React.memo(({ chapter, premium }) => (
-  <article className="p-4 mb-4 border rounded-lg">
-    {premium ? (
-      <div className="flex items-center mb-2">
-        <H3 className="mr-2">Chapter {chapter.number}: {chapter.title}</H3>
-        <Badge>Coming Soon</Badge>
-      </div>
-    ) : (
-      <H3 className="mb-2">Chapter {chapter.number}: {chapter.title}</H3>
-    )}
-    <p className="mb-2">
-      {shortifyString(chapter.description, 255)}
-      <Link 
-        className="text-blue-600 dark:text-blue-400 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500" 
-        href={`/novels/${chapter.novel.slug}/${chapter.slug}`}
-        aria-label={`Read more about Chapter ${chapter.number}: ${chapter.title}`}
-      > 
-        Read More {">>"}
-      </Link>
-    </p>
-    <div className="flex justify-between">
+  <Card className="mb-4 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brutal-xl hover:dark:shadow-brutal-xl-dark transition-all">
+    <CardContent className="pt-4">
+      {premium ? (
+        <div className="flex items-center mb-2">
+          <H3 className="mr-2">Chapter {chapter.number}: {chapter.title}</H3>
+          <Badge>Coming Soon</Badge>
+        </div>
+      ) : (
+        <H3 className="mb-2">Chapter {chapter.number}: {chapter.title}</H3>
+      )}
+      <p className="mb-2">
+        {shortifyString(chapter.description, 255)}
+        <Link 
+          className="text-brutal-blue font-bold hover:underline focus:outline-none focus:ring-2 focus:ring-brutal-blue focus:ring-offset-2" 
+          href={`/novels/${chapter.novel.slug}/${chapter.slug}`}
+          aria-label={`Read more about Chapter ${chapter.number}: ${chapter.title}`}
+        > 
+          {" "}Read More {">>"}
+        </Link>
+      </p>
+    </CardContent>
+    <CardFooter className="flex justify-between">
       <Muted>
         <Link 
-          className="hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500" 
+          className="hover:underline focus:outline-none focus:ring-2 focus:ring-brutal-blue focus:ring-offset-2" 
           href={`/novels/${chapter.novel.slug}`} 
           title={chapter.novel.title}
           aria-label={`View novel: ${chapter.novel.title}`}
@@ -53,8 +56,8 @@ const ChapterItem: React.FC<{ chapter: ChapterDetail; premium: boolean }> = Reac
           {timeAgo(new Date(chapter.publishedAt || chapter.createdAt))}
         </time>
       </Muted>
-    </div>
-  </article>
+    </CardFooter>
+  </Card>
 ))
 
 ChapterItem.displayName = 'ChapterItem'

@@ -46,11 +46,13 @@ export default function CreateNovelForm() {
     if (newNovelData.slug) {
       toast({
         description: `New novel with name: ${values.title} is created.`,
-        action: <Link href={`/novels/${newNovelData.slug}`}>Check here!</Link>
+        action: <Link href={`/novels/${newNovelData.slug}`}>Check here!</Link>,
+        variant: "success"
       })
     } else {
       toast({
-        description: `Something feels wrong with the novel.`
+        description: `Something feels wrong with the novel.`,
+        variant: "destructive"
       })
     }
     form.reset()
@@ -119,7 +121,7 @@ export default function CreateNovelForm() {
             />
           </div>
         </div>
-        <Button type="submit" disabled={submitting}>Submit</Button>
+        <Button type="submit" variant="primary" disabled={submitting}>Submit</Button>
       </form>
     </Form>
   )

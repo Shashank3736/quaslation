@@ -1,8 +1,8 @@
 import React from "react";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { Card, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
 import { DISCORD_INVITE_URL } from "@/lib/config";
-import { cn } from "@/lib/utils"; // if you have a className merge helper
+import { cn } from "@/lib/utils";
 
 export const DiscordSVG = ({ className }: { className?: string }) => {
   return (
@@ -23,41 +23,38 @@ export const DiscordSVG = ({ className }: { className?: string }) => {
 
 const JoinDiscord = () => {
   return (
-    <div
-      className={cn(
-        "group relative overflow-hidden glass border border-white/15",
-        "rounded-xl p-6 flex flex-col sm:flex-row sm:items-center gap-6"
-      )}
-    >
-      {/* Icon container */}
-      <div className="flex-shrink-0 flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br-indigo-violet text-white">
-        <DiscordSVG className="w-8 h-8" />
-      </div>
+    <Card className="group relative overflow-hidden">
+      <CardContent className="p-4 md:p-6 flex flex-col sm:flex-row sm:items-center gap-4 md:gap-6">
+        {/* Icon container */}
+        <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-br-indigo-violet">
+          <DiscordSVG className="w-6 h-6 md:w-8 md:h-8" />
+        </div>
 
-      {/* Content */}
-      <div className="flex-1">
-        <AlertTitle className="text-2xl font-bold tracking-tight text-gradient-indigo-violet">
-          Join our Discord Community
-        </AlertTitle>
-        <AlertDescription className="mt-2 text-muted-foreground leading-relaxed">
-          Connect with like-minded individuals, participate in discussions, and stay up-to-date with
-          the latest news and updates. You can also request translations for other novels.
-        </AlertDescription>
-      </div>
+        {/* Content */}
+        <div className="flex-1">
+          <h3 className="text-xl md:text-2xl font-bold tracking-tight text-gradient-indigo-violet">
+            Join our Discord Community
+          </h3>
+          <p className="mt-2 text-sm md:text-base text-muted-foreground leading-relaxed">
+            Connect with like-minded individuals, participate in discussions, and stay up-to-date with
+            the latest news and updates. You can also request translations for other novels.
+          </p>
+        </div>
 
-      {/* Button */}
-      <div className="flex-shrink-0">
-        <Button
-          size="lg"
-          className="bg-gradient-to-r-indigo-violet text-white hover:opacity-90 transition-opacity shadow-lg"
-          asChild
-        >
-          <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer">
-            Join Now
-          </a>
-        </Button>
-      </div>
-    </div>
+        {/* Button */}
+        <div className="flex-shrink-0">
+          <Button
+            size="lg"
+            className="hover:opacity-90 transition-opacity shadow-lg w-full sm:w-auto"
+            asChild
+          >
+            <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer">
+              Join Now
+            </a>
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

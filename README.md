@@ -1,10 +1,10 @@
 # Quaslation
 
-![Version](https://img.shields.io/badge/version-2.16.0-blue)
+![Version](https://img.shields.io/badge/version-3.0.0-blue)
 
 Evidence-based technical overview and setup guide for the Quaslation web application.
 
-- Version: 2.16.0 from [package.json](package.json)
+- Version: 3.0.0 from [package.json](package.json)
 - Maturity: Active development with semantic versioning and detailed changelog entries ([CHANGELOG.md](CHANGELOG.md))
 - CI: GitHub Actions build workflow present ([.github/workflows/nextjs-build.yml](.github/workflows/nextjs-build.yml))
 
@@ -73,7 +73,7 @@ Quaslation is a Next.js App Router application for publishing high-quality fan t
 
 ## Architecture overview
 - Platform and frameworks
-  - Next.js 15 App Router with React 19 and TypeScript
+  - Next.js 16 App Router with React 19.2 and TypeScript
   - Styling: Tailwind CSS with typography plugin and animations
   - UI primitives: Radix UI and components under [src/components/ui](src/components/ui)
 - Persistence and ORM

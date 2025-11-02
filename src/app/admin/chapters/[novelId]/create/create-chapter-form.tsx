@@ -50,7 +50,8 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
     try {
       await createChapter(novelId, values)
       toast({
-        description: "Completed."
+        description: "Completed.",
+        variant: "success"
       })
       form.setValue("content", "")
       form.setValue("number", values.number+1)
@@ -201,7 +202,7 @@ export const CreateChapterForm = ({ previousChapter, novelId }:{ previousChapter
           )} 
         />
         
-        <Button type="submit" disabled={submiting}>Submit</Button>
+        <Button type="submit" variant="primary" disabled={submiting}>Submit</Button>
       </form>
     </Form>
   )

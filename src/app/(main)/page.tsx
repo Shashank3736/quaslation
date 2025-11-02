@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { DecorativeHero } from '@/components/ui/decorative';
 import { MoveRightIcon } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
@@ -20,24 +21,18 @@ const MainPage = () => {
     <main className="flex-1">
       
       {/* Hero Section */}
-      <section className="relative w-full py-16 md:py-24 lg:py-32 overflow-hidden">
-        {/* Decorative gradient blobs */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-32 w-80 h-80 bg-gradient-to-br-indigo-violet opacity-20 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-gradient-to-tr-indigo-violet opacity-20 rounded-full blur-3xl"></div>
-        </div>
-        
-        <div className="relative container px-4 md:px-6">
+      <DecorativeHero pattern="grid" className="w-full py-16 md:py-24 lg:py-32">
+        <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center space-y-6 text-center">
             <div className="space-y-6 flex flex-col items-center max-w-4xl">
               <h1 className="flex text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-center">
-                Welcome to <span className="text-gradient-indigo-violet ml-2">Quaslation</span>
+                Welcome to Quaslation
               </h1>
               <p className="mx-auto max-w-[700px] text-lg md:text-xl text-muted-foreground">
                 Discover the <del>best</del> fan translations of <strong>Asian</strong> web novels. Immerse yourself in captivating stories from
                 across Asia.
               </p>
-              <Button size="lg" className="bg-gradient-to-r-indigo-violet text-white px-8 py-3" asChild>
+              <Button size="lg" className="bg-gradient-to-r-indigo-violet text-primary px-8 py-3" asChild>
                 <Link href="/novels">
                   Browse Novels <MoveRightIcon className="w-5 h-5 ml-2" />
                 </Link>
@@ -45,7 +40,7 @@ const MainPage = () => {
             </div>
           </div>
         </div>
-      </section>
+      </DecorativeHero>
 
       {/* Features Section */}
       <section className="py-16">
@@ -111,7 +106,7 @@ const MainPage = () => {
                 Stay up to date with our most recent translations. New chapters added regularly!
               </p>
             </div>
-            <Button variant="gradient" asChild><Link href={"/home"}>View Latest Releases <MoveRightIcon className='w-4 h-4 ml-2' /></Link></Button>
+            <Button variant="primary" asChild><Link href={"/home"}>View Latest Releases <MoveRightIcon className='w-4 h-4 ml-2' /></Link></Button>
           </div>
         </div>
       </section>
