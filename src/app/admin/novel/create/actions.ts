@@ -7,6 +7,7 @@ import { novel as novelTable, richText as richTextTable } from "@/lib/db/schema"
 import { markdownToHtml, markdownToText, slugify } from "@/lib/utils";
 import { eq } from "drizzle-orm";
 import { updateTag } from "next/cache";
+import { CACHE_TAGS } from "@/lib/cache";
 
 export async function createNovel(values: z.infer<typeof createNovelSchema>):Promise<{ slug: string | false }> {
   const richTextData = await db.insert(richTextTable).values({
@@ -27,7 +28,9 @@ export async function createNovel(values: z.infer<typeof createNovelSchema>):Pro
       slug: novelTable.slug,
     });
 
-    updateTag("novel:create");
+    // Invalidate novel list and all novel-related caches
+    updateTag(CACHE_TAGS.novel.list);
+    updateTag(CACHE_TAGS.novel.all);
 
     return data[0]
   } catch (error) {
