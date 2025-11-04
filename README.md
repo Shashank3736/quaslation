@@ -1,10 +1,10 @@
 # Quaslation
 
-![Version](https://img.shields.io/badge/version-3.0.1-blue)
+![Version](https://img.shields.io/badge/version-3.0.2-blue)
 
 Evidence-based technical overview and setup guide for the Quaslation web application.
 
-- Version: 3.0.1 from [package.json](package.json)
+- Version: 3.0.2 from [package.json](package.json)
 - Maturity: Active development with semantic versioning and detailed changelog entries ([CHANGELOG.md](CHANGELOG.md))
 - CI: GitHub Actions build workflow present ([.github/workflows/nextjs-build.yml](.github/workflows/nextjs-build.yml))
 
