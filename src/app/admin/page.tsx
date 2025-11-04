@@ -12,6 +12,9 @@ const links = [
   }, {
     tag: "Novel",
     href: "/admin/novel"
+  }, {
+    tag: "Comments",
+    href: "/admin/comments"
   }
 ]
 
