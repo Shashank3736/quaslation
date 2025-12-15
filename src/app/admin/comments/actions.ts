@@ -35,11 +35,21 @@ export async function getAllCommentsAdmin(): Promise<AdminComment[]> {
       return [];
     }
 
-    // Check if user is admin
+    // Get user email from Clerk for database lookup
+    const client = await clerkClient();
+    const clerkUser = await client.users.getUser(userId);
+    const userEmail = clerkUser.emailAddresses[0]?.emailAddress;
+
+    if (!userEmail) {
+      console.error("Unauthorized: No email found for user");
+      return [];
+    }
+
+    // Check if user is admin (database stores admin with email in clerkId field)
     const currentUser = await db
       .select()
       .from(userTable)
-      .where(eq(userTable.clerkId, userId))
+      .where(eq(userTable.clerkId, userEmail))
       .limit(1);
 
     if (currentUser.length === 0 || currentUser[0].role !== "ADMIN") {
@@ -144,11 +154,23 @@ export async function toggleCommentVisibilityAdmin(
       };
     }
 
-    // Check if user is admin
+    // Get user email from Clerk for database lookup
+    const client = await clerkClient();
+    const clerkUser = await client.users.getUser(userId);
+    const userEmail = clerkUser.emailAddresses[0]?.emailAddress;
+
+    if (!userEmail) {
+      return {
+        success: false,
+        error: "Unauthorized: No email found",
+      };
+    }
+
+    // Check if user is admin (database stores admin with email in clerkId field)
     const currentUser = await db
       .select()
       .from(userTable)
-      .where(eq(userTable.clerkId, userId))
+      .where(eq(userTable.clerkId, userEmail))
       .limit(1);
 
     if (currentUser.length === 0 || currentUser[0].role !== "ADMIN") {
@@ -225,11 +247,23 @@ export async function deleteCommentAdmin(
       };
     }
 
-    // Check if user is admin
+    // Get user email from Clerk for database lookup
+    const client = await clerkClient();
+    const clerkUser = await client.users.getUser(userId);
+    const userEmail = clerkUser.emailAddresses[0]?.emailAddress;
+
+    if (!userEmail) {
+      return {
+        success: false,
+        error: "Unauthorized: No email found",
+      };
+    }
+
+    // Check if user is admin (database stores admin with email in clerkId field)
     const currentUser = await db
       .select()
       .from(userTable)
-      .where(eq(userTable.clerkId, userId))
+      .where(eq(userTable.clerkId, userEmail))
       .limit(1);
 
     if (currentUser.length === 0 || currentUser[0].role !== "ADMIN") {
