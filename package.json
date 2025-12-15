@@ -1,6 +1,6 @@
 {
   "name": "quaslation",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -15,7 +15,7 @@
     "db:verify": "node scripts/migrate/verify-export.js"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.30.0",
+    "@clerk/nextjs": "^6.36.2",
     "@gradio/client": "^1.15.6",
     "@hookform/resolvers": "^3.9.0",
     "@mdx-js/loader": "^3.0.1",
