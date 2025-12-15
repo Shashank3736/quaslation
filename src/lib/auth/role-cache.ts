@@ -12,8 +12,10 @@ if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
 /**
  * Direct database query for user role without caching
  * This is used as a fallback and in edge runtime contexts where unstable_cache isn't available
+ * Note: The id parameter is the user's email, which is stored in the clerkId column
  */
 async function getUserRoleFromDb(id: string): Promise<string> {
+  // The database stores admin users with their email in the clerkId field
   const data = await db.select().from(userTable).where(eq(userTable.clerkId, id));
   const userData = data.at(0);
   return userData ? userData.role : "MEMBER";
@@ -125,21 +127,21 @@ export async function getCachedUserRole(userId: string): Promise<string> {
   try {
     // Try to get from cache first
     const cachedRole = await roleCache.get(userId);
-    
+
     if (cachedRole) {
       return cachedRole;
     }
 
     // Cache miss - query database
     const role = await getUserRoleFromDb(userId);
-    
+
     // Store in cache for future requests
     await roleCache.set(userId, role);
-    
+
     return role;
   } catch (error) {
     console.error("Error getting cached user role:", error);
-    
+
     // Fallback to direct database query on any error
     try {
       return await getUserRoleFromDb(userId);
