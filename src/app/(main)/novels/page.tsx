@@ -65,13 +65,13 @@ const getCacheData = unstable_cache(getNovelList, ["novels"], {
 export default async function NovelList() {
   const novels = await getCacheData()
   return (
-    <div className='p-4'>
-      <div className="text-center mb-12">
+    <section className='p-4'>
+      <header className="text-center mb-12">
         <H2 className="text-3xl font-bold text-gradient-indigo-violet mb-4">Discover Amazing Novels</H2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           Explore our collection of fan-translated Asian web novels. Each story is carefully translated and edited by passionate fans.
         </p>
-      </div>
+      </header>
       
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
         {novels.map(novel => novel.chapters.length > 0 ? (
@@ -145,6 +145,6 @@ export default async function NovelList() {
           </p>
         </DecorativeEmptyState>
       )}
-    </div>
+    </section>
   )
 }
