@@ -108,9 +108,9 @@ export default async function NovelPage({ params }: { params: Promise<{ slug: st
 
   const chapters = novel.chapters;
   return (
-    <div className='p-2 sm:p-4'>
+    <article className='p-2 sm:p-4'>
       {/* Hero Section with Cover and Info */}
-      <div className='mb-8'>
+      <header className='mb-8'>
         <div className='flex flex-col lg:flex-row items-center gap-8'>
           {/* Cover Image */}
           <div className='flex-shrink-0'>
@@ -176,10 +176,10 @@ export default async function NovelPage({ params }: { params: Promise<{ slug: st
             </Card>
           </div>
         </div>
-      </div>
+      </header>
 
       {/* Novel Description */}
-      <div className="mb-8">
+      <section className="mb-8">
         <Card className="glass">
           <CardContent className="p-6">
             <div
@@ -188,18 +188,18 @@ export default async function NovelPage({ params }: { params: Promise<{ slug: st
             />
           </CardContent>
         </Card>
-      </div>
+      </section>
 
       {/* Chapters Section */}
-      <div className='mt-8'>
-        <div className="flex items-center justify-between mb-6">
+      <section className='mt-8'>
+        <header className="flex items-center justify-between mb-6">
           <H2 className="text-2xl font-bold text-gradient-indigo-violet">Chapters</H2>
-          <div className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {chapters.length} total chapters
-          </div>
-        </div>
+          </p>
+        </header>
         <ChapterList novelId={novel.id} novelSlug={paramsResolved.slug} data={chapters} />
-      </div>
-    </div>
+      </section>
+    </article>
   )
 }

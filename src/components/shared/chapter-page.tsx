@@ -22,9 +22,9 @@ commentSection
   const previous = chapter.previous
   const next = chapter.next
   return (
-    <div className='p-4 space-y-6'>
+    <main className='p-4 space-y-6'>
       {/* Reading container with neobrutalism styling */}
-      <div className='max-w-4xl mx-auto bg-background md:border-brutal md:border-black md:dark:border-white rounded-lg md:shadow-brutal-lg p-2 md:p-12'>
+      <section className='max-w-4xl mx-auto bg-background md:border-brutal md:border-black md:dark:border-white rounded-lg md:shadow-brutal-lg p-2 md:p-12'>
         <H3 className='border-b-4 border-brutal-cyan pb-2 mb-6'>Chapter {chapter.number}: {chapter.title}</H3>
         {(chapter.premium) ? 
         <>
@@ -40,10 +40,10 @@ commentSection
         :(
           <article className='space-y-2 prose lg:prose-xl dark:prose-invert max-w-none chapter-content' dangerouslySetInnerHTML={{__html: chapter.content}} />
         )}
-      </div>
+      </section>
 
       {/* Chapter navigation with neobrutalism styling */}
-      <div className='max-w-4xl mx-auto flex flex-wrap gap-3 justify-center items-center'>
+      <nav className='max-w-4xl mx-auto flex flex-wrap gap-3 justify-center items-center'>
         {previous ? (
           <Link href={`/novels/${novelSlug}/${previous.slug}`}>
             <Button className='bg-brutal-yellow hover:bg-brutal-yellow text-black border-brutal border-black dark:border-white shadow-brutal hover:shadow-brutal-lg hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all'>
@@ -72,12 +72,12 @@ commentSection
           </Button>
         )}
         <ChapterNavigation previousLink={previous ? `/novels/${novelSlug}/${previous.slug}` : undefined} nextLink={next ? `/novels/${novelSlug}/${next.slug}` : undefined} />
-      </div>
+      </nav>
 
       <NovelSuggestions currentNovelId={chapter.novelId} count={3} />
       <JoinDiscord />
       {commentSection}
       {/* <ScrollToTop /> */}
-    </div>
+    </main>
   )
 }
