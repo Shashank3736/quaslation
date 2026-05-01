@@ -1,5 +1,5 @@
 import { TranslationTool } from "@/components/update-translation-tool";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
+import { Show } from "@clerk/nextjs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -13,10 +13,10 @@ export default function Home() {
         </div>
       </header>
       <main className="container mx-auto px-4 py-8 max-w-6xl">
-        <SignedIn>
+        <Show when="signed-in">
           <TranslationTool />
-        </SignedIn>
-        <SignedOut>
+        </Show>
+        <Show when="signed-out">
           <div className="text-center py-16">
             <Card className="glass max-w-md mx-auto">
               <CardHeader>
@@ -37,7 +37,7 @@ export default function Home() {
               </CardContent>
             </Card>
           </div>
-        </SignedOut>
+        </Show>
       </main>
     </div>
   )
