@@ -1,6 +1,6 @@
 import React from 'react'
 import H3 from '../typography/h3'
-import { SignedIn, SignedOut } from '@clerk/nextjs'
+import { Show } from '@clerk/nextjs'
 import RestrictedContent from './restricted-content'
 import LimitedContent from './limited-content'
 import { Button } from '../ui/button'
@@ -28,14 +28,14 @@ commentSection
         <H3 className='border-b-4 border-brutal-cyan pb-2 mb-6'>Chapter {chapter.number}: {chapter.title}</H3>
         {(chapter.premium) ? 
         <>
-        <SignedIn>
+        <Show when="signed-in">
           <article className='space-y-2 prose lg:prose-xl dark:prose-invert max-w-none chapter-content' dangerouslySetInnerHTML={{__html: chapter.content}} />
-        </SignedIn>
-        <SignedOut>
+        </Show>
+        <Show when="signed-out">
           <RestrictedContent type={"login"}>
             <LimitedContent htmlContent={chapter.content} />
           </RestrictedContent>
-        </SignedOut>
+        </Show>
         </>
         :(
           <article className='space-y-2 prose lg:prose-xl dark:prose-invert max-w-none chapter-content' dangerouslySetInnerHTML={{__html: chapter.content}} />

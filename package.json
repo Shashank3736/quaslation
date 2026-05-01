@@ -15,7 +15,7 @@
     "db:verify": "node scripts/migrate/verify-export.js"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.30.0",
+    "@clerk/nextjs": "^7.3.0",
     "@gradio/client": "^1.15.6",
     "@hookform/resolvers": "^3.9.0",
     "@mdx-js/loader": "^3.0.1",
@@ -56,8 +56,8 @@
     "node-html-parser": "^7.0.1",
     "openai": "^5.10.2",
     "postgres": "^3.4.4",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
     "react-hook-form": "^7.53.0",
     "rehype-parse": "^9.0.1",
     "rehype-remark": "^10.0.1",
@@ -72,15 +72,15 @@
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
     "turndown": "^7.2.0",
-    "zod": "^3.23.8"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
     "@google/generative-ai": "^0.24.1",
     "@tailwindcss/typography": "^0.5.13",
     "@types/node": "^20.19.9",
-    "@types/react": "19.2.2",
-    "@types/react-dom": "19.2.2",
+    "@types/react": "19.2.3",
+    "@types/react-dom": "19.2.3",
     "@types/rss": "^0.0.32",
     "@types/turndown": "^5.0.5",
     "dotenv": "^16.4.5",
@@ -95,7 +95,7 @@
     "typescript": "^5"
   },
   "overrides": {
-    "@types/react": "19.2.2",
-    "@types/react-dom": "19.2.2"
+    "@types/react": "19.2.3",
+    "@types/react-dom": "19.2.3"
   }
 }

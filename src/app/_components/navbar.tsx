@@ -3,7 +3,7 @@
 import { ModeToggle } from '@/components/system/dark-mode-button'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
+import { Show, SignInButton, UserButton } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
@@ -97,16 +97,15 @@ export default function Navbar() {
 
       {/* Auth Section */}
       <div className='flex space-x-2 justify-center items-center px-4 py-3'>
-        <SignedIn>
-          <UserButton userProfileMode='navigation' userProfileUrl='/user-profile' />
-        </SignedIn>
-        <SignedOut>
+        <Show when="signed-in" fallback={
           <SignInButton>
             <Button className='hover:cursor-pointer font-semibold' asChild>
               <span>Sign In</span>
             </Button>
           </SignInButton>
-        </SignedOut>
+        }>
+          <UserButton userProfileMode='navigation' userProfileUrl='/user-profile' />
+        </Show>
       </div>
     </div>
   )
