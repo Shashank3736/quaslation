@@ -2,7 +2,7 @@
 
 import { ModeToggle } from '@/components/system/dark-mode-button'
 import { Button } from '@/components/ui/button'
-import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -36,16 +36,16 @@ export default function Navbar() {
   }, [])
 
   return (
-    <div className={cn(
+    <nav aria-label="Main navigation" className={cn(
       'flex justify-between items-center sticky top-0 z-50 bg-background border-b-brutal-lg border-black dark:border-white transition-shadow duration-300',
       scrolled && 'shadow-brutal-lg dark:shadow-white'
     )}>
       {/* Logo/Brand Area with brutal-yellow background */}
       <div className='flex items-center px-4 py-3'>
-        <Image alt='logo' src={"/icon.jpg"} width={256} height={256} className='rounded-full w-10 h-10 border-brutal border-black hidden md:block' />
+        <Image alt='Quaslation logo' src={"/icon.jpg"} width={256} height={256} className='rounded-full w-10 h-10 border-brutal border-black hidden md:block' />
         <Sheet>
-          <SheetTrigger className='md:hidden p-1 hover:bg-black/10 dark:hover:bg-white/10 rounded transition-colors'>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="size-6">
+          <SheetTrigger className='md:hidden p-1 hover:bg-black/10 dark:hover:bg-white/10 rounded transition-colors' aria-label="Open navigation menu">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="size-6" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M12 17.25h8.25" />
             </svg>
           </SheetTrigger>
@@ -57,6 +57,7 @@ export default function Navbar() {
               <SheetTitle className='text-center font-bold text-xl uppercase'>
                 Index
               </SheetTitle>
+              <SheetDescription className='sr-only'>Site navigation links</SheetDescription>
               <Separator className='bg-black dark:bg-white h-[3px]' />
               {navLinks.map((data) => (
                 <SheetClose key={data.title} asChild>
@@ -81,7 +82,7 @@ export default function Navbar() {
       </div>
 
       {/* Desktop Navigation */}
-      <div className='hidden md:flex space-x-2 justify-center items-center px-4'>
+      <div className='hidden md:flex space-x-2 justify-center items-center px-4' role="navigation" aria-label="Desktop navigation">
         {navLinks.map((data) => (
           <Button 
             key={data.title} 
@@ -108,6 +109,6 @@ export default function Navbar() {
           </SignInButton>
         </SignedOut>
       </div>
-    </div>
+    </nav>
   )
 }

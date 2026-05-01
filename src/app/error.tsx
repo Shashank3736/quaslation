@@ -7,23 +7,23 @@ import { DISCORD_INVITE_URL } from "@/lib/config"
 
 export default function Component() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-brutal-orange/10 text-foreground p-4 relative overflow-hidden">
+    <main className="flex flex-col items-center justify-center min-h-screen bg-brutal-orange/10 text-foreground p-4 relative overflow-hidden">
       {/* Decorative geometric shapes */}
-      <div className="absolute top-20 left-20 w-24 h-24 border-brutal border-black dark:border-white bg-brutal-yellow opacity-40" />
-      <div className="absolute bottom-10 right-10 w-40 h-40 border-brutal border-black dark:border-white bg-brutal-pink rounded-full opacity-30" />
-      <div className="absolute top-1/2 left-10 w-20 h-20 border-brutal border-black dark:border-white bg-brutal-cyan transform rotate-45 opacity-50" />
+      <div className="absolute top-20 left-20 w-24 h-24 border-brutal border-black dark:border-white bg-brutal-yellow opacity-40" aria-hidden="true" />
+      <div className="absolute bottom-10 right-10 w-40 h-40 border-brutal border-black dark:border-white bg-brutal-pink rounded-full opacity-30" aria-hidden="true" />
+      <div className="absolute top-1/2 left-10 w-20 h-20 border-brutal border-black dark:border-white bg-brutal-cyan transform rotate-45 opacity-50" aria-hidden="true" />
       
       <div className="max-w-md w-full space-y-8 relative z-10 bg-background border-brutal border-black dark:border-white shadow-brutal-xl p-8 rounded-lg">
         <div className="text-center">
           <div className="mx-auto h-24 w-24 text-brutal-orange mb-6 relative inline-block">
             <div className="absolute inset-0 border-brutal border-black dark:border-white bg-brutal-orange/20 rounded-full transform -rotate-6" />
             <div className="relative z-10 flex items-center justify-center h-full">
-              <AlertTriangle className="h-16 w-16" strokeWidth={3} />
+              <AlertTriangle className="h-16 w-16" strokeWidth={3} aria-hidden="true" />
             </div>
           </div>
-          <h2 className="text-3xl font-black uppercase mb-4 text-foreground">
+          <h1 className="text-3xl font-black uppercase mb-4 text-foreground">
             Oops! Something went wrong
-          </h2>
+          </h1>
           <p className="text-base text-foreground/80 mb-6">
             {`We're sorry, but it seems like we've encountered an error.`}
           </p>
@@ -48,6 +48,6 @@ export default function Component() {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   )
 }

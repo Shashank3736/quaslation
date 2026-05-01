@@ -8,16 +8,16 @@ import { Button } from "@/components/ui/button"
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-brutal-yellow/10 px-4 py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+    <main className="flex min-h-[100dvh] flex-col items-center justify-center bg-brutal-yellow/10 px-4 py-12 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Decorative geometric shapes */}
-      <div className="absolute top-10 left-10 w-20 h-20 border-brutal border-black dark:border-white bg-brutal-pink rotate-45 opacity-50" />
-      <div className="absolute bottom-20 right-20 w-32 h-32 border-brutal border-black dark:border-white bg-brutal-cyan rounded-full opacity-40" />
-      <div className="absolute top-1/3 right-10 w-16 h-16 border-brutal border-black dark:border-white bg-brutal-purple opacity-30" />
+      <div className="absolute top-10 left-10 w-20 h-20 border-brutal border-black dark:border-white bg-brutal-pink rotate-45 opacity-50" aria-hidden="true" />
+      <div className="absolute bottom-20 right-20 w-32 h-32 border-brutal border-black dark:border-white bg-brutal-cyan rounded-full opacity-40" aria-hidden="true" />
+      <div className="absolute top-1/3 right-10 w-16 h-16 border-brutal border-black dark:border-white bg-brutal-purple opacity-30" aria-hidden="true" />
       
       <div className="mx-auto max-w-md text-center relative z-10 bg-background border-brutal border-black dark:border-white shadow-brutal-xl p-8 rounded-lg">
         <div className="mx-auto h-32 w-32 text-brutal-orange mb-6 relative">
           <div className="absolute inset-0 border-brutal border-black dark:border-white bg-brutal-orange/20 rounded-lg transform rotate-6" />
-          <PuzzleIcon className="h-full w-full relative z-10" />
+          <PuzzleIcon className="h-full w-full relative z-10" aria-hidden="true" />
         </div>
         <h1 className="text-4xl font-black tracking-tight text-foreground sm:text-5xl mb-4 uppercase">
           404
@@ -38,7 +38,7 @@ export default function NotFound() {
           </Link>
         </Button>
       </div>
-    </div>
+    </main>
   )
 }
 

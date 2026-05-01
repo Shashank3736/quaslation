@@ -29,7 +29,7 @@ commentSection
         {(chapter.premium) ? 
         <>
         <SignedIn>
-          <article className='space-y-2 prose lg:prose-xl dark:prose-invert max-w-none chapter-content' dangerouslySetInnerHTML={{__html: chapter.content}} />
+          <article aria-label="Chapter content" className='space-y-2 prose lg:prose-xl dark:prose-invert max-w-none chapter-content' dangerouslySetInnerHTML={{__html: chapter.content}} />
         </SignedIn>
         <SignedOut>
           <RestrictedContent type={"login"}>
@@ -38,41 +38,41 @@ commentSection
         </SignedOut>
         </>
         :(
-          <article className='space-y-2 prose lg:prose-xl dark:prose-invert max-w-none chapter-content' dangerouslySetInnerHTML={{__html: chapter.content}} />
+          <article aria-label="Chapter content" className='space-y-2 prose lg:prose-xl dark:prose-invert max-w-none chapter-content' dangerouslySetInnerHTML={{__html: chapter.content}} />
         )}
       </div>
 
       {/* Chapter navigation with neobrutalism styling */}
-      <div className='max-w-4xl mx-auto flex flex-wrap gap-3 justify-center items-center'>
+      <nav aria-label="Chapter navigation" className='max-w-4xl mx-auto flex flex-wrap gap-3 justify-center items-center'>
         {previous ? (
           <Link href={`/novels/${novelSlug}/${previous.slug}`}>
-            <Button className='bg-brutal-yellow hover:bg-brutal-yellow text-black border-brutal border-black dark:border-white shadow-brutal hover:shadow-brutal-lg hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all'>
+            <Button aria-label="Go to previous chapter" className='bg-brutal-yellow hover:bg-brutal-yellow text-black border-brutal border-black dark:border-white shadow-brutal hover:shadow-brutal-lg hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all'>
               ← Previous
             </Button>
           </Link>
         ):(
-          <Button disabled className='border-brutal border-black dark:border-white shadow-brutal opacity-50'>
+          <Button disabled aria-disabled="true" aria-label="No previous chapter available" className='border-brutal border-black dark:border-white shadow-brutal opacity-50'>
             ← Previous
           </Button>
         )}
         <Link href={`/novels/${novelSlug}`}>
-          <Button variant={"secondary"} className='bg-brutal-cyan hover:bg-brutal-cyan text-black border-brutal border-black dark:border-white shadow-brutal hover:shadow-brutal-lg hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all font-semibold'>
+          <Button variant={"secondary"} aria-label="View all chapters" className='bg-brutal-cyan hover:bg-brutal-cyan text-black border-brutal border-black dark:border-white shadow-brutal hover:shadow-brutal-lg hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all font-semibold'>
             📑 All Chapters
           </Button>
         </Link>
         {next ? (
           <Link href={`/novels/${novelSlug}/${next.slug}`}>
-            <Button className='bg-brutal-yellow hover:bg-brutal-yellow text-black border-brutal border-black dark:border-white shadow-brutal hover:shadow-brutal-lg hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all'>
+            <Button aria-label="Go to next chapter" className='bg-brutal-yellow hover:bg-brutal-yellow text-black border-brutal border-black dark:border-white shadow-brutal hover:shadow-brutal-lg hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all'>
               Next →
             </Button>
           </Link>
         ):(
-          <Button disabled className='border-brutal border-black dark:border-white shadow-brutal opacity-50'>
+          <Button disabled aria-disabled="true" aria-label="No next chapter available" className='border-brutal border-black dark:border-white shadow-brutal opacity-50'>
             Next →
           </Button>
         )}
         <ChapterNavigation previousLink={previous ? `/novels/${novelSlug}/${previous.slug}` : undefined} nextLink={next ? `/novels/${novelSlug}/${next.slug}` : undefined} />
-      </div>
+      </nav>
 
       <NovelSuggestions currentNovelId={chapter.novelId} count={3} />
       <JoinDiscord />

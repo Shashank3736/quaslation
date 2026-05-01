@@ -135,7 +135,7 @@ export default function PostList({ premium = false }) {
         <AlertTitle>Error</AlertTitle>
         <AlertDescription>
           <p>
-          Well Something wrong happend. Join our <a href={DISCORD_INVITE_URL} className="underline">Discord Server</a> and report it please.
+          Something went wrong. Join our <a href={DISCORD_INVITE_URL} className="underline" target="_blank" rel="noopener noreferrer">Discord Server<span className="sr-only"> (opens in new tab)</span></a> and report it, please.
           {error}
           </p>
           <Button variant="outline" className="mt-2" onClick={() => fetchLatestPosts()}>
@@ -152,7 +152,7 @@ export default function PostList({ premium = false }) {
       {chapters ? chapters.map((chapter) => (
         <ChapterItem key={chapter.slug} chapter={chapter} premium={premium} />
       )) : (
-        <div aria-label="Loading chapters">
+        <div role="status" aria-label="Loading chapters">
           {Array.from({ length: 10 }, (_, index) => (
             <div key={index} className="p-4 mb-4 space-y-2 border rounded-lg" aria-hidden="true">
               <Skeleton className="h-6 w-28" />

@@ -19,7 +19,7 @@ type LatestPosts = Awaited<ReturnType<typeof getLatestPosts>>
 type ChapterDetail = LatestPosts[number]
 
 const ChapterItem: React.FC<{ chapter: ChapterDetail; premium: boolean }> = React.memo(({ chapter, premium }) => (
-  <Card className="mb-4 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brutal-xl hover:dark:shadow-brutal-xl-dark transition-all">
+  <Card role="article" aria-label={`Chapter ${chapter.number}: ${chapter.title}`} className="mb-4 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brutal-xl hover:dark:shadow-brutal-xl-dark transition-all">
     <CardContent className="pt-4">
       {premium ? (
         <div className="flex items-center mb-2">
@@ -136,7 +136,7 @@ export function PostListClient({ initialChapters, premium }: PostListClientProps
         <AlertTitle>Error</AlertTitle>
         <AlertDescription>
           <p>
-            Something went wrong. Join our <a href={DISCORD_INVITE_URL} className="underline">Discord Server</a> and report it, please.
+            Something went wrong. Join our <a href={DISCORD_INVITE_URL} className="underline" target="_blank" rel="noopener noreferrer">Discord Server<span className="sr-only"> (opens in new tab)</span></a> and report it, please.
           </p>
           <Button variant="outline" className="mt-2" onClick={() => fetchLatestPosts(0)}>
             Try Again

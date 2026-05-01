@@ -12,7 +12,7 @@ import { PostListClient } from "./post-list-client"
 type ChapterDetail = Awaited<ReturnType<typeof getReleases>>[number]
 
 const ChapterItem: React.FC<{ chapter: ChapterDetail; premium: boolean }> = React.memo(({ chapter, premium }) => (
-  <Card accent={premium ? "pink" : "cyan"} className="mb-4 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brutal-xl hover:dark:shadow-brutal-xl-dark transition-all">
+  <Card role="article" aria-label={`Chapter ${chapter.number}: ${chapter.title}`} accent={premium ? "pink" : "cyan"} className="mb-4 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brutal-xl hover:dark:shadow-brutal-xl-dark transition-all">
     <CardContent className="pt-4">
       {premium ? (
         <div className="flex items-center mb-2">

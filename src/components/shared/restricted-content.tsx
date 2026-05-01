@@ -33,13 +33,13 @@ export default function RestrictedContent({ children, type="login" }: { children
         <div className="bg-brutal-pink border-brutal border-black dark:border-white rounded-lg shadow-brutal-lg px-4 py-2 text-sm font-bold text-white">
           Restricted Content
         </div>
-        <h1 className="mt-6 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">{MESSAGE[type].title}</h1>
+        <h2 className="mt-6 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">{MESSAGE[type].title}</h2>
         <p className="mt-4 text-muted-foreground max-w-md">{MESSAGE[type].message}</p>
         <div className={cn("mt-6")}>
         {type === "login"?(
           <SignInButton>
             <Button className="shadow-brutal border-brutal border-black dark:border-white">
-              <LogInIcon className="mr-2 h-4 w-4 drop-shadow-[2px_2px_0px_rgba(0,0,0,0.3)]" />
+              <LogInIcon className="mr-2 h-4 w-4 drop-shadow-[2px_2px_0px_rgba(0,0,0,0.3)]" aria-hidden="true" />
               Login
             </Button>
           </SignInButton>
@@ -50,7 +50,7 @@ export default function RestrictedContent({ children, type="login" }: { children
         )}
         </div>
       </div>
-      <div className="px-3 overflow-hidden max-h-[700px]">
+      <div className="px-3 overflow-hidden max-h-[700px]" aria-hidden="true">
         {children}
       </div>
     </div>

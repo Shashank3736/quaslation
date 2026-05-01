@@ -23,7 +23,7 @@ export function ModeToggle({ showTheme=false }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="flex">
+        <Button variant="outline" className="flex" aria-label="Toggle theme">
           {(client && showTheme && theme) ?(
             <p className="mr-2">{theme[0].toUpperCase()+theme.slice(1)}</p>
           ):(
@@ -41,13 +41,13 @@ export function ModeToggle({ showTheme=false }) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
+        <DropdownMenuItem onClick={() => setTheme("light")} aria-current={theme === "light" ? "true" : undefined}>
           Light
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
+        <DropdownMenuItem onClick={() => setTheme("dark")} aria-current={theme === "dark" ? "true" : undefined}>
           Dark
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
+        <DropdownMenuItem onClick={() => setTheme("system")} aria-current={theme === "system" ? "true" : undefined}>
           System
         </DropdownMenuItem>
       </DropdownMenuContent>
