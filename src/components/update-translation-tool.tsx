@@ -133,7 +133,7 @@ export function LanguageSelector({ value, onValueChange, languages, placeholder 
           className="w-full justify-between bg-transparent"
         >
           {selectedLanguage ? selectedLanguage.name : placeholder}
-          <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" aria-hidden="true" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-0">
@@ -288,8 +288,9 @@ export function TranslationTool() {
           onClick={handleSwapLanguages}
           className="shrink-0 bg-transparent"
           disabled={sourceLanguageCode === "auto"}
+          aria-label="Swap source and target languages"
         >
-          <ArrowRightLeft className="h-4 w-4" />
+          <ArrowRightLeft className="h-4 w-4" aria-hidden="true" />
         </Button>
 
         <div className="w-full sm:w-64">
@@ -314,8 +315,8 @@ export function TranslationTool() {
             <CardTitle className="text-sm font-medium">
               {sourceLanguageName}
             </CardTitle>
-            <Button variant="ghost" size="sm" onClick={() => handleCopyToClipboard(inputText)} disabled={!inputText}>
-              <Copy className="h-4 w-4" />
+            <Button variant="ghost" size="sm" onClick={() => handleCopyToClipboard(inputText)} disabled={!inputText} aria-label="Copy source text">
+              <Copy className="h-4 w-4" aria-hidden="true" />
             </Button>
           </CardHeader>
           <CardContent>
@@ -325,8 +326,9 @@ export function TranslationTool() {
               onChange={(e) => setInputText(e.target.value)}
               className="min-h-[200px] resize-none"
               maxLength={5000}
+              aria-describedby="update-source-char-count"
             />
-            <div className="flex justify-between items-center mt-2 text-sm text-muted-foreground">
+            <div className="flex justify-between items-center mt-2 text-sm text-muted-foreground" id="update-source-char-count">
               <span>{inputText.length}/5000</span>
             </div>
           </CardContent>
@@ -343,15 +345,16 @@ export function TranslationTool() {
               size="sm"
               onClick={() => handleCopyToClipboard(translatedText)}
               disabled={!translatedText}
+              aria-label="Copy translated text"
             >
-              <Copy className="h-4 w-4" />
+              <Copy className="h-4 w-4" aria-hidden="true" />
             </Button>
           </CardHeader>
           <CardContent>
-            <div className="min-h-[200px] p-3 rounded-md border bg-muted/50 text-sm">
+            <div className="min-h-[200px] p-3 rounded-md border bg-muted/50 text-sm" role="status" aria-live="polite">
               {isTranslating ? (
                 <div className="flex items-center justify-center h-full">
-                  <Loader2 className="h-6 w-6 animate-spin" />
+                  <Loader2 className="h-6 w-6 animate-spin" aria-hidden="true" />
                   <span className="ml-2">Translating...</span>
                 </div>
               ) : translatedText ? (

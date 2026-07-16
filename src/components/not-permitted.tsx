@@ -18,10 +18,10 @@ export function NotPermittedComponent() {
         If you believe this is an error, please contact your administrator or try logging in again.
       </p>
       <div className="flex gap-4">
-        <Button variant="outline" onClick={() => window.history.back()}>
+        <Button variant="outline" onClick={() => window.history.back()} aria-label="Go back to previous page">
           Go Back
         </Button>
-        <Button onClick={() => window.location.href = "/"}>
+        <Button onClick={() => window.location.href = "/"} aria-label="Go to home page">
           Home
         </Button>
       </div>

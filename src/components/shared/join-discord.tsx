@@ -27,7 +27,7 @@ const JoinDiscord = () => {
       <CardContent className="p-4 md:p-6 flex flex-col sm:flex-row sm:items-center gap-4 md:gap-6">
         {/* Icon container */}
         <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-br-indigo-violet">
-          <DiscordSVG className="w-6 h-6 md:w-8 md:h-8" />
+          <DiscordSVG className="w-6 h-6 md:w-8 md:h-8" aria-hidden="true" />
         </div>
 
         {/* Content */}
@@ -48,7 +48,7 @@ const JoinDiscord = () => {
             className="hover:opacity-90 transition-opacity shadow-lg w-full sm:w-auto"
             asChild
           >
-            <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer">
+            <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" aria-label="Join Discord community (opens in new tab)">
               Join Now
             </a>
           </Button>

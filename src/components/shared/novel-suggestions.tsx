@@ -18,7 +18,7 @@ export default async function NovelSuggestions({
   }
 
   return (
-    <section className="mt-12">
+    <section className="mt-12" aria-label="Novel recommendations">
       <h2 className="text-2xl font-bold text-gradient-indigo-violet mb-6">
         You May Also Like
       </h2>

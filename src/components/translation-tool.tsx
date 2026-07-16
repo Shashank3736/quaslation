@@ -103,7 +103,7 @@ export function TranslationTool() {
       {/* Hero Section */}
       <div className="text-center space-y-4 py-8">
         <div className="flex items-center justify-center gap-2 mb-4">
-          <Sparkles className="h-8 w-8 text-gradient-indigo-violet" />
+          <Sparkles className="h-8 w-8 text-gradient-indigo-violet" aria-hidden="true" />
           <h2 className="text-4xl font-bold tracking-tight text-gradient-indigo-violet">Translate Text</h2>
         </div>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -117,7 +117,7 @@ export function TranslationTool() {
           <div className="flex flex-col sm:flex-row items-center gap-6 justify-center">
             <div className="w-full sm:w-56">
               <Select value={sourceLanguage} onValueChange={setSourceLanguage}>
-                <SelectTrigger className="glass-ring">
+                <SelectTrigger className="glass-ring" aria-label="Source language">
                   <SelectValue placeholder="From" />
                 </SelectTrigger>
                 <SelectContent>
@@ -135,13 +135,14 @@ export function TranslationTool() {
               size="icon"
               onClick={handleSwapLanguages}
               className="shrink-0 bg-transparent hover:bg-accent/50"
+              aria-label="Swap source and target languages"
             >
-              <ArrowRightLeft className="h-5 w-5" />
+              <ArrowRightLeft className="h-5 w-5" aria-hidden="true" />
             </Button>
 
             <div className="w-full sm:w-56">
               <Select value={targetLanguage} onValueChange={setTargetLanguage}>
-                <SelectTrigger className="glass-ring">
+                <SelectTrigger className="glass-ring" aria-label="Target language">
                   <SelectValue placeholder="To" />
                 </SelectTrigger>
                 <SelectContent>
@@ -172,8 +173,9 @@ export function TranslationTool() {
                 onClick={() => handleCopyToClipboard(inputText)}
                 disabled={!inputText}
                 className="h-8 w-8 p-0"
+                aria-label="Copy source text"
               >
-                <Copy className="h-4 w-4" />
+                <Copy className="h-4 w-4" aria-hidden="true" />
               </Button>
             </div>
           </CardHeader>
@@ -184,8 +186,9 @@ export function TranslationTool() {
               onChange={(e) => setInputText(e.target.value)}
               className="min-h-[250px] resize-none bg-background/50 border-border/50"
               maxLength={5000}
+              aria-describedby="source-char-count"
             />
-            <div className="flex justify-between items-center mt-3 text-sm text-muted-foreground">
+            <div className="flex justify-between items-center mt-3 text-sm text-muted-foreground" id="source-char-count">
               <span>{inputText.length}/5000 characters</span>
               <span className={inputText.length > 4500 ? "text-destructive" : ""}>
                 {inputText.length > 4500 ? "Approaching limit" : "Ready to translate"}
@@ -207,23 +210,24 @@ export function TranslationTool() {
                 onClick={() => handleCopyToClipboard(translatedText)}
                 disabled={!translatedText}
                 className="h-8 w-8 p-0"
+                aria-label="Copy translated text"
               >
-                <Copy className="h-4 w-4" />
+                <Copy className="h-4 w-4" aria-hidden="true" />
               </Button>
             </div>
           </CardHeader>
           <CardContent className="pt-0">
-            <div className="min-h-[250px] p-4 rounded-lg border border-border/50 bg-background/50 text-sm">
+            <div className="min-h-[250px] p-4 rounded-lg border border-border/50 bg-background/50 text-sm" role="status" aria-live="polite">
               {isTranslating ? (
                 <div className="flex flex-col items-center justify-center h-full space-y-3">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" aria-hidden="true" />
                   <span className="text-muted-foreground">Translating...</span>
                 </div>
               ) : translatedText ? (
                 <p className="whitespace-pre-wrap leading-relaxed">{translatedText}</p>
               ) : (
                 <div className="flex flex-col items-center justify-center h-full space-y-2 text-muted-foreground">
-                  <Sparkles className="h-6 w-6 opacity-50" />
+                  <Sparkles className="h-6 w-6 opacity-50" aria-hidden="true" />
                   <span>Translation will appear here...</span>
                 </div>
               )}

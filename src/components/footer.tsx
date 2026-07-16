@@ -42,7 +42,7 @@ export function FooterComponent() {
           </div>
           
           {/* Navigation Links Section */}
-          <nav className="grid grid-cols-2 md:grid-cols-3 lg:flex gap-4 sm:gap-6 md:border-r-brutal border-black dark:border-white md:pr-8">
+          <nav aria-label="Footer navigation" className="grid grid-cols-2 md:grid-cols-3 lg:flex gap-4 sm:gap-6 md:border-r-brutal border-black dark:border-white md:pr-8">
             {footerLinks.map((link) => (
               <Link 
                 className="text-sm font-medium text-foreground hover:bg-brutal-yellow hover:shadow-brutal-sm dark:hover:bg-brutal-yellow/90 px-3 py-1.5 border-2 border-transparent hover:border-black dark:hover:border-white transition-all rounded-sm" 
@@ -65,9 +65,9 @@ export function FooterComponent() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-3 bg-background border-brutal border-black dark:border-white rounded-sm shadow-brutal hover:shadow-brutal-lg hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all"
-                  aria-label={social.name}
+                  aria-label={`${social.name} (opens in new tab)`}
                 >
-                  <Icon className="w-5 h-5 text-foreground" />
+                  <Icon className="w-5 h-5 text-foreground" aria-hidden="true" />
                 </Link>
               );
             })}

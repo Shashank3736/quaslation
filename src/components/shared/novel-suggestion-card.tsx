@@ -14,10 +14,10 @@ interface NovelSuggestionCardProps {
 
 export default function NovelSuggestionCard({ novel }: NovelSuggestionCardProps) {
   return (
-    <Link href={`/novels/${novel.slug}`} className="block group">
+    <Link href={`/novels/${novel.slug}`} className="block group" aria-label={`View novel: ${novel.title}`}>
       <Card className="border-brutal border-black shadow-brutal-lg hover:shadow-brutal-xl hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all duration-200 h-full relative overflow-hidden bg-background">
         {/* Colorful accent corner - top-right triangle */}
-        <div className="absolute top-0 right-0 w-0 h-0 border-l-[60px] border-l-transparent border-t-[60px] border-t-brutal-cyan z-10" />
+        <div className="absolute top-0 right-0 w-0 h-0 border-l-[60px] border-l-transparent border-t-[60px] border-t-brutal-cyan z-10" aria-hidden="true" />
         
         <CardHeader className="pb-4">
           <div className="relative aspect-[2/3] w-full overflow-hidden rounded-lg mb-4 border-brutal border-black shadow-brutal-sm">

@@ -107,7 +107,7 @@ export function CommentSection({
         </CardHeader>
         <CardContent className="space-y-6">
           {isLoading ? (
-            <div className="text-center py-4 text-muted-foreground">Loading comments...</div>
+            <div className="text-center py-4 text-muted-foreground" role="status" aria-live="polite">Loading comments...</div>
           ) : (
             <>
               {/* Show comment form only for authenticated users */}

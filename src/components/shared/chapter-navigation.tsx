@@ -16,6 +16,17 @@ export const ScrollToTop = () => {
 export const ChapterNavigation = ({ previousLink, nextLink }: { previousLink?: string, nextLink?: string }) => {
   const router = useRouter();
   const handleKeyPress = useCallback((event:KeyboardEvent) => {
+    // Don't intercept arrow keys when user is in form elements or contenteditable
+    const target = event.target as HTMLElement;
+    if (
+      target.tagName === 'INPUT' ||
+      target.tagName === 'TEXTAREA' ||
+      target.tagName === 'SELECT' ||
+      target.isContentEditable
+    ) {
+      return;
+    }
+
     if(event.key == "ArrowLeft" && previousLink) {
       router.push(previousLink)
     } else if(event.key == "ArrowRight" && nextLink) {

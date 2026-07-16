@@ -194,11 +194,11 @@ export function CommentItem({
               <span className="font-semibold text-sm">
                 {getUserDisplayName()}
               </span>
-              <span className="text-xs text-muted-foreground">
+              <time className="text-xs text-muted-foreground" dateTime={new Date(comment.createdAt).toISOString()}>
                 {formatDistanceToNow(new Date(comment.createdAt), {
                   addSuffix: true,
                 })}
-              </span>
+              </time>
               {comment.isEdited && (
                 <Badge variant="secondary" className="text-xs">
                   Edited
@@ -220,6 +220,7 @@ export function CommentItem({
                   className="min-h-[100px]"
                   maxLength={2000}
                   disabled={isLoading}
+                  aria-label="Edit your comment"
                 />
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-muted-foreground">
