@@ -17,7 +17,7 @@ export function ModeToggle({ showTheme=false }) {
   const [client, setClient] = React.useState(false)
 
   React.useEffect(() => {
-    setClient(true)
+    setTimeout(() => setClient(true), 0)
   },[])
 
   return (
