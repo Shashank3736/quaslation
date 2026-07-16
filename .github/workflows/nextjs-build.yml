@@ -26,8 +26,6 @@ jobs:
   # Build job
   build:
     runs-on: ubuntu-latest
-<<<<<<< HEAD
-=======
 
     services:
       postgres:
@@ -44,7 +42,6 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
->>>>>>> origin/development
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -82,10 +79,6 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
-<<<<<<< HEAD
-      - name: Build with Next.js
-        run: npm run build
-=======
       - name: Setup database
         run: npm run db:push
         env:
@@ -98,4 +91,3 @@ jobs:
           DIRECT_URL: "postgres://dummy:dummy@localhost:5432/dummy"
           NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "pk_test_dummy"
           CLERK_SECRET_KEY: "sk_test_dummy"
->>>>>>> origin/development
