@@ -1,6 +1,5 @@
 import H2 from '@/components/typography/h2'
 import Muted from '@/components/typography/muted'
-import { Separator } from '@/components/ui/separator'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { DecorativeEmptyState } from '@/components/ui/decorative'
