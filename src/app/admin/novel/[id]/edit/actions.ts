@@ -6,7 +6,8 @@ import { db } from "@/lib/db";
 import { richText, novel as novelTable } from "@/lib/db/schema";
 import { markdownToHtml, markdownToText } from "@/lib/utils";
 import { eq } from "drizzle-orm";
-import { updateTag } from "next/cache";
+import { updateTag, revalidatePath } from "next/cache";
+import { CACHE_TAGS } from "@/lib/cache";
 import { Novel } from "./server";
 
 export const updateNovel = async (values: z.infer<typeof editNovelSchema>, oldData: Novel) => {
@@ -28,6 +29,11 @@ export const updateNovel = async (values: z.infer<typeof editNovelSchema>, oldDa
 
     updateTag("novel:update");
     updateTag(`novel:update:${oldData.slug}`);
+    updateTag(CACHE_TAGS.novel.all);
+    updateTag(CACHE_TAGS.novel.list);
+    revalidatePath("/novels");
+    revalidatePath("/admin/novel");
+    revalidatePath(`/novels/${oldData.slug}`);
 
     return {
       message: "ok"

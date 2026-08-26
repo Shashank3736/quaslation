@@ -1,78 +1,36 @@
 import "server-only";
-import { unstable_cache } from "next/cache";
+import { unstable_cache, updateTag, revalidateTag, revalidatePath } from "next/cache";
+
+export * from "./cache-constants";
+import { CACHE_PRESETS, CacheConfig } from "./cache-constants";
 
 /**
- * Cache configuration interface
+ * Safely invalidates a cache tag in any Next.js runtime context.
+ * Uses updateTag when available (Server Action context) and falls back to revalidateTag.
  */
-export interface CacheConfig {
-  revalidate?: number;
-  tags?: string[] | ((...args: any[]) => string[]);
+export function invalidateTagSafe(tag: string): void {
+  try {
+    updateTag(tag);
+  } catch {
+    try {
+      // In Next.js 16, revalidateTag accepts a profile argument ('max' expires immediately)
+      revalidateTag(tag, "max");
+    } catch (e) {
+      console.warn(`Failed to revalidate tag: ${tag}`, e);
+    }
+  }
 }
 
 /**
- * Standardized cache configuration presets
+ * Safely invalidates a path cache using revalidatePath.
  */
-export const CACHE_PRESETS = {
-  /** Static content - 7 days (604800 seconds) */
-  static: {
-    revalidate: 604800,
-  },
-  /** Dynamic content - 12 hours (43200 seconds) */
-  dynamic: {
-    revalidate: 43200,
-  },
-  /** Frequently updated content - 1 hour (3600 seconds) */
-  frequent: {
-    revalidate: 3600,
-  },
-  /** Real-time content - 30 seconds */
-  realtime: {
-    revalidate: 30,
-  },
-} as const;
-
-/**
- * Cache tag constants for consistent cache invalidation
- */
-export const CACHE_TAGS = {
-  // Novel-related tags
-  novel: {
-    all: "novel:all",
-    byId: (id: number) => `novel:${id}`,
-    bySlug: (slug: string) => `novel:slug:${slug}`,
-    list: "novel:list",
-    update: (id: number) => `novel:update:${id}`,
-    create: "novel:create",
-  },
-  // Chapter-related tags
-  chapter: {
-    all: "chapter:all",
-    byId: (id: number) => `chapter:${id}`,
-    bySlug: (slug: string) => `chapter:slug:${slug}`,
-    byNovel: (novelId: number) => `chapter:novel:${novelId}`,
-    update: (id: number) => `chapter:update:${id}`,
-    updateFree: "chapter:update:free",
-    updatePublish: "chapter:update:publish",
-    updateContent: (id: number) => `chapter:update:content:${id}`,
-  },
-  // Release-related tags
-  releases: {
-    all: "releases:all",
-    free: "releases:free",
-    premium: "releases:premium",
-    byPage: (skip: number, premium: boolean) => 
-      `releases:${skip}:${premium}`,
-  },
-  // Volume-related tags
-  volume: {
-    all: "volume:all",
-    byNovel: (novelId: number) => `volume:novel:${novelId}`,
-  },
-  // User role tags
-  role: {
-    byUser: (userId: string) => `role:${userId}`,
-  },
-} as const;
+export function invalidatePathSafe(path: string, type?: "layout" | "page"): void {
+  try {
+    revalidatePath(path, type);
+  } catch (e) {
+    console.warn(`Failed to revalidate path: ${path}`, e);
+  }
+}
 
 /**
  * Creates a cached query function with consistent configuration.

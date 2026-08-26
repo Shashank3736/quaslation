@@ -22,6 +22,7 @@ const AdminLayout = ({ children }:{ children: React.ReactNode }) => {
           </Button>
           <Button className='mb-4' asChild><Link href={"/admin"}>Admin Page</Link></Button>
           <Button className='mb-4' asChild><Link href={"/admin/novel/create"}>+ Create Novel</Link></Button>
+          <Button className='mb-4' variant={"outline"} asChild><Link href={"/admin/cache"}>Cache Reset</Link></Button>
           <ModeToggle showTheme />
         </div>
         <H2 className="text-gradient-indigo-violet">Quaslation</H2>

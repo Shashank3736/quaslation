@@ -6,7 +6,7 @@ import { db } from "@/lib/db";
 import { novel as novelTable, richText as richTextTable } from "@/lib/db/schema";
 import { markdownToHtml, markdownToText, slugify } from "@/lib/utils";
 import { eq } from "drizzle-orm";
-import { updateTag } from "next/cache";
+import { updateTag, revalidatePath } from "next/cache";
 import { CACHE_TAGS } from "@/lib/cache";
 
 export async function createNovel(values: z.infer<typeof createNovelSchema>):Promise<{ slug: string | false }> {
@@ -31,6 +31,11 @@ export async function createNovel(values: z.infer<typeof createNovelSchema>):Pro
     // Invalidate novel list and all novel-related caches
     updateTag(CACHE_TAGS.novel.list);
     updateTag(CACHE_TAGS.novel.all);
+    updateTag(CACHE_TAGS.novel.create);
+    updateTag(CACHE_TAGS.novel.updateGeneral);
+    revalidatePath("/novels");
+    revalidatePath("/admin/novel");
+    revalidatePath("/admin/chapters");
 
     return data[0]
   } catch (error) {
