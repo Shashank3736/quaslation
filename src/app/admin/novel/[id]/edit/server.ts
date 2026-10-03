@@ -12,12 +12,26 @@ export const getNovel = async(id: number) => {
       thumbnail: true,
       id: true,
       slug: true,
+      author: true,
+      language: true,
+      status: true,
     },
     with: {
       richText: {
         columns: {
           id: true,
           markdown: true,
+        }
+      },
+      novelTags: {
+        with: {
+          tag: {
+            columns: {
+              id: true,
+              slug: true,
+              name: true,
+            }
+          }
         }
       }
     }

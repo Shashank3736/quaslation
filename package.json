@@ -12,7 +12,9 @@
     "db:studio": "drizzle-kit studio",
     "db:push": "drizzle-kit push",
     "db:export": "node scripts/migrate/export-database.js",
-    "db:verify": "node scripts/migrate/verify-export.js"
+    "db:verify": "node scripts/migrate/verify-export.js",
+    "search:reindex": "tsx scripts/search/reindex.ts",
+    "search:validate": "tsx scripts/search/validate.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.3.0",
@@ -75,6 +77,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
     "@eslint/eslintrc": "^3.3.1",
     "@google/generative-ai": "^0.24.1",
     "@tailwindcss/typography": "^0.5.13",

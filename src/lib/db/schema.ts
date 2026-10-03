@@ -1,7 +1,21 @@
-import { pgTable, varchar, timestamp, text, integer, uniqueIndex, foreignKey, serial, doublePrecision, index, boolean, pgEnum } from "drizzle-orm/pg-core"
+import { pgTable, varchar, timestamp, text, integer, uniqueIndex, foreignKey, serial, doublePrecision, index, boolean, pgEnum, customType } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 export const role = pgEnum("Role", ['ADMIN', 'SUBSCRIBER', 'MEMBER'])
+
+/** Serialization status of a novel. `ONGOING` is the default so existing rows stay valid. */
+export const novelStatus = pgEnum("NovelStatus", ['ONGOING', 'COMPLETED', 'HIATUS'])
+
+/**
+ * PostgreSQL `tsvector` is only meaningful for the search index, so it is modelled as an
+ * opaque string column. Values are never read from the application - the
+ * `search_vector` triggers in migration 0008 keep them in sync.
+ */
+const tsvector = customType<{ data: string }>({
+  dataType() {
+    return "tsvector"
+  },
+})
 
 export const prismaMigrations = pgTable("_prisma_migrations", {
 	id: varchar("id", { length: 36 }).primaryKey().notNull(),
@@ -44,6 +58,41 @@ export const richText = pgTable("RichText", {
 	text: text("text").notNull(),
 	html: text("html").notNull(),
 	markdown: text("markdown").notNull(),
+	wordCount: integer("wordCount").default(0).notNull(),
+});
+
+export const tag = pgTable("Tag", {
+	id: serial("id").primaryKey().notNull(),
+	slug: text("slug").notNull(),
+	name: text("name").notNull(),
+	createdAt: timestamp("createdAt", { precision: 3 }).default(sql`CURRENT_TIMESTAMP`).notNull(),
+},
+(table) => {
+	return {
+		slugKey: uniqueIndex("Tag_slug_key").using("btree", table.slug.asc().nullsLast()),
+		nameKey: uniqueIndex("Tag_name_key").using("btree", table.name.asc().nullsLast()),
+	}
+});
+
+export const novelTag = pgTable("NovelTag", {
+	novelId: integer("novelId").notNull(),
+	tagId: integer("tagId").notNull(),
+},
+(table) => {
+	return {
+		novelIdTagIdKey: uniqueIndex("NovelTag_novelId_tagId_key").using("btree", table.novelId.asc().nullsLast(), table.tagId.asc().nullsLast()),
+		tagIdIdx: index("NovelTag_tagId_idx").using("btree", table.tagId.asc().nullsLast()),
+		novelIdFkey: foreignKey({
+			columns: [table.novelId],
+			foreignColumns: [novel.id],
+			name: "NovelTag_novelId_fkey"
+		}).onUpdate("cascade").onDelete("cascade"),
+		tagIdFkey: foreignKey({
+			columns: [table.tagId],
+			foreignColumns: [tag.id],
+			name: "NovelTag_tagId_fkey"
+		}).onUpdate("cascade").onDelete("cascade"),
+	}
 });
 
 export const novel = pgTable("Novel", {
@@ -55,12 +104,18 @@ export const novel = pgTable("Novel", {
 	publishedAt: timestamp("publishedAt", { precision: 3 }),
 	updatedAt: timestamp("updatedAt", { precision: 3 }).notNull().defaultNow(),
 	richTextId: integer("richTextId").notNull(),
+	searchVector: tsvector("search_vector"),
+	author: text("author"),
+	language: text("language"),
+	status: novelStatus("status").default('ONGOING'),
 },
 (table) => {
 	return {
 		richTextIdKey: uniqueIndex("Novel_richTextId_key").using("btree", table.richTextId.asc().nullsLast()),
 		slugKey: uniqueIndex("Novel_slug_key").using("btree", table.slug.asc().nullsLast()),
 		titleKey: uniqueIndex("Novel_title_key").using("btree", table.title.asc().nullsLast()),
+		statusIdx: index("Novel_status_idx").using("btree", table.status.asc().nullsLast()),
+		languageIdx: index("Novel_language_idx").using("btree", table.language.asc().nullsLast()),
 		novelRichTextIdFkey: foreignKey({
 			columns: [table.richTextId],
 			foreignColumns: [richText.id],
@@ -82,6 +137,7 @@ export const chapter = pgTable("Chapter", {
 	publishedAt: timestamp("publishedAt", { precision: 3 }),
 	updatedAt: timestamp("updatedAt", { precision: 3 }).notNull().defaultNow(),
 	richTextId: integer("richTextId").notNull(),
+	searchVector: tsvector("search_vector"),
 },
 (table) => {
 	return {

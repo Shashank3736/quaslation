@@ -26,6 +26,10 @@ export const CACHE_PRESETS = {
   realtime: {
     revalidate: 30,
   },
+  /** Search results - 60 seconds (trending queries must not sit in cache for an hour) */
+  search: {
+    revalidate: 60,
+  },
 } as const;
 
 /**
@@ -71,6 +75,14 @@ export const CACHE_TAGS = {
   role: {
     byUser: (userId: string) => `role:${userId}`,
   },
+  // Search tags
+  search: {
+    all: "search:all",
+    /** Normalized query + filter fingerprint, see `buildSearchCacheKey` */
+    query: (fingerprint: string) => `search:query:${fingerprint}`,
+    /** Normalized autocomplete prefix, see `buildSearchCacheKey` */
+    autocomplete: (fingerprint: string) => `search:auto:${fingerprint}`,
+  },
 } as const;
 
 /**
@@ -87,6 +99,7 @@ export const CACHE_INVALIDATION_PRESETS = {
       CACHE_TAGS.novel.create,
       CACHE_TAGS.novel.updateGeneral,
       CACHE_TAGS.chapter.updateFree,
+      CACHE_TAGS.search.all,
     ],
     paths: ["/novels", "/admin/novel", "/admin/chapters", "/"],
   },
@@ -99,6 +112,7 @@ export const CACHE_INVALIDATION_PRESETS = {
       CACHE_TAGS.chapter.updateGeneral,
       CACHE_TAGS.chapter.updateFree,
       CACHE_TAGS.chapter.updatePublish,
+      CACHE_TAGS.search.all,
     ],
     paths: ["/admin/chapters", "/novels"],
   },
@@ -126,6 +140,13 @@ export const CACHE_INVALIDATION_PRESETS = {
     ],
     paths: ["/novels/sitemap", "/chapters/sitemap", "/rss.xml"],
   },
+  search: {
+    id: "search",
+    name: "Search Index & Results",
+    description: "Purges cached search result pages, autocomplete prefixes, and reindexes titles",
+    tags: [CACHE_TAGS.search.all],
+    paths: ["/search"],
+  },
   all: {
     id: "all",
     name: "Full Cache Reset",
@@ -143,11 +164,13 @@ export const CACHE_INVALIDATION_PRESETS = {
       CACHE_TAGS.releases.free,
       CACHE_TAGS.releases.premium,
       CACHE_TAGS.volume.all,
+      CACHE_TAGS.search.all,
     ],
     paths: [
       "/",
       "/home",
       "/novels",
+      "/search",
       "/admin",
       "/admin/novel",
       "/admin/chapters",
@@ -223,5 +246,12 @@ export const CACHE_TAG_DOCUMENTATION = [
     description: "Home page latest releases feed (both free and premium)",
     usedIn: ["/home", "/"],
     recommendedFor: "After releasing new chapters or upcoming chapters",
+  },
+  {
+    tag: "search:all",
+    description: "Every cached search result page, autocomplete prefix and filter facet list",
+    usedIn: ["/search", "/api/search", "/api/search/autocomplete"],
+    recommendedFor:
+      "After editing novel titles, chapter titles, descriptions or tags without going through the admin forms",
   },
 ] as const;

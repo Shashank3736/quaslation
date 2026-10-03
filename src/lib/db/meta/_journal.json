@@ -43,6 +43,27 @@
       "when": 1760509689518,
       "tag": "0005_marvelous_black_cat",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1790985353262,
+      "tag": "0006_search",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1790985387452,
+      "tag": "0007_search_meta",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1790985414636,
+      "tag": "0008_search_functions",
+      "breakpoints": true
     }
   ]
 }
