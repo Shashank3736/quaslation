@@ -2,7 +2,7 @@ import "server-only";
 import { unstable_cache, updateTag, revalidateTag, revalidatePath } from "next/cache";
 
 export * from "./cache-constants";
-import { CACHE_PRESETS, CacheConfig } from "./cache-constants";
+import { CACHE_PRESETS, CACHE_TAGS, CacheConfig } from "./cache-constants";
 
 /**
  * Safely invalidates a cache tag in any Next.js runtime context.
@@ -276,4 +276,20 @@ export function createRealtimeCachedQuery<TArgs extends unknown[], TResult>(
   keyParts: string[] = []
 ) {
   return createCachedQuery(queryFn, { ...CACHE_PRESETS.realtime, tags }, keyParts);
+}
+
+/**
+ * Helper to create a cached query with the short search preset.
+ *
+ * Search result sets live under `search:all` so a single `updateTag(CACHE_TAGS.search.all)`
+ * from any content mutation purges every cached query. Per-query tags
+ * (`CACHE_TAGS.search.query(...)`) are added by the caller when a single fingerprint
+ * should be invalidated on its own.
+ */
+export function createSearchCachedQuery<TArgs extends unknown[], TResult>(
+  queryFn: (...args: TArgs) => Promise<TResult>,
+  tags: string[] = [CACHE_TAGS.search.all],
+  keyParts: string[] = []
+) {
+  return createCachedQuery(queryFn, { ...CACHE_PRESETS.search, tags }, keyParts);
 }

@@ -7,6 +7,7 @@ import { and, eq } from "drizzle-orm";
 import { updateTag } from "next/cache";
 import { z } from "zod";
 import { formSchema } from "./form";
+import { invalidateSearchCaches } from "@/lib/search/invalidate";
 
 export const getChapter = async(id:number) => {
   return (await db.select({
@@ -71,4 +72,5 @@ export const updateChapterContent = async(richTextId: number, values: z.infer<ty
   updateTag(`chapter:update:${chapterSlug}`);
   updateTag(`chapter:update:richText:${chapterSlug}`);
   updateTag(`chapter:update:content:${chapterSlug}`);
+  invalidateSearchCaches();
 }

@@ -9,6 +9,7 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
+import { SearchCombobox } from './search-combobox'
 
 const navLinks = [
   {
@@ -59,6 +60,15 @@ export default function Navbar() {
               </SheetTitle>
               <SheetDescription className='sr-only'>Site navigation links</SheetDescription>
               <Separator className='bg-black dark:bg-white h-[3px]' />
+              <SheetClose asChild>
+                <Button
+                  variant={"outline"}
+                  className='hover:bg-brutal-yellow hover:text-black hover:-translate-x-1 hover:-translate-y-1 hover:shadow-brutal transition-all'
+                  asChild
+                >
+                  <Link href="/search">Search</Link>
+                </Button>
+              </SheetClose>
               {navLinks.map((data) => (
                 <SheetClose key={data.title} asChild>
                   <Button 
@@ -93,11 +103,17 @@ export default function Navbar() {
             <Link href={data.href}>{data.title}</Link>
           </Button>
         ))}
+        <SearchCombobox />
         <ModeToggle />
       </div>
 
       {/* Auth Section */}
       <div className='flex space-x-2 justify-center items-center px-4 py-3'>
+        <Link href="/search" className='md:hidden p-1 hover:bg-black/10 dark:hover:bg-white/10 rounded transition-colors' aria-label="Search novels and chapters">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="size-6" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
+        </Link>
         <Show when="signed-in" fallback={
           <SignInButton>
             <Button className='hover:cursor-pointer font-semibold' asChild>

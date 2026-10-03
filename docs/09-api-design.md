@@ -437,6 +437,21 @@ async function sendContactEmail(data: {
 ```
 
 ### Search API
+
+Implemented in `.kilo/plans/1790984064324-search-functionality-plan.md` (PostgreSQL-native
+`tsvector` + `pg_trgm`; see also `docs/13-search.md`). The sketch below is kept for
+historical reference only — do not implement the raw `ILIKE` version, it is O(n) per
+query and has no ranking, pagination or premium gating.
+
+> **Shipped endpoints**
+> - `GET /api/search?q=…&type=all|novel|chapter&tags=1,2&status=ONGOING&language=…&author=…&minWords=…&maxWords=…&cursor=…&limit=…&premium=1`
+>   — ranked, keyset-paginated results, 30 qpm/IP. Short queries serve the recent-novels
+>   fallback instead of a 400. Premium chapter rows require a SUBSCRIBER/ADMIN viewer;
+>   `premium=1` narrows but never widens.
+> - `GET /api/search/autocomplete?q=…&type=…&limit=…` — ≤8 typeahead hits, 60 qpm/IP,
+>   cached in KV for 300 s, quiet for <2 characters.
+> - SSR page `/(main)/search` renders the same query layer with a filter sidebar and a
+>   keyset "Next results" pager; the navbar embeds `SearchCombobox` for the typeahead.
 ```typescript
 // src/app/api/search/route.ts
 import { NextRequest, NextResponse } from 'next/server'

@@ -8,6 +8,7 @@ import { markdownToHtml, markdownToText, slugify } from "@/lib/utils"
 import { and, eq } from "drizzle-orm"
 import { revalidatePath } from "next/cache"
 import { randomBytes } from "crypto"
+import { invalidateSearchCaches } from "@/lib/search/invalidate"
 
 export const createChapter = async (novelId:number, values: z.infer<typeof createChapterFormSchema>) => {
   try {
@@ -47,6 +48,7 @@ export const createChapter = async (novelId:number, values: z.infer<typeof creat
       })
 
       revalidatePath(`/admin/chapters/${novelId}/create`);
+      invalidateSearchCaches();
     } catch (error) {
       await db.delete(richTextTable).where(eq(richTextTable.id, content[0].id));
       throw new Error((error instanceof Error ? error.message : "Unknown error"));

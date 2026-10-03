@@ -16,6 +16,7 @@ Welcome to the comprehensive developer documentation for Quaslation - a Next.js 
 - [**Deployment & DevOps**](./10-deployment.md) - Build process, environment setup, and deployment
 - [**Performance & SEO**](./11-performance-seo.md) - Optimization strategies and analytics
 - [**Development Workflow**](./12-development-workflow.md) - Local setup, testing, and contribution guidelines
+- [**Search**](./13-search.md) - PostgreSQL-native novel/chapter discovery (API, page, typeahead, reindex)
 
 ## Quick Start
 

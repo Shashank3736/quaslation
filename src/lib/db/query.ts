@@ -366,6 +366,7 @@ export const freeChapters = async ({ novelId, first, last }: { novelId: number, 
     updateTag(CACHE_TAGS.releases.all);
     updateTag(CACHE_TAGS.releases.free);
     updateTag(CACHE_TAGS.releases.premium);
+    updateTag(CACHE_TAGS.search.all);
   } catch (error) {
     console.error('Cache invalidation failed:', error);
     // Continue execution - cache invalidation failure shouldn't break the mutation
@@ -395,6 +396,7 @@ export const publishChapters = async ({ novelId, serial }: { novelId: number, se
     updateTag(CACHE_TAGS.releases.all);
     updateTag(CACHE_TAGS.releases.free);
     updateTag(CACHE_TAGS.releases.premium);
+    updateTag(CACHE_TAGS.search.all);
   } catch (error) {
     console.error('Cache invalidation failed:', error);
     // Continue execution - cache invalidation failure shouldn't break the mutation

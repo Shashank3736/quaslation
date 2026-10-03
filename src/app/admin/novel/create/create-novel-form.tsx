@@ -20,14 +20,19 @@ import Link from 'next/link'
 import { createNovel } from './actions'
 import { markdownToHtml } from '@/lib/utils'
 import AutoResizeTextarea from '@/components/auto-resize-textarea'
+import { TagPicker, TagOption } from '../_components/tag-picker'
 
 export const createNovelSchema = z.object({
   title: z.string().min(2),
   description: z.string().min(2),
-  thumbnail: z.coerce.string().url().or(z.literal(""))
+  thumbnail: z.coerce.string().url().or(z.literal("")),
+  author: z.string().max(120).optional().default(""),
+  language: z.string().max(60).optional().default(""),
+  status: z.enum(["ONGOING", "COMPLETED", "HIATUS"]).optional().default("ONGOING"),
+  tagIds: z.array(z.number().int().positive()).optional().default([]),
 });
 
-export default function CreateNovelForm() {
+export default function CreateNovelForm({ initialTags }: { initialTags: TagOption[] }) {
   const [preview, setPreview] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
@@ -36,13 +41,19 @@ export default function CreateNovelForm() {
     defaultValues: {
       title: '',
       description: '',
-      thumbnail: ''
+      thumbnail: '',
+      author: '',
+      language: '',
+      status: 'ONGOING',
+      tagIds: [],
     }
   })
 
+  const [selectedTagIds, setSelectedTagIds] = useState<number[]>([])
+
   const onSubmit = async (values: z.infer<typeof createNovelSchema>) => {
     setSubmitting(true)
-    const newNovelData = await createNovel(values)
+    const newNovelData = await createNovel({ ...values, tagIds: selectedTagIds })
     if (newNovelData.slug) {
       toast({
         description: `New novel with name: ${values.title} is created.`,
@@ -91,6 +102,66 @@ export default function CreateNovelForm() {
             </FormItem>
           )}
         />
+        <div className='grid grid-cols-2 space-x-2'>
+          <FormField
+            control={form.control}
+            name="author"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Translator</FormLabel>
+                <FormControl>
+                  <Input placeholder="Translator or author name" {...field} />
+                </FormControl>
+                <FormDescription>Indexed for search; shown under hit titles.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="language"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Language</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. Chinese" {...field} />
+                </FormControl>
+                <FormDescription>Filterable on the search page.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <FormField
+          control={form.control}
+          name="status"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Status</FormLabel>
+              <FormControl>
+                <select
+                  className="flex h-10 w-full rounded-md border-brutal-mobile md:border-brutal border-black dark:border-white bg-background px-3 py-2 text-sm"
+                  {...field}
+                >
+                  <option value="ONGOING">Ongoing</option>
+                  <option value="COMPLETED">Completed</option>
+                  <option value="HIATUS">Hiatus</option>
+                </select>
+              </FormControl>
+              <FormDescription>Serialization status, shown on search hits.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div>
+          <FormLabel>Tags</FormLabel>
+          <TagPicker
+            allTags={initialTags}
+            initialSelected={selectedTagIds}
+            onChange={setSelectedTagIds}
+          />
+          <FormDescription>Search filters and ranking weight D.</FormDescription>
+        </div>
         <div className='grid grid-cols-2 space-x-2'>
           <FormField
             control={form.control}
